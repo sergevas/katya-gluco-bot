@@ -1,0 +1,16 @@
+[Unit]
+Description=katya-gluco-bot application service
+After=syslog.target network.target
+
+[Service]
+TimeoutStartSec=30
+SuccessExitStatus=143
+Type=simple
+User=root
+Group=root
+EnvironmentFile=/usr/local/bin/katya-gluco-bot/.env
+ExecStart=/usr/lib/jvm/zulu21.34.19-ca-jdk21.0.3-linux_x64/bin/java -Xms32m -Xmx256m -server -jar /usr/local/bin/katya-gluco-bot/katya-gluco-bot-1.0.0.jar
+ExecStop=/bin/kill -15 $MAINPID
+
+[Install]
+WantedBy=multi-user.target

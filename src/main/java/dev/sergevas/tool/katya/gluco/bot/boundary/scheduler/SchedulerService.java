@@ -38,7 +38,7 @@ public class SchedulerService {
         this.telegramBotApiConfig = telegramBotApiConfig;
     }
 
-    @Scheduled(every = "300s")
+    @Scheduled(every = "600s")
     public void updateReadings() {
         var rawData = jugglucoWebServerApiClient.getStream();
         var currentCsvStreamReading = csvDataReader.readToCsv(CsvStreamReading.class, rawData);
