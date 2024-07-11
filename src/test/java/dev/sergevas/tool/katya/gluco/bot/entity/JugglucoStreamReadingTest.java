@@ -4,7 +4,7 @@ import org.junit.jupiter.api.Test;
 
 import java.time.OffsetDateTime;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class JugglucoStreamReadingTest {
 
@@ -20,6 +20,7 @@ class JugglucoStreamReadingTest {
                 0.49,
                 ChangeStatus.STABLE
         );
-        assertEquals("6.8 → 2024-07-10T14:51:31", jugglucoStreamReading.toFormattedString());
+//        assertEquals("6.8 → 2024-07-10T14:51:31", jugglucoStreamReading.toFormattedString());
+        assertEquals("6.8 →", jugglucoStreamReading.toFormattedString());
     }
 }

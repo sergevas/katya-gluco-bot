@@ -1,7 +1,6 @@
 package dev.sergevas.tool.katya.gluco.bot.entity;
 
 import java.time.OffsetDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 import java.util.StringJoiner;
 
@@ -65,9 +64,9 @@ public class JugglucoStreamReading {
     public String toFormattedString() {
         return reading +
                 DELIMITER +
-                changeStatus.getMark() +
-                DELIMITER +
-                timestamp.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
+                changeStatus.getMark();
+//                + DELIMITER +
+//                timestamp.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
     }
 
     @Override
