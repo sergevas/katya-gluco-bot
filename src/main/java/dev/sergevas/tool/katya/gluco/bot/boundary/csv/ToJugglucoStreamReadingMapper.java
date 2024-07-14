@@ -16,7 +16,7 @@ public class ToJugglucoStreamReadingMapper {
     public static List<JugglucoStreamReading> toJugglucoStreamReadingList(List<CsvStreamReading> csv) {
         return Optional.ofNullable(csv).orElse(List.of()).stream()
                 .map(ToJugglucoStreamReadingMapper::toJugglucoStreamReading)
-                .sorted(Comparator.comparing(JugglucoStreamReading::getNr))
+                .sorted(Comparator.comparing(JugglucoStreamReading::getUnixTime))
                 .toList();
     }
 

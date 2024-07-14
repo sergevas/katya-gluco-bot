@@ -15,8 +15,10 @@ class ToJugglucoStreamReadingMapperTest {
 
     private CsvStreamReading csvStreamReading1;
     private CsvStreamReading csvStreamReading2;
+    private CsvStreamReading csvStreamReading3;
     private JugglucoStreamReading jugglucoStreamReading1;
     private JugglucoStreamReading jugglucoStreamReading2;
+    private JugglucoStreamReading jugglucoStreamReading3;
 
     @BeforeEach
     void setup() {
@@ -42,6 +44,17 @@ class ToJugglucoStreamReadingMapperTest {
         csvStreamReading2.setRate("+0.81");
         csvStreamReading2.setChangeLabel("STABLE");
 
+        csvStreamReading3 = new CsvStreamReading();
+        csvStreamReading3.setSensorId("3MH00Y1F3PH");
+        csvStreamReading3.setNr("31");
+        csvStreamReading3.setUnixTime("1720989715");
+        csvStreamReading3.setTimestamp("2024-07-14-23:41:55");
+        csvStreamReading3.setTz("3");
+        csvStreamReading3.setMin("102");
+        csvStreamReading3.setReading("7.6");
+        csvStreamReading3.setRate("-0.44");
+        csvStreamReading3.setChangeLabel("STABLE");
+
         jugglucoStreamReading1 = new JugglucoStreamReading(
                 "3MH00Y1F110",
                 879,
@@ -63,12 +76,23 @@ class ToJugglucoStreamReadingMapperTest {
                 0.81,
                 ChangeStatus.STABLE
         );
+
+        jugglucoStreamReading3 = new JugglucoStreamReading(
+                "3MH00Y1F3PH",
+                31,
+                1720989715,
+                OffsetDateTime.parse("2024-07-14T23:41:55+03:00"),
+                102,
+                7.6,
+                -0.44,
+                ChangeStatus.STABLE
+        );
     }
 
     @Test
     void toJugglucoStreamReadingList() {
-        assertIterableEquals(List.of(jugglucoStreamReading1, jugglucoStreamReading2),
-                ToJugglucoStreamReadingMapper.toJugglucoStreamReadingList(List.of(csvStreamReading1, csvStreamReading2)));
+        assertIterableEquals(List.of(jugglucoStreamReading1, jugglucoStreamReading2, jugglucoStreamReading3),
+                ToJugglucoStreamReadingMapper.toJugglucoStreamReadingList(List.of(csvStreamReading1, csvStreamReading2, csvStreamReading3)));
     }
 
     @Test
