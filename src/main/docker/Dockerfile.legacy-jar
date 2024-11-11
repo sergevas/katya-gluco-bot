@@ -3,7 +3,7 @@
 #
 # Before building the container image run:
 #
-# mvn package -Dquarkus.package.jar.type=legacy-jar
+# mvn package -Dquarkus.package.jar.resourceType=legacy-jar
 #
 # Then, build the image with:
 #

@@ -1,4 +1,4 @@
-package dev.sergevas.tool.katya.gluco.bot.application;
+package dev.sergevas.tool.katya.gluco.bot;
 
 public class KatyaGlucoBotBaseException extends RuntimeException {
 

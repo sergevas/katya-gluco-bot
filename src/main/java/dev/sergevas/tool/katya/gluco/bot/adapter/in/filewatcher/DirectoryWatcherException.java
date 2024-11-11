@@ -1,6 +1,6 @@
 package dev.sergevas.tool.katya.gluco.bot.adapter.in.filewatcher;
 
-import dev.sergevas.tool.katya.gluco.bot.application.KatyaGlucoBotBaseException;
+import dev.sergevas.tool.katya.gluco.bot.KatyaGlucoBotBaseException;
 
 public class DirectoryWatcherException extends KatyaGlucoBotBaseException {
 
