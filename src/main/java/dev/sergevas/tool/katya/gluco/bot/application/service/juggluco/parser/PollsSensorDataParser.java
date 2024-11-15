@@ -7,7 +7,6 @@ import jakarta.enterprise.context.ApplicationScoped;
 public class PollsSensorDataParser implements SensorDataParser<PollsSensorReading> {
 
     private static final int dataRowLength = 20;
-    
 
     @Override
     public PollsSensorReading parse(byte[] rawData) {
