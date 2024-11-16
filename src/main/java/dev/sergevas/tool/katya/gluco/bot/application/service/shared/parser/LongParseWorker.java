@@ -1,4 +1,4 @@
-package dev.sergevas.tool.katya.gluco.bot.application.service.juggluco.parser;
+package dev.sergevas.tool.katya.gluco.bot.application.service.shared.parser;
 
 public class LongParseWorker extends ParseWorker<Long> {
 
@@ -9,9 +9,9 @@ public class LongParseWorker extends ParseWorker<Long> {
     @Override
     public Long unmarshal(byte[] source) {
         long value = 0L;
-        for (byte b : source) {
+        for (int i = source.length - 1; i >= 0; i--) {
             value <<= 8;
-            value |= (b & 0xFF);
+            value |= (source[i] & 0xFF);
         }
         return value;
     }

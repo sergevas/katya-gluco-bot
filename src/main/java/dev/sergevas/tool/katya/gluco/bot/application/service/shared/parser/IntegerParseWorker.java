@@ -1,4 +1,4 @@
-package dev.sergevas.tool.katya.gluco.bot.application.service.juggluco.parser;
+package dev.sergevas.tool.katya.gluco.bot.application.service.shared.parser;
 
 public class IntegerParseWorker extends ParseWorker<Integer> {
 
@@ -9,9 +9,9 @@ public class IntegerParseWorker extends ParseWorker<Integer> {
     @Override
     public Integer unmarshal(byte[] source) {
         int value = 0;
-        for (byte b : source) {
+        for (int i = source.length - 1; i >= 0; i--) {
             value <<= 8;
-            value |= (b & 0xFF);
+            value |= (source[i] & 0xFF);
         }
         return value;
     }

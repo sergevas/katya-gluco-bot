@@ -1,4 +1,4 @@
-package dev.sergevas.tool.katya.gluco.bot.application.service.juggluco.parser;
+package dev.sergevas.tool.katya.gluco.bot.application.service.shared.parser;
 
 import java.util.Arrays;
 

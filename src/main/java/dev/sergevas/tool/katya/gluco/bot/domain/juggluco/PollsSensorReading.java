@@ -8,21 +8,21 @@ public class PollsSensorReading {
 
     public enum Trend {
 
-        NOT_DETERMINED("00000000"),
-        FALLING_QUICKLY("01000000"),
-        FALLING("02000000"),
-        STABLE("03000000"),
-        RISING("04000000"),
-        RISING_QUICKLY("05000000"),
-        ERROR("06000000");
+        NOT_DETERMINED(0x00),
+        FALLING_QUICKLY(0x01),
+        FALLING(0x02),
+        STABLE(0x03),
+        RISING(0x04),
+        RISING_QUICKLY(0x05),
+        ERROR(0x06);
 
-        private final String code;
+        private final Integer code;
 
-        Trend(String code) {
+        Trend(Integer code) {
             this.code = code;
         }
 
-        public static Trend fromCode(String code) {
+        public static Trend fromCode(Integer code) {
             return Arrays.stream(Trend.values())
                     .filter(v -> v.code.equals(code))
                     .findFirst()
@@ -34,9 +34,9 @@ public class PollsSensorReading {
     private int minSinceStart; // Minutes since sensor start
     private int glucose; // Glucose, mg/dL
     private Trend trend;
-    private double rateOfChange;
+    private float rateOfChange;
 
-    public PollsSensorReading(LocalDateTime timeLocal, int minSinceStart, int glucose, Trend trend, double rateOfChange) {
+    public PollsSensorReading(LocalDateTime timeLocal, int minSinceStart, int glucose, Trend trend, float rateOfChange) {
         this.timeLocal = timeLocal;
         this.minSinceStart = minSinceStart;
         this.glucose = glucose;
@@ -60,7 +60,7 @@ public class PollsSensorReading {
         return trend;
     }
 
-    public double getRateOfChange() {
+    public float getRateOfChange() {
         return rateOfChange;
     }
 
