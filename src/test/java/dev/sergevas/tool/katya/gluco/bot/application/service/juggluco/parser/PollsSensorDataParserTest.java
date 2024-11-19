@@ -1,11 +1,14 @@
 package dev.sergevas.tool.katya.gluco.bot.application.service.juggluco.parser;
 
+import dev.sergevas.tool.katya.gluco.bot.domain.juggluco.PollsSensorReading;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.time.LocalDateTime;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -21,10 +24,17 @@ class PollsSensorDataParserTest {
 
     @Test
     void parse() throws IOException {
+        var expected = List.of(
+                new PollsSensorReading(
+                        LocalDateTime.of(2024, 10, 25, 10, 25, 11),
+                        101, 54, PollsSensorReading.Trend.FALLING, -1.65f),
+                new PollsSensorReading(
+                        LocalDateTime.of(2024, 10, 25, 10, 26, 11),
+                        102, 53, PollsSensorReading.Trend.FALLING, -1.7f));
         byte[] rawSensorData = Files.readAllBytes(Path.of("src/test/resources/polls.dat"));
         var pollsSensorReading = parser.parse(rawSensorData);
         assertNotNull(pollsSensorReading);
-        assertEquals(2, pollsSensorReading.size());
+        assertEquals(expected, pollsSensorReading);
     }
 
     @Test

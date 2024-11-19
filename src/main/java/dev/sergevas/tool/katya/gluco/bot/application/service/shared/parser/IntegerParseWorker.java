@@ -9,9 +9,10 @@ public class IntegerParseWorker extends ParseWorker<Integer> {
     @Override
     public Integer unmarshal(byte[] source) {
         int value = 0;
-        for (int i = source.length - 1; i >= 0; i--) {
+        var chunk = fetchChunk(source);
+        for (int i = chunk.length - 1; i >= 0; i--) {
             value <<= 8;
-            value |= (source[i] & 0xFF);
+            value |= (chunk[i] & 0xFF);
         }
         return value;
     }

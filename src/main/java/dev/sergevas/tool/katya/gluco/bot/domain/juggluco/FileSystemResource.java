@@ -53,6 +53,10 @@ public record FileSystemResource(
         return path.getFileName().toString();
     }
 
+    public String pathString() {
+        return String.valueOf(path);
+    }
+
     @Override
     public String toString() {
         var sj = new StringJoiner(", ", FileSystemResource.class.getSimpleName() + "[", "]")

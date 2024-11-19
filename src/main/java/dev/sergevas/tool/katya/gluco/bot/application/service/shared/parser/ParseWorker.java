@@ -4,8 +4,8 @@ import java.util.Arrays;
 
 public abstract class ParseWorker<T> {
 
-    private int fromIndex;
-    private int binValueLength;
+    private final int fromIndex;
+    private final int binValueLength;
 
     public ParseWorker(int fromIndex, int binValueLength) {
         this.fromIndex = fromIndex;

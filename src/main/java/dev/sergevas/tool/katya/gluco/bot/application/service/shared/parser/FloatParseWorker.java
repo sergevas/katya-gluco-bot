@@ -2,7 +2,7 @@ package dev.sergevas.tool.katya.gluco.bot.application.service.shared.parser;
 
 public class FloatParseWorker extends ParseWorker<Float> {
 
-    private IntegerParseWorker integerParseWorker;
+    private final IntegerParseWorker integerParseWorker;
 
     public FloatParseWorker(int fromIndex, int binValueLength) {
         super(fromIndex, binValueLength);

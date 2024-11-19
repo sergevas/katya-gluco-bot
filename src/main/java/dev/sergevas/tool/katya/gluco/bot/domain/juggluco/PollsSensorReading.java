@@ -30,11 +30,11 @@ public class PollsSensorReading {
         }
     }
 
-    private LocalDateTime timeLocal; // Reading timestamp, local Time Zone
-    private int minSinceStart; // Minutes since sensor start
-    private int glucose; // Glucose, mg/dL
-    private Trend trend;
-    private float rateOfChange;
+    private final LocalDateTime timeLocal; // Reading timestamp, local Time Zone
+    private final int minSinceStart; // Minutes since sensor start
+    private final int glucose; // Glucose, mg/dL
+    private final Trend trend;
+    private final float rateOfChange;
 
     public PollsSensorReading(LocalDateTime timeLocal, int minSinceStart, int glucose, Trend trend, float rateOfChange) {
         this.timeLocal = timeLocal;
