@@ -1,4 +1,4 @@
-package dev.sergevas.tool.katya.gluco.bot.application.port.out;
+package dev.sergevas.tool.katya.gluco.bot.application.port.out.juggluco;
 
 import dev.sergevas.tool.katya.gluco.bot.domain.juggluco.FileSystemResource;
 
