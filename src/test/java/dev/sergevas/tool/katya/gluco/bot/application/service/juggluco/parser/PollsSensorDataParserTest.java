@@ -23,7 +23,7 @@ class PollsSensorDataParserTest {
     }
 
     @Test
-    void parse() throws IOException {
+    void when_pollsContainNullRows_thenShouldParseSuccessfully() throws IOException {
         var expected = List.of(
                 new PollsSensorReading(
                         LocalDateTime.of(2024, 10, 25, 10, 25, 11),
@@ -31,7 +31,22 @@ class PollsSensorDataParserTest {
                 new PollsSensorReading(
                         LocalDateTime.of(2024, 10, 25, 10, 26, 11),
                         102, 53, PollsSensorReading.Trend.FALLING, -1.7f));
-        byte[] rawSensorData = Files.readAllBytes(Path.of("src/test/resources/polls.dat"));
+        byte[] rawSensorData = Files.readAllBytes(Path.of("src/test/resources/polls01.dat"));
+        var pollsSensorReading = parser.parse(rawSensorData);
+        assertNotNull(pollsSensorReading);
+        assertEquals(expected, pollsSensorReading);
+    }
+
+    @Test
+    void when_pollsDoesntContainNullRows_thenShouldParseSuccessfully() throws IOException {
+        var expected = List.of(
+                new PollsSensorReading(
+                        LocalDateTime.of(2024, 10, 25, 10, 25, 11),
+                        101, 54, PollsSensorReading.Trend.FALLING, -1.65f),
+                new PollsSensorReading(
+                        LocalDateTime.of(2024, 10, 25, 10, 26, 11),
+                        102, 53, PollsSensorReading.Trend.FALLING, -1.7f));
+        byte[] rawSensorData = Files.readAllBytes(Path.of("src/test/resources/polls02.dat"));
         var pollsSensorReading = parser.parse(rawSensorData);
         assertNotNull(pollsSensorReading);
         assertEquals(expected, pollsSensorReading);

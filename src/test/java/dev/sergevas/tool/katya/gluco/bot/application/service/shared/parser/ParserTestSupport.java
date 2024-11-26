@@ -7,7 +7,7 @@ public class ParserTestSupport {
 
     public static byte[] readRawTestSensorData() {
         try {
-            return Files.readAllBytes(Path.of("src/test/resources/polls.dat"));
+            return Files.readAllBytes(Path.of("src/test/resources/polls01.dat"));
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

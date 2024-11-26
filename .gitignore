@@ -35,4 +35,4 @@ target/
 *.env
 
 # Plugin directory
-/.quarkus/cli/plugins/ 
+/.quarkus/cli/plugins/

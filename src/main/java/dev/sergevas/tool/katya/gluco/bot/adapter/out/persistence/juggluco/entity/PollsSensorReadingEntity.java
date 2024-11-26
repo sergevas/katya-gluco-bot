@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "JG_POLLS")
-@SequenceGenerator(name = "SEQ_GEN", sequenceName = "SEQ_JG_POLLS", allocationSize = 1)
+@SequenceGenerator(name = "SEQ_GEN", sequenceName = "JG_POLLS_ID_SEQ", allocationSize = 1)
 public class PollsSensorReadingEntity extends BaseEntity {
 
     private LocalDateTime timeLocal;
