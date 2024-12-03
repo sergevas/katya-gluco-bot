@@ -36,3 +36,5 @@ target/
 
 # Plugin directory
 /.quarkus/cli/plugins/
+
+*.dat

@@ -22,14 +22,16 @@ public class SensorDataPersistenceAdapter implements SensorDataRepository {
     @Override
     public void store(List<PollsSensorReading> sensorReadings) {
         Log.debugf("Enter store sensorReadings.size() = %d", sensorReadings.size());
-        sensorReadings.forEach(em::persist);
+        sensorReadings.stream()
+                .map(this::toPollsSensorReadingEntity)
+                .forEach(em::persist);
         Log.debugf("Exit store sensorReadings.size() = %d", sensorReadings.size());
     }
 
     public PollsSensorReadingEntity toPollsSensorReadingEntity(PollsSensorReading pollsSensorReading) {
         Log.debug("Enter toPollsSensorReadingEntity()");
         var entity = new PollsSensorReadingEntity();
-        entity.setGlucose(pollsSensorReading.getGlucoseMgDl());
+        entity.setTimeLocal(pollsSensorReading.getTimeLocal());
         entity.setMinSinceStart(pollsSensorReading.getMinSinceStart());
         entity.setGlucose(pollsSensorReading.getGlucoseMgDl());
         entity.setTrend(Trend.valueOf(pollsSensorReading.getTrend().name()));
