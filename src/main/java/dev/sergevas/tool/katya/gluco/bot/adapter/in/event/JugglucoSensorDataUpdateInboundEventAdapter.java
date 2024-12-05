@@ -1,5 +1,6 @@
 package dev.sergevas.tool.katya.gluco.bot.adapter.in.event;
 
+import dev.sergevas.tool.katya.gluco.bot.application.port.in.juggluco.FileSystemResourceDeleteHandler;
 import dev.sergevas.tool.katya.gluco.bot.application.port.in.juggluco.JugglucoSensorDataUpdateException;
 import dev.sergevas.tool.katya.gluco.bot.application.port.in.juggluco.SensorDataUpdateHandler;
 import dev.sergevas.tool.katya.gluco.bot.domain.juggluco.FileSystemResource;
@@ -13,6 +14,7 @@ import jakarta.inject.Inject;
 import java.nio.file.Files;
 import java.util.Optional;
 
+import static dev.sergevas.tool.katya.gluco.bot.domain.juggluco.FileSystemResource.EventType.valueOf;
 import static dev.sergevas.tool.katya.gluco.bot.domain.juggluco.FileSystemResource.ResourceType.DIRECTORY;
 import static dev.sergevas.tool.katya.gluco.bot.domain.juggluco.FileSystemResource.ResourceType.FILE;
 
@@ -21,15 +23,22 @@ public class JugglucoSensorDataUpdateInboundEventAdapter {
 
     @Inject
     SensorDataUpdateHandler sensorDataUpdateHandler;
+    @Inject
+    FileSystemResourceDeleteHandler fileResourceDeleteHandler;
 
     public void onDirectoryChangeEvent(@ObservesAsync final DirectoryChangeEvent directoryChangeEvent) {
         Log.debugf("onDirectoryChangeEvent: %s", directoryChangeEvent);
-        sensorDataUpdateHandler.handleUpdate(toFileSystemResource(directoryChangeEvent));
+        var fsr = toFileSystemResource(directoryChangeEvent);
+        switch (fsr.eventType()) {
+            case CREATE, MODIFY -> sensorDataUpdateHandler.handleUpdate(fsr);
+            case DELETE -> fileResourceDeleteHandler.handleDelete(fsr);
+            default -> Log.warnf("Unhandled event type %s for %s", fsr.eventType(), fsr);
+        }
     }
 
     public FileSystemResource toFileSystemResource(final DirectoryChangeEvent dce) {
         try {
-            var eventType = FileSystemResource.EventType.valueOf(dce.eventType().name());
+            var eventType = valueOf(dce.eventType().name());
             var path = dce.path();
             return dce.isDirectory() ?
                     new FileSystemResource(DIRECTORY, eventType, path)
