@@ -4,6 +4,7 @@ import dev.sergevas.tool.katya.gluco.bot.application.port.in.juggluco.FileSystem
 import dev.sergevas.tool.katya.gluco.bot.application.port.in.juggluco.JugglucoSensorDataUpdateException;
 import dev.sergevas.tool.katya.gluco.bot.application.port.in.juggluco.SensorDataUpdateHandler;
 import dev.sergevas.tool.katya.gluco.bot.domain.juggluco.FileSystemResource;
+import dev.sergevas.tool.katya.gluco.bot.infra.log.interceptor.Loggable;
 import io.methvin.watcher.DirectoryChangeEvent;
 import io.methvin.watcher.hashing.FileHash;
 import io.quarkus.logging.Log;
@@ -26,8 +27,8 @@ public class JugglucoSensorDataUpdateInboundEventAdapter {
     @Inject
     FileSystemResourceDeleteHandler fileResourceDeleteHandler;
 
+    @Loggable(logArguments = true)
     public void onDirectoryChangeEvent(@ObservesAsync final DirectoryChangeEvent directoryChangeEvent) {
-        Log.debugf("onDirectoryChangeEvent: %s", directoryChangeEvent);
         var fsr = toFileSystemResource(directoryChangeEvent);
         switch (fsr.eventType()) {
             case CREATE, MODIFY -> sensorDataUpdateHandler.handleUpdate(fsr);
