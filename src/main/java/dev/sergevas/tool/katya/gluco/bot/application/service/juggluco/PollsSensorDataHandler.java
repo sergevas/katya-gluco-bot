@@ -5,7 +5,7 @@ import dev.sergevas.tool.katya.gluco.bot.application.port.out.juggluco.SensorDat
 import dev.sergevas.tool.katya.gluco.bot.application.service.juggluco.parser.PollsSensorDataParser;
 import dev.sergevas.tool.katya.gluco.bot.domain.juggluco.FileSystemResource;
 import dev.sergevas.tool.katya.gluco.bot.domain.juggluco.PollsSensorReading;
-import io.quarkus.logging.Log;
+import dev.sergevas.tool.katya.gluco.bot.infra.log.interceptor.Loggable;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
@@ -21,12 +21,11 @@ public class PollsSensorDataHandler implements SensorDataHandler<PollsSensorRead
     @Inject
     SensorDataRepository sensorDataRepository;
 
+    @Loggable
     @Override
     public List<PollsSensorReading> handle(FileSystemResource fileSystemResource) {
-        Log.debug("Enter handle()");
         List<PollsSensorReading> readings = pollsSensorDataParser.parse(fileSystemResource.content());
         sensorDataRepository.store(readings);
-        Log.debug("Exit handle()");
         return List.of();
     }
 }
