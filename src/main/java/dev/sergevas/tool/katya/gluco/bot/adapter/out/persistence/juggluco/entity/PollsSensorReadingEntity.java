@@ -25,18 +25,16 @@ public class PollsSensorReadingEntity extends BaseEntity {
         return timeLocal;
     }
 
-    public PollsSensorReadingEntity setTimeLocal(LocalDateTime timeLocal) {
+    public void setTimeLocal(LocalDateTime timeLocal) {
         this.timeLocal = timeLocal;
-        return this;
     }
 
     public int getMinSinceStart() {
         return minSinceStart;
     }
 
-    public PollsSensorReadingEntity setMinSinceStart(int minSinceStart) {
+    public void setMinSinceStart(int minSinceStart) {
         this.minSinceStart = minSinceStart;
-        return this;
     }
 
     public int getGlucose() {
@@ -61,9 +59,7 @@ public class PollsSensorReadingEntity extends BaseEntity {
         return rateOfChange;
     }
 
-    public PollsSensorReadingEntity setRateOfChange(float rateOfChange) {
+    public void setRateOfChange(float rateOfChange) {
         this.rateOfChange = rateOfChange;
-        return this;
     }
 }
-

@@ -15,6 +15,7 @@ class TransformersTest {
      */
     @Test
     void toLocalDateTime() {
+        System.out.println(Transformers.toLocalDateTime(1729851911L).toLocalDate());
         assertEquals(LocalDateTime.of(2024, 10, 25, 10, 25, 11),
                 Transformers.toLocalDateTime(1729851911L));
     }
