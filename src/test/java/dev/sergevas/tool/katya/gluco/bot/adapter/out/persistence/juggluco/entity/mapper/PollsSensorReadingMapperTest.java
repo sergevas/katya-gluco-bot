@@ -18,9 +18,10 @@ class PollsSensorReadingMapperTest {
 
     @Test
     void whenInputValid_shouldReturnConvertedEntity() {
-        var entity = mapper.toPollsSensorReadingEntity(new PollsSensorReading(
+        var entity = mapper.toPollsSensorReadingEntity(new PollsSensorReading(1729851911L,
                 LocalDateTime.of(2024, 10, 25, 10, 25, 11),
                 101, 54, PollsSensorReading.Trend.FALLING, -1.65f));
+        assertEquals(1729851911L, entity.getTimeEpoch());
         assertEquals(LocalDateTime.parse("2024-10-25T10:25:11"), entity.getTimeLocal());
         assertEquals(101, entity.getMinSinceStart());
         assertEquals(54, entity.getGlucose());

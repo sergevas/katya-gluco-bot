@@ -48,7 +48,9 @@ public class PollsSensorDataParser implements SensorDataParser<List<PollsSensorR
             if (isCompleted(buffer)) {
                 break;
             }
+            var timeEpoch = timeLocalParseWorker.unmarshal(buffer);
             sensorReadings.add(new PollsSensorReading(
+                    timeEpoch,
                     toLocalDateTime(timeLocalParseWorker.unmarshal(buffer)),
                     minSinceStartParseWorker.unmarshal(buffer),
                     glucoseParseWorker.unmarshal(buffer),

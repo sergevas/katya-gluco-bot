@@ -12,6 +12,7 @@ import java.time.LocalDateTime;
 @SequenceGenerator(name = "SEQ_GEN", sequenceName = "JG_POLLS_ID_SEQ", allocationSize = 1)
 public class PollsSensorReadingEntity extends BaseEntity {
 
+    private long timeEpoch;
     private LocalDateTime timeLocal;
     private int minSinceStart;
     private int glucose;
@@ -19,6 +20,14 @@ public class PollsSensorReadingEntity extends BaseEntity {
     private float rateOfChange;
 
     public PollsSensorReadingEntity() {
+    }
+
+    public long getTimeEpoch() {
+        return timeEpoch;
+    }
+
+    public void setTimeEpoch(long timeEpoch) {
+        this.timeEpoch = timeEpoch;
     }
 
     public LocalDateTime getTimeLocal() {
@@ -41,9 +50,8 @@ public class PollsSensorReadingEntity extends BaseEntity {
         return glucose;
     }
 
-    public PollsSensorReadingEntity setGlucose(int glucose) {
+    public void setGlucose(int glucose) {
         this.glucose = glucose;
-        return this;
     }
 
     public Trend getTrend() {

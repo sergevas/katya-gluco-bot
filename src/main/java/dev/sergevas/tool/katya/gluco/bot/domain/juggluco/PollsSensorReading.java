@@ -30,18 +30,24 @@ public class PollsSensorReading {
         }
     }
 
+    private final long timeEpoch;
     private final LocalDateTime timeLocal; // Reading timestamp, local Time Zone
     private final int minSinceStart; // Minutes since sensor start
     private final int glucose; // Glucose, mg/dL
     private final Trend trend;
     private final float rateOfChange;
 
-    public PollsSensorReading(LocalDateTime timeLocal, int minSinceStart, int glucose, Trend trend, float rateOfChange) {
+    public PollsSensorReading(long timeEpoch, LocalDateTime timeLocal, int minSinceStart, int glucose, Trend trend, float rateOfChange) {
+        this.timeEpoch = timeEpoch;
         this.timeLocal = timeLocal;
         this.minSinceStart = minSinceStart;
         this.glucose = glucose;
         this.trend = trend;
         this.rateOfChange = rateOfChange;
+    }
+
+    public long getTimeEpoch() {
+        return timeEpoch;
     }
 
     public LocalDateTime getTimeLocal() {
@@ -70,23 +76,23 @@ public class PollsSensorReading {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         PollsSensorReading that = (PollsSensorReading) o;
-        return minSinceStart == that.minSinceStart && glucose == that.glucose
-                && Double.compare(rateOfChange, that.rateOfChange) == 0
-                && Objects.equals(timeLocal, that.timeLocal) && trend == that.trend;
+        return timeEpoch == that.timeEpoch && minSinceStart == that.minSinceStart && glucose == that.glucose
+                && Float.compare(rateOfChange, that.rateOfChange) == 0 && Objects.equals(timeLocal, that.timeLocal)
+                && trend == that.trend;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(timeLocal, minSinceStart, glucose, trend, rateOfChange);
+        return Objects.hash(timeEpoch, timeLocal, minSinceStart, glucose, trend, rateOfChange);
     }
 
     @Override
     public String toString() {
         return "PollsSensorReading{" +
-                "timeLocal=" + timeLocal +
+                "timeEpoch=" + timeEpoch +
+                ", timeLocal=" + timeLocal +
                 ", minSinceStart=" + minSinceStart +
                 ", glucose(mg/dL)=" + glucose +
                 ", glucose(mmol/L)=" + getGlucoseMmolL() +

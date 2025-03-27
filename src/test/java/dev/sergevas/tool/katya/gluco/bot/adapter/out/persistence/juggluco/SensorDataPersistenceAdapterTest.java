@@ -17,10 +17,10 @@ class SensorDataPersistenceAdapterTest {
     @Test
     void whenInputSensorReadingsValid_shouldPersist() {
         var sensorReadings = List.of(
-                new PollsSensorReading(
+                new PollsSensorReading(1729851911L,
                         LocalDateTime.of(2024, 10, 25, 10, 25, 11),
                         101, 54, PollsSensorReading.Trend.FALLING, -1.65f),
-                new PollsSensorReading(
+                new PollsSensorReading(1729851971L,
                         LocalDateTime.of(2024, 10, 25, 10, 26, 11),
                         102, 53, PollsSensorReading.Trend.FALLING, -1.7f));
         sensorDataRepository.store(sensorReadings);

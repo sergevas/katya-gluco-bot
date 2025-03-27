@@ -10,7 +10,9 @@ import java.nio.file.Path;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class PollsSensorDataParserTest {
 
@@ -25,10 +27,10 @@ class PollsSensorDataParserTest {
     @Test
     void when_pollsContainNullRows_thenShouldParseSuccessfully() throws IOException {
         var expected = List.of(
-                new PollsSensorReading(
+                new PollsSensorReading(1729851911L,
                         LocalDateTime.of(2024, 10, 25, 10, 25, 11),
                         101, 54, PollsSensorReading.Trend.FALLING, -1.65f),
-                new PollsSensorReading(
+                new PollsSensorReading(1729851971L,
                         LocalDateTime.of(2024, 10, 25, 10, 26, 11),
                         102, 53, PollsSensorReading.Trend.FALLING, -1.7f));
         byte[] rawSensorData = Files.readAllBytes(Path.of("src/test/resources/polls01.dat"));
@@ -40,10 +42,10 @@ class PollsSensorDataParserTest {
     @Test
     void when_pollsDoesntContainNullRows_thenShouldParseSuccessfully() throws IOException {
         var expected = List.of(
-                new PollsSensorReading(
+                new PollsSensorReading(1729851911L,
                         LocalDateTime.of(2024, 10, 25, 10, 25, 11),
                         101, 54, PollsSensorReading.Trend.FALLING, -1.65f),
-                new PollsSensorReading(
+                new PollsSensorReading(1729851971L,
                         LocalDateTime.of(2024, 10, 25, 10, 26, 11),
                         102, 53, PollsSensorReading.Trend.FALLING, -1.7f));
         byte[] rawSensorData = Files.readAllBytes(Path.of("src/test/resources/polls02.dat"));
