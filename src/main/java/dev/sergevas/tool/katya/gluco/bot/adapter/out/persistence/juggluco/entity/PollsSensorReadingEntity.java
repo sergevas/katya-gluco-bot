@@ -13,6 +13,7 @@ import java.time.LocalDateTime;
 @SequenceGenerator(name = "SEQ_GEN", sequenceName = "JG_POLLS_ID_SEQ", allocationSize = 1)
 @NamedQuery(name = "PollsSensorReadingEntity.findByTimeEpoch",
         query = "select p from PollsSensorReadingEntity p where p.timeEpoch in :timeEpochValues")
+@NamedQuery(name = "PollsSensorReadingEntity.findAll", query = "select p from PollsSensorReadingEntity p")
 public class PollsSensorReadingEntity extends BaseEntity {
 
     private long timeEpoch;

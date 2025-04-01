@@ -54,13 +54,21 @@ public class SensorDataPersistenceAdapter implements SensorDataRepository {
                 .forEach(em::persist);
 
         if (!existingPollsSensorReadingsByTimeEpoch.isEmpty()) {
-            sensorReadingsByTimeEpoch.forEach((timeToEpoch, reading) -> {
-                Optional.ofNullable(existingPollsSensorReadingsByTimeEpoch.get(timeToEpoch)).ifPresent(existingReading -> {
-                    if (reading.equals(existingReading)) {
-                        Log.warnf("Idempotency conflict occurred: new %s, existing: %s", reading, existingReading);
-                    }
-                });
-            });
+            sensorReadingsByTimeEpoch.forEach((timeToEpoch, reading) ->
+                    Optional.ofNullable(existingPollsSensorReadingsByTimeEpoch.get(timeToEpoch)).ifPresent(existingReading -> {
+                        if (!reading.equals(existingReading)) {
+                            Log.warnf("Idempotency conflict occurred: new %s, existing: %s", reading, existingReading);
+                        }
+                    }));
         }
+    }
+
+    @Loggable
+    @Override
+    public List<PollsSensorReading> readAll() {
+        return em.createNamedQuery("PollsSensorReadingEntity.findAll", PollsSensorReadingEntity.class)
+                .getResultStream()
+                .map(pollsSensorReadingMapper::toPollsSensorReading)
+                .toList();
     }
 }

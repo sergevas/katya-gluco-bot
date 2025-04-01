@@ -7,4 +7,6 @@ import java.util.List;
 public interface SensorDataRepository {
 
     void store(List<PollsSensorReading> sensorReadings);
+
+    List<PollsSensorReading> readAll();
 }

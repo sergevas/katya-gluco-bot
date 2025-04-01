@@ -12,6 +12,10 @@ public class TestData {
             LocalDateTime.of(2024, 10, 25, 10, 25, 11),
             101, 54, PollsSensorReading.Trend.FALLING, -1.65f);
 
+    public static final PollsSensorReading POLLS_SENSOR_READING_1_MODIFIED = new PollsSensorReading(1729851911L,
+            LocalDateTime.of(2024, 10, 25, 10, 25, 11),
+            101, 55, PollsSensorReading.Trend.FALLING, -1.65f);
+
     public static final PollsSensorReading POLLS_SENSOR_READING_2 = new PollsSensorReading(1729851971L,
             LocalDateTime.of(2024, 10, 25, 10, 26, 11),
             102, 53, PollsSensorReading.Trend.FALLING, -1.7f);
