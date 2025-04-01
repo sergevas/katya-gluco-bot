@@ -1,6 +1,12 @@
 package dev.sergevas.tool.katya.gluco.bot.adapter.out.persistence;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.MappedSuperclass;
+
+import java.util.Objects;
 
 @MappedSuperclass
 public class BaseEntity {
@@ -19,25 +25,14 @@ public class BaseEntity {
 
     @Override
     public boolean equals(Object o) {
-        if (o == null) {
-            return false;
-        }
-
-        if (this == o) {
-            return true;
-        }
-        if (getClass() != o.getClass()
-                && !o.getClass().isAssignableFrom(getClass())
-                && !getClass().isAssignableFrom(o.getClass())) {
-            return false;
-        }
-        final BaseEntity entity = (BaseEntity) o;
-        return this.id.equals(entity.getId());
+        if (o == null || getClass() != o.getClass()) return false;
+        BaseEntity that = (BaseEntity) o;
+        return Objects.equals(id, that.id);
     }
 
     @Override
     public int hashCode() {
-        return this.id != null ? this.id.hashCode() : 0;
+        return Objects.hashCode(id);
     }
 
     @Override

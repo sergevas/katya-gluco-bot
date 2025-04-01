@@ -30,7 +30,7 @@ public class PollsSensorReading {
         }
     }
 
-    private final long timeEpoch;
+    private final Long timeEpoch;
     private final LocalDateTime timeLocal; // Reading timestamp, local Time Zone
     private final int minSinceStart; // Minutes since sensor start
     private final int glucose; // Glucose, mg/dL
@@ -46,7 +46,7 @@ public class PollsSensorReading {
         this.rateOfChange = rateOfChange;
     }
 
-    public long getTimeEpoch() {
+    public Long getTimeEpoch() {
         return timeEpoch;
     }
 
@@ -78,8 +78,11 @@ public class PollsSensorReading {
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         PollsSensorReading that = (PollsSensorReading) o;
-        return timeEpoch == that.timeEpoch && minSinceStart == that.minSinceStart && glucose == that.glucose
-                && Float.compare(rateOfChange, that.rateOfChange) == 0 && Objects.equals(timeLocal, that.timeLocal)
+        return minSinceStart == that.minSinceStart
+                && glucose == that.glucose
+                && Float.compare(rateOfChange, that.rateOfChange) == 0
+                && Objects.equals(timeEpoch, that.timeEpoch)
+                && Objects.equals(timeLocal, that.timeLocal)
                 && trend == that.trend;
     }
 

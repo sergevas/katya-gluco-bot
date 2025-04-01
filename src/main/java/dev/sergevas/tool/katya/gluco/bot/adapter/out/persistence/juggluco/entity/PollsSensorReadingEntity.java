@@ -2,6 +2,7 @@ package dev.sergevas.tool.katya.gluco.bot.adapter.out.persistence.juggluco.entit
 
 import dev.sergevas.tool.katya.gluco.bot.adapter.out.persistence.BaseEntity;
 import jakarta.persistence.Entity;
+import jakarta.persistence.NamedQuery;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 
@@ -10,6 +11,8 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "JG_POLLS")
 @SequenceGenerator(name = "SEQ_GEN", sequenceName = "JG_POLLS_ID_SEQ", allocationSize = 1)
+@NamedQuery(name = "PollsSensorReadingEntity.findByTimeEpoch",
+        query = "select p from PollsSensorReadingEntity p where p.timeEpoch in :timeEpochValues")
 public class PollsSensorReadingEntity extends BaseEntity {
 
     private long timeEpoch;
