@@ -3,134 +3,167 @@ package dev.sergevas.tool.katya.gluco.bot.boundary.csv;
 import com.opencsv.bean.CsvBindByPosition;
 
 import java.util.Objects;
-import java.util.StringJoiner;
-
 
 public class CsvStreamReading {
 
     /*
-     * Sensorid	nr	UnixTime	YYYY-mm-dd-HH:MM:SS	TZ	Min	mmol/L	Rate	ChangeLabel
-     * 3MH00Y1F110	882	1720612291	2024-07-10-14:51:31	3	13854	6.8	+0.49	STABLE
+     * name,tags,time,delta,direction,filtered,noise,rssi,unfiltered,value_mgdl,value_mmol
+     * glucose,,1744664860688000000,2.159,Flat,-0,1,100,0,130,7.214927129235995
      */
 
     @CsvBindByPosition(position = 0)
-    private String sensorId;
+    private String name;
     @CsvBindByPosition(position = 1)
-    private String nr;
+    private String tags;
     @CsvBindByPosition(position = 2)
-    private String unixTime;
+    private String time;
     @CsvBindByPosition(position = 3)
-    private String timestamp;
+    private String delta;
     @CsvBindByPosition(position = 4)
-    private String tz;
+    private String direction;
     @CsvBindByPosition(position = 5)
-    private String min;
+    private String filtered;
     @CsvBindByPosition(position = 6)
-    private String reading;
+    private String noise;
     @CsvBindByPosition(position = 7)
-    private String rate;
+    private String rssi;
     @CsvBindByPosition(position = 8)
-    private String changeLabel;
+    private String unfiltered;
+    @CsvBindByPosition(position = 9)
+    private String value_mgdl;
+    @CsvBindByPosition(position = 10)
+    private String value_mmol;
 
-    public String getSensorId() {
-        return sensorId;
+    public String getName() {
+        return name;
     }
 
-    public void setSensorId(String sensorId) {
-        this.sensorId = sensorId;
+    public CsvStreamReading setName(String name) {
+        this.name = name;
+        return this;
     }
 
-    public String getNr() {
-        return nr;
+    public String getTags() {
+        return tags;
     }
 
-    public void setNr(String nr) {
-        this.nr = nr;
+    public CsvStreamReading setTags(String tags) {
+        this.tags = tags;
+        return this;
     }
 
-    public String getUnixTime() {
-        return unixTime;
+    public String getTime() {
+        return time;
     }
 
-    public void setUnixTime(String unixTime) {
-        this.unixTime = unixTime;
+    public CsvStreamReading setTime(String time) {
+        this.time = time;
+        return this;
     }
 
-    public String getTimestamp() {
-        return timestamp;
+    public String getDelta() {
+        return delta;
     }
 
-    public void setTimestamp(String timestamp) {
-        this.timestamp = timestamp;
+    public CsvStreamReading setDelta(String delta) {
+        this.delta = delta;
+        return this;
     }
 
-    public String getTz() {
-        return tz;
+    public String getDirection() {
+        return direction;
     }
 
-    public void setTz(String tz) {
-        this.tz = tz;
+    public CsvStreamReading setDirection(String direction) {
+        this.direction = direction;
+        return this;
     }
 
-    public String getMin() {
-        return min;
+    public String getFiltered() {
+        return filtered;
     }
 
-    public void setMin(String min) {
-        this.min = min;
+    public CsvStreamReading setFiltered(String filtered) {
+        this.filtered = filtered;
+        return this;
     }
 
-    public String getReading() {
-        return reading;
+    public String getNoise() {
+        return noise;
     }
 
-    public void setReading(String reading) {
-        this.reading = reading;
+    public CsvStreamReading setNoise(String noise) {
+        this.noise = noise;
+        return this;
     }
 
-    public String getRate() {
-        return rate;
+    public String getRssi() {
+        return rssi;
     }
 
-    public void setRate(String rate) {
-        this.rate = rate;
+    public CsvStreamReading setRssi(String rssi) {
+        this.rssi = rssi;
+        return this;
     }
 
-    public String getChangeLabel() {
-        return changeLabel;
+    public String getUnfiltered() {
+        return unfiltered;
     }
 
-    public void setChangeLabel(String changeLabel) {
-        this.changeLabel = changeLabel;
+    public CsvStreamReading setUnfiltered(String unfiltered) {
+        this.unfiltered = unfiltered;
+        return this;
+    }
+
+    public String getValue_mgdl() {
+        return value_mgdl;
+    }
+
+    public CsvStreamReading setValue_mgdl(String value_mgdl) {
+        this.value_mgdl = value_mgdl;
+        return this;
+    }
+
+    public String getValue_mmol() {
+        return value_mmol;
+    }
+
+    public CsvStreamReading setValue_mmol(String value_mmol) {
+        this.value_mmol = value_mmol;
+        return this;
     }
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         CsvStreamReading that = (CsvStreamReading) o;
-        return Objects.equals(sensorId, that.sensorId) && Objects.equals(nr, that.nr) && Objects.equals(unixTime, that.unixTime)
-                && Objects.equals(timestamp, that.timestamp) && Objects.equals(tz, that.tz) && Objects.equals(min, that.min)
-                && Objects.equals(reading, that.reading) && Objects.equals(rate, that.rate) && Objects.equals(changeLabel, that.changeLabel);
+        return Objects.equals(name, that.name) && Objects.equals(tags, that.tags)
+                && Objects.equals(time, that.time) && Objects.equals(delta, that.delta)
+                && Objects.equals(direction, that.direction) && Objects.equals(filtered, that.filtered)
+                && Objects.equals(noise, that.noise) && Objects.equals(rssi, that.rssi)
+                && Objects.equals(unfiltered, that.unfiltered) && Objects.equals(value_mgdl, that.value_mgdl)
+                && Objects.equals(value_mmol, that.value_mmol);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(sensorId, nr, unixTime, timestamp, tz, min, reading, rate, changeLabel);
+        return Objects.hash(name, tags, time, delta, direction, filtered, noise, rssi, unfiltered, value_mgdl, value_mmol);
     }
 
     @Override
     public String toString() {
-        return new StringJoiner(", ", CsvStreamReading.class.getSimpleName() + "[", "]")
-                .add("sensorId='" + getSensorId() + "'")
-                .add("nr='" + getNr() + "'")
-                .add("unixTime='" + getUnixTime() + "'")
-                .add("timestamp='" + getTimestamp() + "'")
-                .add("tz='" + getTz() + "'")
-                .add("min='" + getMin() + "'")
-                .add("reading='" + getReading() + "'")
-                .add("rate='" + getRate() + "'")
-                .add("changeLabel='" + getChangeLabel() + "'")
-                .toString();
+        return "CsvStreamReading{" +
+                "name='" + name + '\'' +
+                ", tags='" + tags + '\'' +
+                ", time='" + time + '\'' +
+                ", delta='" + delta + '\'' +
+                ", direction='" + direction + '\'' +
+                ", filtered='" + filtered + '\'' +
+                ", noise='" + noise + '\'' +
+                ", rssi='" + rssi + '\'' +
+                ", unfiltered='" + unfiltered + '\'' +
+                ", value_mgdl='" + value_mgdl + '\'' +
+                ", value_mmol='" + value_mmol + '\'' +
+                '}';
     }
 }

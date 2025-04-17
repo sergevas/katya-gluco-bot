@@ -8,7 +8,7 @@ import dev.sergevas.tool.katya.gluco.bot.boundary.juggluco.JugglucoWebServerApiC
 import dev.sergevas.tool.katya.gluco.bot.boundary.telegram.KatyaGlucoBotApiClient;
 import dev.sergevas.tool.katya.gluco.bot.boundary.telegram.TelegramBotApiConfig;
 import dev.sergevas.tool.katya.gluco.bot.control.LastReadingCacheManager;
-import dev.sergevas.tool.katya.gluco.bot.entity.JugglucoStreamReading;
+import dev.sergevas.tool.katya.gluco.bot.entity.ICanReading;
 import io.quarkus.logging.Log;
 import io.quarkus.scheduler.Scheduled;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -45,7 +45,7 @@ public class SchedulerService {
     @Scheduled(every = "600s")
     public void updateReadings() {
         for (JugglucoWebServerApi jugglucoWebServerApi : jugglucoWebServerApiClient.getJugglucoWebServerApiList()) {
-            Optional<JugglucoStreamReading> jugglucoStreamReadingOpt = tryToGetLastJugglucoStreamReading(jugglucoWebServerApi);
+            Optional<ICanReading> jugglucoStreamReadingOpt = tryToGetLastJugglucoStreamReading(jugglucoWebServerApi);
             if (jugglucoStreamReadingOpt.isPresent()) {
                 var jugglucoStreamReading = jugglucoStreamReadingOpt.get();
                 sendUpdate(jugglucoStreamReading.toFormattedString());
@@ -55,8 +55,8 @@ public class SchedulerService {
         }
     }
 
-    public Optional<JugglucoStreamReading> tryToGetLastJugglucoStreamReading(JugglucoWebServerApi jugglucoWebServerApi) {
-        Optional<JugglucoStreamReading> jugglucoStreamReadingOpt = Optional.empty();
+    public Optional<ICanReading> tryToGetLastJugglucoStreamReading(JugglucoWebServerApi jugglucoWebServerApi) {
+        Optional<ICanReading> jugglucoStreamReadingOpt = Optional.empty();
         try {
             var rawData = jugglucoWebServerApi.getStream();
             Objects.requireNonNull(rawData, "Raw Data must not be null!");

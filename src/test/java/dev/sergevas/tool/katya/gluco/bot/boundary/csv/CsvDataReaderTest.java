@@ -11,29 +11,35 @@ class CsvDataReaderTest {
     @Test
     void readToCsv() {
         var rawData = """
-                3MH00Y1F110	879	1720609087	2024-07-10-13:58:07	3	13801	3.1	-1.64	FALLING
-                3MH00Y1F110	880	1720611989	2024-07-10-14:46:29	3	13849	7.2	+0.81	STABLE""";
+                name,tags,time,delta,direction,filtered,noise,rssi,unfiltered,value_mgdl,value_mmol
+                glucose,,1744664860688000000,2.159,Flat,-0,1,100,0,130,7.214927129235995
+                glucose,,1744665065087000000,-13.209,SingleDown,-0,1,100,0,121,6.715432174135041""";
+
         var csvStreamReading1 = new CsvStreamReading();
-        csvStreamReading1.setSensorId("3MH00Y1F110");
-        csvStreamReading1.setNr("879");
-        csvStreamReading1.setUnixTime("1720609087");
-        csvStreamReading1.setTimestamp("2024-07-10-13:58:07");
-        csvStreamReading1.setTz("3");
-        csvStreamReading1.setMin("13801");
-        csvStreamReading1.setReading("3.1");
-        csvStreamReading1.setRate("-1.64");
-        csvStreamReading1.setChangeLabel("FALLING");
+        csvStreamReading1.setName("glucose");
+        csvStreamReading1.setTags("");
+        csvStreamReading1.setTime("1744664860688000000");
+        csvStreamReading1.setDelta("2.159");
+        csvStreamReading1.setDirection("Flat");
+        csvStreamReading1.setFiltered("-0");
+        csvStreamReading1.setNoise("1");
+        csvStreamReading1.setRssi("100");
+        csvStreamReading1.setUnfiltered("0");
+        csvStreamReading1.setValue_mgdl("130");
+        csvStreamReading1.setValue_mmol("7.214927129235995");
 
         var csvStreamReading2 = new CsvStreamReading();
-        csvStreamReading2.setSensorId("3MH00Y1F110");
-        csvStreamReading2.setNr("880");
-        csvStreamReading2.setUnixTime("1720611989");
-        csvStreamReading2.setTimestamp("2024-07-10-14:46:29");
-        csvStreamReading2.setTz("3");
-        csvStreamReading2.setMin("13849");
-        csvStreamReading2.setReading("7.2");
-        csvStreamReading2.setRate("+0.81");
-        csvStreamReading2.setChangeLabel("STABLE");
+        csvStreamReading2.setName("glucose");
+        csvStreamReading2.setTags("");
+        csvStreamReading2.setTime("1744665065087000000");
+        csvStreamReading2.setDelta("-13.209");
+        csvStreamReading2.setDirection("SingleDown");
+        csvStreamReading2.setFiltered("-0");
+        csvStreamReading2.setNoise("1");
+        csvStreamReading2.setRssi("100");
+        csvStreamReading2.setUnfiltered("0");
+        csvStreamReading2.setValue_mgdl("121");
+        csvStreamReading2.setValue_mmol("6.715432174135041");
         var csvDataReader = new CsvDataReader();
         var expected = List.of(csvStreamReading1, csvStreamReading2);
         assertIterableEquals(expected, new CsvDataReader().readToCsv(CsvStreamReading.class, rawData));

@@ -13,7 +13,8 @@ public class CsvDataReader {
     public <T> List<T> readToCsv(Class<T> typeInfo, String rawData) {
         try (Reader reader = new StringReader(rawData)) {
             return new CsvToBeanBuilder<T>(reader)
-                    .withSeparator('\t')
+                    .withSkipLines(1)
+                    .withSeparator(',')
                     .withIgnoreQuotations(true)
                     .withType(typeInfo)
                     .build().parse();

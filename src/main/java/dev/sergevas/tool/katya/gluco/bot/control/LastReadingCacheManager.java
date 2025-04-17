@@ -1,22 +1,22 @@
 package dev.sergevas.tool.katya.gluco.bot.control;
 
-import dev.sergevas.tool.katya.gluco.bot.entity.JugglucoStreamReading;
+import dev.sergevas.tool.katya.gluco.bot.entity.ICanReading;
 import jakarta.enterprise.context.ApplicationScoped;
 
 @ApplicationScoped
 public class LastReadingCacheManager {
 
-    private JugglucoStreamReading cachedJugglucoStreamReading;
+    private ICanReading cachedICanReading;
 
-    public boolean checkUpdatesJugglucoStreamReading(JugglucoStreamReading currentJugglucoStreamReading) {
-        boolean isUpdated = !currentJugglucoStreamReading.equals(cachedJugglucoStreamReading);
+    public boolean checkUpdatesJugglucoStreamReading(ICanReading currentICanReading) {
+        boolean isUpdated = !currentICanReading.equals(cachedICanReading);
         if (isUpdated) {
-            cachedJugglucoStreamReading = currentJugglucoStreamReading;
+            cachedICanReading = currentICanReading;
         }
         return isUpdated;
     }
 
-    public JugglucoStreamReading getCachedJugglucoStreamReading() {
-        return cachedJugglucoStreamReading;
+    public ICanReading getCachedJugglucoStreamReading() {
+        return cachedICanReading;
     }
 }
