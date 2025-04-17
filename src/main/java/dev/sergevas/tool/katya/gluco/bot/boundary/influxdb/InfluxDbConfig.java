@@ -1,11 +1,11 @@
-package dev.sergevas.tool.katya.gluco.bot.boundary.juggluco;
+package dev.sergevas.tool.katya.gluco.bot.boundary.influxdb;
 
 import io.smallrye.config.ConfigMapping;
 
 import java.util.List;
 
 @ConfigMapping(prefix = "juggluco")
-public interface JugglucoConfig {
+public interface InfluxDbConfig {
 
     Webserver webserver();
 

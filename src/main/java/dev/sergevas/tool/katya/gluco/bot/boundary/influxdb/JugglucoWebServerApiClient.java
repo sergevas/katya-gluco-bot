@@ -1,4 +1,4 @@
-package dev.sergevas.tool.katya.gluco.bot.boundary.juggluco;
+package dev.sergevas.tool.katya.gluco.bot.boundary.influxdb;
 
 
 import jakarta.annotation.PostConstruct;
@@ -12,15 +12,15 @@ import java.util.List;
 public class JugglucoWebServerApiClient {
 
     private List<JugglucoWebServerApi> jugglucoWebServerApiList;
-    private final JugglucoConfig jugglucoConfig;
+    private final InfluxDbConfig influxDbConfig;
 
-    public JugglucoWebServerApiClient(JugglucoConfig jugglucoConfig) {
-        this.jugglucoConfig = jugglucoConfig;
+    public JugglucoWebServerApiClient(InfluxDbConfig influxDbConfig) {
+        this.influxDbConfig = influxDbConfig;
     }
 
     @PostConstruct
     public void init() {
-        jugglucoWebServerApiList = jugglucoConfig.webserver().urls().stream()
+        jugglucoWebServerApiList = influxDbConfig.webserver().urls().stream()
                 .map(url -> RestClientBuilder.newBuilder().baseUri(URI.create(url))
                         .build(JugglucoWebServerApi.class))
                 .toList();

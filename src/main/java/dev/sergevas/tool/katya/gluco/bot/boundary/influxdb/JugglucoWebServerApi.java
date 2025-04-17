@@ -1,4 +1,4 @@
-package dev.sergevas.tool.katya.gluco.bot.boundary.juggluco;
+package dev.sergevas.tool.katya.gluco.bot.boundary.influxdb;
 
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.GET;
