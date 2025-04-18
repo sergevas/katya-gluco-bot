@@ -2,23 +2,24 @@ package dev.sergevas.tool.katya.gluco.bot.entity;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.time.Instant;
 import java.util.Objects;
 
 public class ICanReading {
 
 
-    private final long unixTime;
+    private final Instant time;
     private final double reading; // mmol/L
     private final ChangeStatus changeStatus;
 
-    public ICanReading(long unixTime, double reading, ChangeStatus changeStatus) {
-        this.unixTime = unixTime;
+    public ICanReading(Instant time, double reading, ChangeStatus changeStatus) {
+        this.time = time;
         this.reading = reading;
         this.changeStatus = changeStatus;
     }
 
-    public long getUnixTime() {
-        return unixTime;
+    public Instant getTime() {
+        return time;
     }
 
     public double getReading() {
@@ -44,18 +45,18 @@ public class ICanReading {
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         ICanReading that = (ICanReading) o;
-        return unixTime == that.unixTime && Double.compare(reading, that.reading) == 0 && changeStatus == that.changeStatus;
+        return Double.compare(reading, that.reading) == 0 && Objects.equals(time, that.time) && changeStatus == that.changeStatus;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(unixTime, reading, changeStatus);
+        return Objects.hash(time, reading, changeStatus);
     }
 
     @Override
     public String toString() {
         return "ICanReading{" +
-                "unixTime=" + unixTime +
+                "time=" + time +
                 ", reading=" + reading +
                 ", changeStatus=" + changeStatus +
                 '}';

@@ -4,12 +4,7 @@ import io.smallrye.config.ConfigMapping;
 
 import java.util.List;
 
-@ConfigMapping(prefix = "juggluco")
+@ConfigMapping(prefix = "influxdb.server")
 public interface InfluxDbConfig {
-
-    Webserver webserver();
-
-    interface Webserver {
-        List<String> urls();
-    }
+    List<String> urls();
 }
