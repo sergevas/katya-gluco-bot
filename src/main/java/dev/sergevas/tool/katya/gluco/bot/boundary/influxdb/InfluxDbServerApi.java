@@ -10,7 +10,6 @@ import jakarta.ws.rs.core.MediaType;
 import org.eclipse.microprofile.faulttolerance.Retry;
 
 @ClientBasicAuth(username = "${influxdb.username}", password = "${influxdb.password}")
-
 public interface InfluxDbServerApi {
 
     @GET

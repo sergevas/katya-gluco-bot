@@ -7,7 +7,6 @@ import java.util.Objects;
 
 public class ICanReading {
 
-
     private final Instant time;
     private final double reading; // mmol/L
     private final ChangeStatus changeStatus;
@@ -33,7 +32,6 @@ public class ICanReading {
     public String getRounded() {
         return BigDecimal.valueOf(reading)
                 .setScale(1, RoundingMode.HALF_UP)
-                .stripTrailingZeros()
                 .toPlainString();
     }
 
@@ -45,7 +43,8 @@ public class ICanReading {
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         ICanReading that = (ICanReading) o;
-        return Double.compare(reading, that.reading) == 0 && Objects.equals(time, that.time) && changeStatus == that.changeStatus;
+        return Double.compare(reading, that.reading) == 0
+                && Objects.equals(time, that.time) && changeStatus == that.changeStatus;
     }
 
     @Override
