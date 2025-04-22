@@ -64,6 +64,9 @@ public class SchedulerService {
             var glucoseData = influxDbServerApi.getReadings(db, query);
             Objects.requireNonNull(glucoseData, "Glucose Data must not be null!");
             var currentReadings = ToICanReadingMapper.toICanReadingList(glucoseData);
+            if (currentReadings.isEmpty()) {
+                return jugglucoStreamReadingOpt;
+            }
             var lastReading = currentReadings.getLast();
             Log.debugf("Have got the last reading: %s", lastReading);
             if (lastReadingCacheManager.checkUpdatesJugglucoStreamReading(lastReading)) {

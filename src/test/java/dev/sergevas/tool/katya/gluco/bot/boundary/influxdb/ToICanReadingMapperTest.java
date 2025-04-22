@@ -1,6 +1,5 @@
-package dev.sergevas.tool.katya.gluco.bot.boundary.csv;
+package dev.sergevas.tool.katya.gluco.bot.boundary.influxdb;
 
-import dev.sergevas.tool.katya.gluco.bot.boundary.influxdb.ToICanReadingMapper;
 import dev.sergevas.tool.katya.gluco.bot.boundary.influxdb.model.GlucoseData;
 import dev.sergevas.tool.katya.gluco.bot.boundary.influxdb.model.GlucoseMeasurement;
 import dev.sergevas.tool.katya.gluco.bot.boundary.influxdb.model.Result;
@@ -134,6 +133,15 @@ class ToICanReadingMapperTest {
     @Test
     void toICanReadingList() {
         assertIterableEquals(List.of(iCanReading1, iCanReading2, iCanReading3), ToICanReadingMapper.toICanReadingList(glucoseData));
+    }
+
+    @Test
+    void givenNoSeries_thenShouldReturnEmptyICanReadingList() {
+        var result = new Result();
+        result.setStatement_id(0);
+        var glucoseData = new GlucoseData();
+        glucoseData.setResults(List.of(result));
+        assertIterableEquals(List.of(), ToICanReadingMapper.toICanReadingList(glucoseData));
     }
 
     @Test
