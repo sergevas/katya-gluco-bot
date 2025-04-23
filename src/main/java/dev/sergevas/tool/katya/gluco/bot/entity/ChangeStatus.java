@@ -13,6 +13,7 @@ public enum ChangeStatus {
     DOUBLE_UP("DoubleUp", parseToUnicode(":arrow_double_up:")),
     FORTY_FIVE_UP("FortyFiveUp", parseToUnicode(":arrow_upper_right:")),
     FORTY_FIVE_DOWN("FortyFiveDown", parseToUnicode(":arrow_lower_right:")),
+    NONE("NONE", parseToUnicode(":confused:")),
     UNDEFINED(null, parseToUnicode(":confused:"));
 
     private final String name;
