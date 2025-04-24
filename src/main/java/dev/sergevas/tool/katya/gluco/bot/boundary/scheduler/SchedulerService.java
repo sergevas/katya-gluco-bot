@@ -6,6 +6,7 @@ import dev.sergevas.tool.katya.gluco.bot.boundary.influxdb.ToICanReadingMapper;
 import dev.sergevas.tool.katya.gluco.bot.boundary.telegram.KatyaGlucoBotApiClient;
 import dev.sergevas.tool.katya.gluco.bot.boundary.telegram.TelegramBotApiConfig;
 import dev.sergevas.tool.katya.gluco.bot.control.LastReadingCacheManager;
+import dev.sergevas.tool.katya.gluco.bot.entity.ChangeStatus;
 import dev.sergevas.tool.katya.gluco.bot.entity.ICanReading;
 import io.quarkus.logging.Log;
 import io.quarkus.scheduler.Scheduled;
@@ -13,11 +14,25 @@ import jakarta.enterprise.context.ApplicationScoped;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
 
+import java.time.Instant;
+import java.util.EnumSet;
 import java.util.Objects;
 import java.util.Optional;
 
+import static dev.sergevas.tool.katya.gluco.bot.entity.ChangeStatus.DOUBLE_DOWN;
+import static dev.sergevas.tool.katya.gluco.bot.entity.ChangeStatus.DOUBLE_UP;
+import static dev.sergevas.tool.katya.gluco.bot.entity.ChangeStatus.NONE;
+import static dev.sergevas.tool.katya.gluco.bot.entity.ChangeStatus.SINGLE_DOWN;
+import static dev.sergevas.tool.katya.gluco.bot.entity.ChangeStatus.SINGLE_UP;
+import static dev.sergevas.tool.katya.gluco.bot.entity.ChangeStatus.UNDEFINED;
+
 @ApplicationScoped
 public class SchedulerService {
+
+    private static final long DEFAULT_PERIOD_SECONDS = 600;
+    private static final long ACCELERATED_PERIOD_SECONDS = 60;
+    private static final EnumSet<ChangeStatus> ACCELERATED_STATUSES = EnumSet.of(
+            SINGLE_DOWN, DOUBLE_DOWN, SINGLE_UP, DOUBLE_UP, NONE, UNDEFINED);
 
     private final KatyaGlucoBotApiClient katyaGlucoBotApiClient;
     private final InfluxDbServerApiClient influxDbServerApiClient;
@@ -26,6 +41,9 @@ public class SchedulerService {
 
     private final String db;
     private final String query;
+
+    private Instant lastExecutionTime = Instant.EPOCH;
+    private long currentPeriodSeconds = DEFAULT_PERIOD_SECONDS;
 
 
     public SchedulerService(
@@ -45,13 +63,53 @@ public class SchedulerService {
         this.query = query;
     }
 
-    @Scheduled(every = "600s")
+    /**
+     * Updates the scheduler period based on the ChangeStatus.
+     * - If ChangeStatus is SINGLE_DOWN, DOUBLE_DOWN, SINGLE_UP, DOUBLE_UP, NONE, or UNDEFINED,
+     * the period is set to 60s.
+     * - If ChangeStatus is FLAT, FORTY_FIVE_UP, or FORTY_FIVE_DOWN, the period is set to 600s.
+     *
+     * @param changeStatus The ChangeStatus to determine the period
+     */
+    private void updateSchedulerPeriod(ChangeStatus changeStatus) {
+        if (changeStatus == null) {
+            return;
+        }
+
+        long newPeriodSeconds = ACCELERATED_STATUSES.contains(changeStatus)
+                ? ACCELERATED_PERIOD_SECONDS
+                : DEFAULT_PERIOD_SECONDS;
+
+        if (newPeriodSeconds != currentPeriodSeconds) {
+            Log.infof("Changing scheduler period from %ds to %ds due to ChangeStatus: %s",
+                    currentPeriodSeconds, newPeriodSeconds, changeStatus);
+            currentPeriodSeconds = newPeriodSeconds;
+        }
+    }
+
+    @Scheduled(every = "60s")
     public void updateReadings() {
+        Instant now = Instant.now();
+        long secondsSinceLastExecution = now.getEpochSecond() - lastExecutionTime.getEpochSecond();
+
+        // Only execute if enough time has passed based on the current period
+        if (secondsSinceLastExecution < currentPeriodSeconds) {
+            Log.debugf("Skipping execution, %d seconds passed out of %d seconds period",
+                    secondsSinceLastExecution, currentPeriodSeconds);
+            return;
+        }
+
+        lastExecutionTime = now;
+        Log.infof("Executing scheduled task with period: %ds", currentPeriodSeconds);
+
         for (InfluxDbServerApi influxDbServerApi : influxDbServerApiClient.getJugglucoWebServerApiList()) {
             Optional<ICanReading> jugglucoStreamReadingOpt = tryToGetLastJugglucoStreamReading(influxDbServerApi);
             if (jugglucoStreamReadingOpt.isPresent()) {
                 var jugglucoStreamReading = jugglucoStreamReadingOpt.get();
                 sendUpdate(jugglucoStreamReading.toFormattedString());
+
+                // Update the scheduler period based on the ChangeStatus
+                updateSchedulerPeriod(jugglucoStreamReading.getChangeStatus());
                 break;
             }
             Log.warn("Will try another URL if it is available");
