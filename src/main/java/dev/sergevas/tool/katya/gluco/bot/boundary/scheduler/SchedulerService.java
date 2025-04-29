@@ -13,6 +13,7 @@ import io.quarkus.scheduler.Scheduled;
 import jakarta.enterprise.context.ApplicationScoped;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
+import org.telegram.telegrambots.meta.generics.TelegramBot;
 
 import java.time.Instant;
 import java.util.EnumSet;
@@ -38,6 +39,7 @@ public class SchedulerService {
     private final InfluxDbServerApiClient influxDbServerApiClient;
     private final LastReadingCacheManager lastReadingCacheManager;
     private final TelegramBotApiConfig telegramBotApiConfig;
+    private final TelegramBot telegramBot;
 
     private final String db;
     private final String query;
@@ -51,7 +53,7 @@ public class SchedulerService {
             KatyaGlucoBotApiClient katyaGlucoBotApiClient,
             InfluxDbServerApiClient influxDbServerApiClient,
             LastReadingCacheManager lastReadingCacheManager,
-            TelegramBotApiConfig telegramBotApiConfig,
+            TelegramBotApiConfig telegramBotApiConfig, TelegramBot telegramBot,
             @ConfigProperty(name = "influxdb.db") String db,
             @ConfigProperty(name = "influxdb.query") String query
     ) {
@@ -59,6 +61,7 @@ public class SchedulerService {
         this.katyaGlucoBotApiClient = katyaGlucoBotApiClient;
         this.lastReadingCacheManager = lastReadingCacheManager;
         this.telegramBotApiConfig = telegramBotApiConfig;
+        this.telegramBot = telegramBot;
         this.db = db;
         this.query = query;
     }

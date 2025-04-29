@@ -7,6 +7,8 @@ import java.util.List;
 @ConfigMapping(prefix = "telegram")
 public interface TelegramBotApiConfig {
 
+    String botUsername();
+
     String token();
 
     List<String> chatIds();
