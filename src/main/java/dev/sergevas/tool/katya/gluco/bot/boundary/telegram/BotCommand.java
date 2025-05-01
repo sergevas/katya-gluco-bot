@@ -1,8 +1,11 @@
 package dev.sergevas.tool.katya.gluco.bot.boundary.telegram;
 
+import java.util.Optional;
+
 public enum BotCommand {
 
-    UPDATE("/update");
+    UPDATE("/update"),
+    UNDEFINED(null);
 
     private final String command;
 
@@ -12,5 +15,9 @@ public enum BotCommand {
 
     public String getCommand() {
         return command;
+    }
+
+    public static BotCommand findByCommand(String command) {
+        return Optional.ofNullable(command).map(BotCommand::valueOf).orElse(UNDEFINED);
     }
 }

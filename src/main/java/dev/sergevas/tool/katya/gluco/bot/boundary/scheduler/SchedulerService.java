@@ -3,8 +3,8 @@ package dev.sergevas.tool.katya.gluco.bot.boundary.scheduler;
 import dev.sergevas.tool.katya.gluco.bot.boundary.influxdb.InfluxDbServerApi;
 import dev.sergevas.tool.katya.gluco.bot.boundary.influxdb.InfluxDbServerApiClient;
 import dev.sergevas.tool.katya.gluco.bot.boundary.influxdb.ToICanReadingMapper;
-import dev.sergevas.tool.katya.gluco.bot.boundary.telegram.KatyaGlucoBotApiClient;
-import dev.sergevas.tool.katya.gluco.bot.boundary.telegram.TelegramBotApiConfig;
+import dev.sergevas.tool.katya.gluco.bot.boundary.telegram.KatyaGlucoBot;
+import dev.sergevas.tool.katya.gluco.bot.boundary.telegram.TelegramBotConfig;
 import dev.sergevas.tool.katya.gluco.bot.control.LastReadingCacheManager;
 import dev.sergevas.tool.katya.gluco.bot.entity.ChangeStatus;
 import dev.sergevas.tool.katya.gluco.bot.entity.ICanReading;
@@ -12,8 +12,6 @@ import io.quarkus.logging.Log;
 import io.quarkus.scheduler.Scheduled;
 import jakarta.enterprise.context.ApplicationScoped;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
-import org.eclipse.microprofile.rest.client.inject.RestClient;
-import org.telegram.telegrambots.meta.generics.TelegramBot;
 
 import java.time.Instant;
 import java.util.EnumSet;
@@ -35,11 +33,10 @@ public class SchedulerService {
     private static final EnumSet<ChangeStatus> ACCELERATED_STATUSES = EnumSet.of(
             SINGLE_DOWN, DOUBLE_DOWN, SINGLE_UP, DOUBLE_UP, NONE, UNDEFINED);
 
-    private final KatyaGlucoBotApiClient katyaGlucoBotApiClient;
     private final InfluxDbServerApiClient influxDbServerApiClient;
     private final LastReadingCacheManager lastReadingCacheManager;
-    private final TelegramBotApiConfig telegramBotApiConfig;
-    private final TelegramBot telegramBot;
+    private final TelegramBotConfig telegramBotConfig;
+    private final KatyaGlucoBot katyaGlucoBot;
 
     private final String db;
     private final String query;
@@ -49,19 +46,17 @@ public class SchedulerService {
 
 
     public SchedulerService(
-            @RestClient
-            KatyaGlucoBotApiClient katyaGlucoBotApiClient,
             InfluxDbServerApiClient influxDbServerApiClient,
             LastReadingCacheManager lastReadingCacheManager,
-            TelegramBotApiConfig telegramBotApiConfig, TelegramBot telegramBot,
+            TelegramBotConfig telegramBotConfig,
+            KatyaGlucoBot katyaGlucoBot,
             @ConfigProperty(name = "influxdb.db") String db,
             @ConfigProperty(name = "influxdb.query") String query
     ) {
         this.influxDbServerApiClient = influxDbServerApiClient;
-        this.katyaGlucoBotApiClient = katyaGlucoBotApiClient;
         this.lastReadingCacheManager = lastReadingCacheManager;
-        this.telegramBotApiConfig = telegramBotApiConfig;
-        this.telegramBot = telegramBot;
+        this.telegramBotConfig = telegramBotConfig;
+        this.katyaGlucoBot = katyaGlucoBot;
         this.db = db;
         this.query = query;
     }
@@ -109,7 +104,7 @@ public class SchedulerService {
             Optional<ICanReading> jugglucoStreamReadingOpt = tryToGetLastJugglucoStreamReading(influxDbServerApi);
             if (jugglucoStreamReadingOpt.isPresent()) {
                 var jugglucoStreamReading = jugglucoStreamReadingOpt.get();
-                sendUpdate(jugglucoStreamReading.toFormattedString());
+                katyaGlucoBot.sendSensorReadingUpdate(jugglucoStreamReading.toFormattedString());
 
                 // Update the scheduler period based on the ChangeStatus
                 updateSchedulerPeriod(jugglucoStreamReading.getChangeStatus());
@@ -141,12 +136,12 @@ public class SchedulerService {
         return jugglucoStreamReadingOpt;
     }
 
-    private void sendUpdate(final String text) {
+    /*private void sendUpdate(final String text) {
         try {
-            telegramBotApiConfig.chatIds().forEach(chatId -> katyaGlucoBotApiClient
-                    .sendUpdate(telegramBotApiConfig.token(), chatId, text));
+            telegramBotConfig.chatIds().forEach(chatId -> katyaGlucoBotApiClient
+                    .sendUpdate(telegramBotConfig.token(), chatId, text));
         } catch (Exception e) {
             Log.error(e);
         }
-    }
+    }*/
 }
