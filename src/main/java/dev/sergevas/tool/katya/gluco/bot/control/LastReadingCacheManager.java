@@ -1,6 +1,6 @@
 package dev.sergevas.tool.katya.gluco.bot.control;
 
-import dev.sergevas.tool.katya.gluco.bot.entity.ICanReading;
+import dev.sergevas.tool.katya.gluco.bot.entity.XDripReading;
 import jakarta.enterprise.context.ApplicationScoped;
 
 import java.util.concurrent.locks.ReadWriteLock;
@@ -10,34 +10,34 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 public class LastReadingCacheManager {
 
     private final ReadWriteLock readWriteLock;
-    private ICanReading cachedICanReading;
+    private XDripReading cachedXDripReading;
 
     public LastReadingCacheManager() {
         readWriteLock = new ReentrantReadWriteLock(true);
     }
 
-    public boolean checkAndUpdateIfNew(ICanReading currentICanReading) {
-        var isNew = !currentICanReading.equals(getReading());
+    public boolean checkAndUpdateIfNew(XDripReading currentXDripReading) {
+        var isNew = !currentXDripReading.equals(getReading());
         if (isNew) {
-            updateReading(currentICanReading);
+            updateReading(currentXDripReading);
         }
         return isNew;
     }
 
-    public ICanReading getReading() {
+    public XDripReading getReading() {
         try {
             readWriteLock.readLock().lock();
-            return cachedICanReading;
+            return cachedXDripReading;
         } finally {
             readWriteLock.readLock().unlock();
         }
     }
 
-    public ICanReading updateReading(ICanReading iCanReading) {
+    public XDripReading updateReading(XDripReading XDripReading) {
         try {
             readWriteLock.writeLock().lock();
-            cachedICanReading = iCanReading;
-            return cachedICanReading;
+            cachedXDripReading = XDripReading;
+            return cachedXDripReading;
         } finally {
             readWriteLock.writeLock().unlock();
         }

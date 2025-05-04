@@ -1,10 +1,10 @@
-package dev.sergevas.tool.katya.gluco.bot.boundary.influxdb;
+package dev.sergevas.tool.katya.gluco.bot.control;
 
 import dev.sergevas.tool.katya.gluco.bot.boundary.influxdb.model.GlucoseData;
 import dev.sergevas.tool.katya.gluco.bot.boundary.influxdb.model.GlucoseMeasurement;
 import dev.sergevas.tool.katya.gluco.bot.boundary.influxdb.model.Result;
 import dev.sergevas.tool.katya.gluco.bot.boundary.influxdb.model.Series;
-import dev.sergevas.tool.katya.gluco.bot.entity.ICanReading;
+import dev.sergevas.tool.katya.gluco.bot.entity.XDripReading;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -16,12 +16,12 @@ import static dev.sergevas.tool.katya.gluco.bot.entity.ChangeStatus.SINGLE_DOWN;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertIterableEquals;
 
-class ToICanReadingMapperTest {
+class ToXDripReadingMapperTest {
 
     private GlucoseData glucoseData;
-    private ICanReading iCanReading1;
-    private ICanReading iCanReading2;
-    private ICanReading iCanReading3;
+    private XDripReading XDripReading1;
+    private XDripReading XDripReading2;
+    private XDripReading XDripReading3;
 
     /*
     {
@@ -125,28 +125,28 @@ class ToICanReadingMapperTest {
         glucoseData = new GlucoseData();
         glucoseData.setResults(List.of(result));
 
-        iCanReading1 = new ICanReading(Instant.parse("2025-04-14T21:07:40.688Z"), 7.214927129235995, FLAT);
-        iCanReading2 = new ICanReading(Instant.parse("2025-04-17T20:35:05.542Z"), 9.323905828551132, SINGLE_DOWN);
-        iCanReading3 = new ICanReading(Instant.parse("2025-04-17T20:41:05.5Z"), 9.323905828552232, FLAT);
+        XDripReading1 = new XDripReading(Instant.parse("2025-04-14T21:07:40.688Z"), 7.214927129235995, FLAT);
+        XDripReading2 = new XDripReading(Instant.parse("2025-04-17T20:35:05.542Z"), 9.323905828551132, SINGLE_DOWN);
+        XDripReading3 = new XDripReading(Instant.parse("2025-04-17T20:41:05.5Z"), 9.323905828552232, FLAT);
     }
 
     @Test
-    void toICanReadingList() {
-        assertIterableEquals(List.of(iCanReading1, iCanReading2, iCanReading3), ToICanReadingMapper.toICanReadingList(glucoseData));
+    void toXDripReadingList() {
+        assertIterableEquals(List.of(XDripReading1, XDripReading2, XDripReading3), ToXDripReadingMapper.toXDripReadingList(glucoseData));
     }
 
     @Test
-    void givenNoSeries_thenShouldReturnEmptyICanReadingList() {
+    void givenNoSeries_thenShouldReturnEmptyXDripReadingList() {
         var result = new Result();
         result.setStatement_id(0);
         var glucoseData = new GlucoseData();
         glucoseData.setResults(List.of(result));
-        assertIterableEquals(List.of(), ToICanReadingMapper.toICanReadingList(glucoseData));
+        assertIterableEquals(List.of(), ToXDripReadingMapper.toXDripReadingList(glucoseData));
     }
 
     @Test
-    void toICanReading() {
-        assertEquals(iCanReading1, ToICanReadingMapper.toICanReading(new GlucoseMeasurement(List.of("2025-04-14T21:07:40.688Z",
+    void toXDripReading() {
+        assertEquals(XDripReading1, ToXDripReadingMapper.toXDripReading(new GlucoseMeasurement(List.of("2025-04-14T21:07:40.688Z",
                 2.159,
                 "Flat",
                 0,

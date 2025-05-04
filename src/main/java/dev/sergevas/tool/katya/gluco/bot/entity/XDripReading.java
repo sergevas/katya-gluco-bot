@@ -5,13 +5,13 @@ import java.math.RoundingMode;
 import java.time.Instant;
 import java.util.Objects;
 
-public class ICanReading {
+public class XDripReading {
 
     private final Instant time;
     private final double reading; // mmol/L
     private final ChangeStatus changeStatus;
 
-    public ICanReading(Instant time, double reading, ChangeStatus changeStatus) {
+    public XDripReading(Instant time, double reading, ChangeStatus changeStatus) {
         this.time = time;
         this.reading = reading;
         this.changeStatus = changeStatus;
@@ -42,7 +42,7 @@ public class ICanReading {
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
-        ICanReading that = (ICanReading) o;
+        XDripReading that = (XDripReading) o;
         return Double.compare(reading, that.reading) == 0
                 && Objects.equals(time, that.time) && changeStatus == that.changeStatus;
     }
@@ -54,7 +54,7 @@ public class ICanReading {
 
     @Override
     public String toString() {
-        return "ICanReading{" +
+        return "XDripReading{" +
                 "time=" + time +
                 ", reading=" + reading +
                 ", changeStatus=" + changeStatus +

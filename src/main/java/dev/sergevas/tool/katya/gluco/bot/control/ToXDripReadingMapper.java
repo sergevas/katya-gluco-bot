@@ -1,19 +1,19 @@
-package dev.sergevas.tool.katya.gluco.bot.boundary.influxdb;
+package dev.sergevas.tool.katya.gluco.bot.control;
 
 import dev.sergevas.tool.katya.gluco.bot.boundary.influxdb.model.GlucoseData;
 import dev.sergevas.tool.katya.gluco.bot.boundary.influxdb.model.GlucoseMeasurement;
 import dev.sergevas.tool.katya.gluco.bot.boundary.influxdb.model.Result;
 import dev.sergevas.tool.katya.gluco.bot.entity.ChangeStatus;
-import dev.sergevas.tool.katya.gluco.bot.entity.ICanReading;
+import dev.sergevas.tool.katya.gluco.bot.entity.XDripReading;
 
 import java.util.List;
 import java.util.Objects;
 
-public class ToICanReadingMapper {
+public class ToXDripReadingMapper {
 
     public static final String SERIES_NAME = "glucose";
 
-    public static List<ICanReading> toICanReadingList(GlucoseData glucoseData) {
+    public static List<XDripReading> toXDripReadingList(GlucoseData glucoseData) {
         var results = glucoseData.getResults();
         if (Objects.isNull(results) || results.stream()
                 .map(Result::getSeries)
@@ -25,11 +25,11 @@ public class ToICanReadingMapper {
                 .filter(s -> SERIES_NAME.equals(s.getName()))
                 .flatMap(s -> s.getValues().stream())
                 .map(GlucoseMeasurement::new)
-                .map(ToICanReadingMapper::toICanReading)
+                .map(ToXDripReadingMapper::toXDripReading)
                 .toList();
     }
 
-    public static ICanReading toICanReading(GlucoseMeasurement gM) {
-        return new ICanReading(gM.getTime(), gM.getValueMmol(), ChangeStatus.fromName(gM.getDirection()));
+    public static XDripReading toXDripReading(GlucoseMeasurement gM) {
+        return new XDripReading(gM.getTime(), gM.getValueMmol(), ChangeStatus.fromName(gM.getDirection()));
     }
 }

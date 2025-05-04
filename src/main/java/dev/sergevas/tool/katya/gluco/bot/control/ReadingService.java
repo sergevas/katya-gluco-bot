@@ -1,8 +1,7 @@
 package dev.sergevas.tool.katya.gluco.bot.control;
 
 import dev.sergevas.tool.katya.gluco.bot.boundary.influxdb.InfluxDbServerApi;
-import dev.sergevas.tool.katya.gluco.bot.boundary.influxdb.ToICanReadingMapper;
-import dev.sergevas.tool.katya.gluco.bot.entity.ICanReading;
+import dev.sergevas.tool.katya.gluco.bot.entity.XDripReading;
 import io.quarkus.logging.Log;
 import jakarta.enterprise.context.ApplicationScoped;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
@@ -30,12 +29,12 @@ public class ReadingService {
         this.influxDbServerApi = influxDbServerApi;
     }
 
-    public Optional<ICanReading> getLastReading() {
-        Optional<ICanReading> jugglucoStreamReadingOpt = Optional.empty();
+    public Optional<XDripReading> getLastReading() {
+        Optional<XDripReading> jugglucoStreamReadingOpt = Optional.empty();
         try {
             var glucoseData = influxDbServerApi.getReadings(db, query);
             Objects.requireNonNull(glucoseData, "Glucose Data must not be null!");
-            var currentReadings = ToICanReadingMapper.toICanReadingList(glucoseData);
+            var currentReadings = ToXDripReadingMapper.toXDripReadingList(glucoseData);
             if (!currentReadings.isEmpty()) {
                 jugglucoStreamReadingOpt = Optional.of(currentReadings.getLast());
             }
@@ -45,13 +44,13 @@ public class ReadingService {
         return jugglucoStreamReadingOpt;
     }
 
-    public Optional<ICanReading> updateAndReturnLastReading() {
+    public Optional<XDripReading> updateAndReturnLastReading() {
         var lastReadingOpt = getLastReading();
         lastReadingOpt.ifPresent(lastReadingCacheManager::updateReading);
         return lastReadingOpt;
     }
 
-    public Optional<ICanReading> updateAndReturnLastReadingIfNew() {
+    public Optional<XDripReading> updateAndReturnLastReadingIfNew() {
         var lastReadingOpt = getLastReading();
         lastReadingOpt.ifPresent(lastReading -> {
             if (lastReadingCacheManager.checkAndUpdateIfNew(lastReading)) {
