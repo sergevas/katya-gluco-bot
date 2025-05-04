@@ -8,11 +8,13 @@ import jakarta.ws.rs.QueryParam;
 import jakarta.ws.rs.core.MediaType;
 import org.eclipse.microprofile.faulttolerance.Retry;
 import org.eclipse.microprofile.rest.client.annotation.ClientHeaderParam;
+import org.eclipse.microprofile.rest.client.inject.RegisterRestClient;
 
 import static java.util.Base64.getEncoder;
 import static org.eclipse.microprofile.config.ConfigProvider.getConfig;
 
 @ClientHeaderParam(name = "Authorization", value = "{lookupAuth}")
+@RegisterRestClient(configKey = "influxdb")
 public interface InfluxDbServerApi {
 
     @GET

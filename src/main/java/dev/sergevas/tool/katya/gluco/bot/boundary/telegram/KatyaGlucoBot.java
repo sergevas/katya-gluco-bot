@@ -1,5 +1,6 @@
 package dev.sergevas.tool.katya.gluco.bot.boundary.telegram;
 
+import dev.sergevas.tool.katya.gluco.bot.boundary.telegram.processor.BotCommandDispatchProcessor;
 import io.quarkus.logging.Log;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -10,13 +11,16 @@ import java.util.List;
 
 public class KatyaGlucoBot extends TelegramLongPollingBot {
 
-    private String botUsername;
-    private List<String> chatIds;
+    private final String botUsername;
+    private final List<String> chatIds;
+    private final BotCommandDispatchProcessor botCommandDispatchProcessor;
 
-    public KatyaGlucoBot(String token, String botUsername, List<String> chatIds) {
+    public KatyaGlucoBot(String token, String botUsername, List<String> chatIds,
+                         BotCommandDispatchProcessor botCommandDispatchProcessor) {
         super(token);
         this.botUsername = botUsername;
         this.chatIds = chatIds;
+        this.botCommandDispatchProcessor = botCommandDispatchProcessor;
     }
 
     @Override
@@ -27,7 +31,21 @@ public class KatyaGlucoBot extends TelegramLongPollingBot {
     @Override
     public void onUpdateReceived(Update update) {
         Log.debugf("Enter onUpdateReceived for %s", update);
+        if (update.hasMessage()) {
+            processMessage(update);
+        }
         Log.debug("Exit onUpdateReceived");
+    }
+
+    private void processMessage(Update update) {
+        var message = update.getMessage();
+        var user = message.getFrom();
+        var id = user.getId();
+        if (message.isCommand()) {
+            this.botCommandDispatchProcessor.process(update);
+        } else {
+            Log.debug("This is not a command");
+        }
     }
 
     public void sendSensorReadingUpdate(final String text) {

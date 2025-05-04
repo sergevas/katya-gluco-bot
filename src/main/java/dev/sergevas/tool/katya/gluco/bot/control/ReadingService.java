@@ -1,0 +1,63 @@
+package dev.sergevas.tool.katya.gluco.bot.control;
+
+import dev.sergevas.tool.katya.gluco.bot.boundary.influxdb.InfluxDbServerApi;
+import dev.sergevas.tool.katya.gluco.bot.boundary.influxdb.ToICanReadingMapper;
+import dev.sergevas.tool.katya.gluco.bot.entity.ICanReading;
+import io.quarkus.logging.Log;
+import jakarta.enterprise.context.ApplicationScoped;
+import org.eclipse.microprofile.config.inject.ConfigProperty;
+import org.eclipse.microprofile.rest.client.inject.RestClient;
+
+import java.util.Objects;
+import java.util.Optional;
+
+@ApplicationScoped
+public class ReadingService {
+
+    private final String db;
+    private final String query;
+    private final InfluxDbServerApi influxDbServerApi;
+    private final LastReadingCacheManager lastReadingCacheManager;
+
+    public ReadingService(
+            @ConfigProperty(name = "influxdb.db") String db,
+            @ConfigProperty(name = "influxdb.query") String query,
+            @RestClient InfluxDbServerApi influxDbServerApi,
+            LastReadingCacheManager lastReadingCacheManager) {
+        this.db = db;
+        this.query = query;
+        this.lastReadingCacheManager = lastReadingCacheManager;
+        this.influxDbServerApi = influxDbServerApi;
+    }
+
+    public Optional<ICanReading> getLastReading() {
+        Optional<ICanReading> jugglucoStreamReadingOpt = Optional.empty();
+        try {
+            var glucoseData = influxDbServerApi.getReadings(db, query);
+            Objects.requireNonNull(glucoseData, "Glucose Data must not be null!");
+            var currentReadings = ToICanReadingMapper.toICanReadingList(glucoseData);
+            if (!currentReadings.isEmpty()) {
+                jugglucoStreamReadingOpt = Optional.of(currentReadings.getLast());
+            }
+        } catch (Exception e) {
+            Log.warn("Unable to fetch a new reading", e);
+        }
+        return jugglucoStreamReadingOpt;
+    }
+
+    public Optional<ICanReading> updateAndReturnLastReading() {
+        var lastReadingOpt = getLastReading();
+        lastReadingOpt.ifPresent(lastReadingCacheManager::updateReading);
+        return lastReadingOpt;
+    }
+
+    public Optional<ICanReading> updateAndReturnLastReadingIfNew() {
+        var lastReadingOpt = getLastReading();
+        lastReadingOpt.ifPresent(lastReading -> {
+            if (lastReadingCacheManager.checkAndUpdateIfNew(lastReading)) {
+                Log.infof("********** Have got a new reading: %s", lastReading.toFormattedString());
+            }
+        });
+        return lastReadingOpt;
+    }
+}
