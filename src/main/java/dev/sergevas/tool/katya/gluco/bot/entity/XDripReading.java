@@ -35,10 +35,6 @@ public class XDripReading {
                 .toPlainString();
     }
 
-    public String toFormattedString() {
-        return String.format("%s %s", getRounded(), changeStatus.getMark());
-    }
-
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;

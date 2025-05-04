@@ -1,8 +1,10 @@
 package dev.sergevas.tool.katya.gluco.bot.boundary.telegram.processor;
 
 import dev.sergevas.tool.katya.gluco.bot.boundary.telegram.KatyaGlucoBot;
+import dev.sergevas.tool.katya.gluco.bot.boundary.telegram.TextMessageFormatter;
 import dev.sergevas.tool.katya.gluco.bot.control.ReadingService;
-import dev.sergevas.tool.katya.gluco.bot.entity.XDripReading;
+import dev.sergevas.tool.katya.gluco.bot.entity.TriggerEvent;
+import dev.sergevas.tool.katya.gluco.bot.entity.XDripReadingContext;
 import io.quarkus.logging.Log;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Named;
@@ -24,7 +26,8 @@ public class BotUpdateCommandProcessor implements BotCommandProcessor {
     public void process(Update update) {
         Log.debug("Enter process");
         var text = readingService.updateAndReturnLastReading()
-                .map(XDripReading::toFormattedString)
+                .map(reading -> new XDripReadingContext(reading, TriggerEvent.UPDATE))
+                .map(TextMessageFormatter::format)
                 .orElse("Нет данных");
         katyaGlucoBot.sendSensorReadingUpdate(text);
         Log.debug("Exit process");

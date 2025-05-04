@@ -54,7 +54,7 @@ public class ReadingService {
         var lastReadingOpt = getLastReading();
         lastReadingOpt.ifPresent(lastReading -> {
             if (lastReadingCacheManager.checkAndUpdateIfNew(lastReading)) {
-                Log.infof("********** Have got a new reading: %s", lastReading.toFormattedString());
+                Log.infof("********** Have got a new reading: %s", lastReading);
             }
         });
         return lastReadingOpt;

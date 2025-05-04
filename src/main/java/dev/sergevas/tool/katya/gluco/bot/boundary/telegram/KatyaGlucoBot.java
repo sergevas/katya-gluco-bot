@@ -52,6 +52,7 @@ public class KatyaGlucoBot extends TelegramLongPollingBot {
         chatIds.forEach(chatId -> {
             var sendMessage = SendMessage.builder()
                     .chatId(chatId)
+                    .parseMode("HTML")
                     .text(text)
                     .build();
             try {

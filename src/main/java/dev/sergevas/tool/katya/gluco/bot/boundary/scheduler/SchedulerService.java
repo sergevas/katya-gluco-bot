@@ -1,8 +1,11 @@
 package dev.sergevas.tool.katya.gluco.bot.boundary.scheduler;
 
 import dev.sergevas.tool.katya.gluco.bot.boundary.telegram.KatyaGlucoBot;
+import dev.sergevas.tool.katya.gluco.bot.boundary.telegram.TextMessageFormatter;
 import dev.sergevas.tool.katya.gluco.bot.control.ReadingService;
 import dev.sergevas.tool.katya.gluco.bot.entity.ChangeStatus;
+import dev.sergevas.tool.katya.gluco.bot.entity.TriggerEvent;
+import dev.sergevas.tool.katya.gluco.bot.entity.XDripReadingContext;
 import io.quarkus.logging.Log;
 import io.quarkus.scheduler.Scheduled;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -78,7 +81,8 @@ public class SchedulerService {
         var newReadingOpt = readingService.updateAndReturnLastReadingIfNew();
         if (newReadingOpt.isPresent()) {
             var newReading = newReadingOpt.get();
-            katyaGlucoBot.sendSensorReadingUpdate(newReading.toFormattedString());
+            katyaGlucoBot.sendSensorReadingUpdate(TextMessageFormatter
+                    .format(new XDripReadingContext(newReading, TriggerEvent.TIMER)));
             updateSchedulerPeriod(newReading.getChangeStatus());
         }
     }
