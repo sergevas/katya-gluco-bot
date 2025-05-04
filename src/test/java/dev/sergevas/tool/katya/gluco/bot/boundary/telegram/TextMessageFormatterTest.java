@@ -23,5 +23,8 @@ class TextMessageFormatterTest {
         assertEquals("7.0 " + EmojiParser.parseToUnicode(":arrow_down:") + " \u1D40",
                 format(new XDripReadingContext(new XDripReading(Instant.parse("2025-04-14T21:07:40.688Z"),
                         7.02, SINGLE_DOWN), TriggerEvent.TIMER)));
+        assertEquals("7.0 " + EmojiParser.parseToUnicode(":arrow_down:"),
+                format(new XDripReadingContext(new XDripReading(Instant.parse("2025-04-14T21:07:40.688Z"),
+                        7.02, SINGLE_DOWN), TriggerEvent.DEFAULT)));
     }
 }

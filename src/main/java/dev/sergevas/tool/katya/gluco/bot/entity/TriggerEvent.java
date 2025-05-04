@@ -2,7 +2,7 @@ package dev.sergevas.tool.katya.gluco.bot.entity;
 
 public enum TriggerEvent {
 
-    TIMER("\u1D40"), UPDATE("\u1D41");
+    TIMER(" \u1D40"), UPDATE(" \u1D41"), DEFAULT("");
 
     private final String mark;
 

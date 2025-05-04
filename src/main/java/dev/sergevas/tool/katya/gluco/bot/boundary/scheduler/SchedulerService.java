@@ -82,7 +82,7 @@ public class SchedulerService {
         if (newReadingOpt.isPresent()) {
             var newReading = newReadingOpt.get();
             katyaGlucoBot.sendSensorReadingUpdate(TextMessageFormatter
-                    .format(new XDripReadingContext(newReading, TriggerEvent.TIMER)));
+                    .format(new XDripReadingContext(newReading, TriggerEvent.DEFAULT)));
             updateSchedulerPeriod(newReading.getChangeStatus());
         }
     }

@@ -9,6 +9,6 @@ public class TextMessageFormatter {
         var changeStatusMark = context.reading().getChangeStatus().getMark();
         var contextTime = context.reading().getTime();
         var triggerEventMark = context.triggerEvent().getMark();
-        return String.format("%s %s %s", rounded, changeStatusMark, triggerEventMark);
+        return String.format("%s %s%s", rounded, changeStatusMark, triggerEventMark);
     }
 }
