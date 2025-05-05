@@ -27,7 +27,7 @@ public class BotUpdateCommandProcessor implements BotCommandProcessor {
         Log.debug("Enter process");
         var text = readingService.updateAndReturnLastReading()
                 .map(reading -> new XDripReadingContext(reading, TriggerEvent.UPDATE))
-                .map(TextMessageFormatter::format)
+                .map(TextMessageFormatter::formatUpdate)
                 .orElse("Нет данных");
         katyaGlucoBot.sendSensorReadingUpdate(text);
         Log.debug("Exit process");

@@ -2,13 +2,25 @@ package dev.sergevas.tool.katya.gluco.bot.boundary.telegram;
 
 import dev.sergevas.tool.katya.gluco.bot.entity.XDripReadingContext;
 
+import java.time.ZoneId;
+import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
+
 public class TextMessageFormatter {
 
+    private static final DateTimeFormatter TIME_FORMATTER = DateTimeFormatter.ofPattern("HH:mm")
+            .withZone(ZoneId.ofOffset("UTC", ZoneOffset.of("+03:00")));
+
     public static String format(XDripReadingContext context) {
-        var rounded = context.reading().getRounded();
-        var changeStatusMark = context.reading().getChangeStatus().getMark();
-        var contextTime = context.reading().getTime();
-        var triggerEventMark = context.triggerEvent().getMark();
-        return String.format("%s %s%s", rounded, changeStatusMark, triggerEventMark);
+        var reading = context.reading();
+        return String.format("%s %s", reading.getRounded(), reading.getChangeStatus().getMark());
+    }
+
+    public static String formatUpdate(XDripReadingContext context) {
+        var reading = context.reading();
+        return String.format("%s %s %s%s", reading.getRounded(),
+                reading.getChangeStatus().getMark(),
+                TIME_FORMATTER.format(reading.getTime()),
+                context.triggerEvent().getMark());
     }
 }
