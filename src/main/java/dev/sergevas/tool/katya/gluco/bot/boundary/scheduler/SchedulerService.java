@@ -5,6 +5,7 @@ import dev.sergevas.tool.katya.gluco.bot.boundary.telegram.TextMessageFormatter;
 import dev.sergevas.tool.katya.gluco.bot.control.ReadingService;
 import dev.sergevas.tool.katya.gluco.bot.entity.ChangeStatus;
 import dev.sergevas.tool.katya.gluco.bot.entity.TriggerEvent;
+import dev.sergevas.tool.katya.gluco.bot.entity.XDripReading;
 import dev.sergevas.tool.katya.gluco.bot.entity.XDripReadingContext;
 import io.quarkus.logging.Log;
 import io.quarkus.scheduler.Scheduled;
@@ -12,6 +13,7 @@ import jakarta.enterprise.context.ApplicationScoped;
 
 import java.time.Instant;
 import java.util.EnumSet;
+import java.util.Optional;
 
 import static dev.sergevas.tool.katya.gluco.bot.entity.ChangeStatus.DOUBLE_DOWN;
 import static dev.sergevas.tool.katya.gluco.bot.entity.ChangeStatus.DOUBLE_UP;
@@ -64,6 +66,24 @@ public class SchedulerService {
         }
     }
 
+    /**
+     * Checks if the scheduler period needs to be accelerated based on the last reading time.
+     * If the last reading is older than the default period, switches to an accelerated period.
+     *
+     * @param lastReadingOpt Optional containing the last reading
+     * @param currentTime    current time to compare against
+     */
+    private void accelerateSchedulerIfReadingOutdated(Optional<XDripReading> lastReadingOpt, Instant currentTime) {
+        lastReadingOpt
+                .map(XDripReading::getTime)
+                .filter(time -> time.isBefore(currentTime.minusSeconds(DEFAULT_PERIOD_SECONDS)))
+                .ifPresent(time -> {
+                    Log.infof("Forcing accelerated scheduler period due to last reading being older than %ds", DEFAULT_PERIOD_SECONDS);
+                    currentPeriodSeconds = ACCELERATED_PERIOD_SECONDS;
+                });
+    }
+
+
     @Scheduled(every = "60s")
     public void updateReadings() {
         Instant now = Instant.now();
@@ -77,13 +97,15 @@ public class SchedulerService {
         }
         lastExecutionTime = now;
         Log.infof("Executing scheduled task with period: %ds", currentPeriodSeconds);
-
-        var newReadingOpt = readingService.updateAndReturnLastReadingIfNew();
+        var lastReadingOpt = readingService.getLastReading();
+        var newReadingOpt = readingService.updateAndReturnLastReadingIfNew(lastReadingOpt);
         if (newReadingOpt.isPresent()) {
             var newReading = newReadingOpt.get();
             katyaGlucoBot.sendSensorReadingUpdate(TextMessageFormatter
                     .format(new XDripReadingContext(newReading, TriggerEvent.DEFAULT)));
             updateSchedulerPeriod(newReading.getChangeStatus());
+        } else {
+            accelerateSchedulerIfReadingOutdated(lastReadingOpt, now);
         }
     }
 }

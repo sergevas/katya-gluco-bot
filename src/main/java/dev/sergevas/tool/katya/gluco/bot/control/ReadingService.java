@@ -50,7 +50,7 @@ public class ReadingService {
         return lastReadingOpt;
     }
 
-    public Optional<XDripReading> updateAndReturnLastReadingIfNew() {
-        return getLastReading().filter(lastReadingCacheManager::checkAndUpdateIfNew);
+    public Optional<XDripReading> updateAndReturnLastReadingIfNew(Optional<XDripReading> lastReadingOpt) {
+        return lastReadingOpt.filter(lastReadingCacheManager::checkAndUpdateIfNew);
     }
 }
