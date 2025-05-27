@@ -11,15 +11,15 @@ import jakarta.inject.Named;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
 @ApplicationScoped
-@Named("update")
-public class BotUpdateCommandProcessor implements BotCommandProcessor {
+@Named("units")
+public class BotUnitsCommandProcessor implements BotCommandProcessor {
 
     private final KatyaGlucoBot katyaGlucoBot;
     private final ReadingService readingService;
     private final TelegramBotConfig telegramBotConfig;
 
-    public BotUpdateCommandProcessor(KatyaGlucoBot katyaGlucoBot, ReadingService readingService,
-                                     TelegramBotConfig telegramBotConfig) {
+    public BotUnitsCommandProcessor(KatyaGlucoBot katyaGlucoBot, ReadingService readingService,
+                                    TelegramBotConfig telegramBotConfig) {
         this.katyaGlucoBot = katyaGlucoBot;
         this.readingService = readingService;
         this.telegramBotConfig = telegramBotConfig;

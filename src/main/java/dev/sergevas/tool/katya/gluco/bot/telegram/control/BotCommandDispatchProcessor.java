@@ -13,6 +13,7 @@ public class BotCommandDispatchProcessor implements BotCommandProcessor {
     public enum BotCommand {
 
         UPDATE("/update"),
+        UNITS("/units"),
         UNKNOWN(null);
 
         private final String command;
@@ -34,11 +35,14 @@ public class BotCommandDispatchProcessor implements BotCommandProcessor {
     }
 
     private final BotCommandProcessor botUpdateCommandProcessor;
+    private final BotCommandProcessor botUnitsCommandProcessor;
     private final BotCommandProcessor botUnknownCommandProcessor;
 
     public BotCommandDispatchProcessor(@Named("update") BotCommandProcessor botUpdateCommandProcessor,
+                                       @Named("units") BotCommandProcessor botUnitsCommandProcessor,
                                        @Named("unknown") BotCommandProcessor botUnknownCommandProcessor) {
         this.botUpdateCommandProcessor = botUpdateCommandProcessor;
+        this.botUnitsCommandProcessor = botUnitsCommandProcessor;
         this.botUnknownCommandProcessor = botUnknownCommandProcessor;
     }
 
@@ -53,6 +57,7 @@ public class BotCommandDispatchProcessor implements BotCommandProcessor {
     private BotCommandProcessor findBotCommandProcessor(BotCommand botCommand) {
         return switch (botCommand) {
             case UPDATE -> botUpdateCommandProcessor;
+            case UNITS -> botUnitsCommandProcessor;
             default -> botUnknownCommandProcessor;
         };
     }
