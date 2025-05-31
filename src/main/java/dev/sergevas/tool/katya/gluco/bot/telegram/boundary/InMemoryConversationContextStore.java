@@ -17,7 +17,7 @@ import static java.util.Objects.isNull;
 @ApplicationScoped
 public class InMemoryConversationContextStore implements ConversationContextStore {
 
-    private Map<String, List<ConversationContext>> store;
+    private Map<Long, List<ConversationContext>> store;
 
     @PostConstruct
     public void init() {
@@ -25,7 +25,7 @@ public class InMemoryConversationContextStore implements ConversationContextStor
     }
 
     @Override
-    public Optional<ConversationContext> getLast(String chatId) {
+    public Optional<ConversationContext> getLast(Long chatId) {
         return Optional.ofNullable(store.get(chatId))
                 .stream()
                 .flatMap(Collection::stream)
@@ -34,7 +34,7 @@ public class InMemoryConversationContextStore implements ConversationContextStor
     }
 
     @Override
-    public ConversationContext put(String chatId, ConversationContext context) {
+    public ConversationContext put(Long chatId, ConversationContext context) {
         var storedContexts = store.get(chatId);
         if (isNull(storedContexts)) {
             storedContexts = new ArrayList<>();
@@ -45,7 +45,7 @@ public class InMemoryConversationContextStore implements ConversationContextStor
     }
 
     @Override
-    public Optional<ConversationContext> removeLast(String chatId) {
+    public Optional<ConversationContext> removeLast(Long chatId) {
         var lastContext = this.getLast(chatId);
         lastContext.ifPresent(context -> context.setDeleted(true));
         return lastContext;

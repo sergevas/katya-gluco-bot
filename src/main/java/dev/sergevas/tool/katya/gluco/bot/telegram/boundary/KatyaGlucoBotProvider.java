@@ -1,7 +1,7 @@
 package dev.sergevas.tool.katya.gluco.bot.telegram.boundary;
 
 import dev.sergevas.tool.katya.gluco.bot.telegram.TelegramBotConfig;
-import dev.sergevas.tool.katya.gluco.bot.telegram.control.BotUpdateDispatchProcessor;
+import dev.sergevas.tool.katya.gluco.bot.telegram.control.updprocessor.BotUpdateDispatchProcessor;
 import jakarta.enterprise.inject.Produces;
 import jakarta.inject.Singleton;
 import org.telegram.telegrambots.meta.TelegramBotsApi;

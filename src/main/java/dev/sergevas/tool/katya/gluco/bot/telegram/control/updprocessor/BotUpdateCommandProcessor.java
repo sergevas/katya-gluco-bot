@@ -1,7 +1,8 @@
-package dev.sergevas.tool.katya.gluco.bot.telegram.control;
+package dev.sergevas.tool.katya.gluco.bot.telegram.control.updprocessor;
 
 import dev.sergevas.tool.katya.gluco.bot.telegram.TelegramBotConfig;
 import dev.sergevas.tool.katya.gluco.bot.telegram.boundary.KatyaGlucoBot;
+import dev.sergevas.tool.katya.gluco.bot.telegram.control.TextMessageFormatter;
 import dev.sergevas.tool.katya.gluco.bot.telegram.entity.TriggerEvent;
 import dev.sergevas.tool.katya.gluco.bot.telegram.entity.XDripReadingContext;
 import dev.sergevas.tool.katya.gluco.bot.xdrip.control.ReadingService;

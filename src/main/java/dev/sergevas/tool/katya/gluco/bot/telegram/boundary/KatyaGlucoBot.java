@@ -1,6 +1,6 @@
 package dev.sergevas.tool.katya.gluco.bot.telegram.boundary;
 
-import dev.sergevas.tool.katya.gluco.bot.telegram.control.BotUpdateDispatchProcessor;
+import dev.sergevas.tool.katya.gluco.bot.telegram.control.updprocessor.BotUpdateDispatchProcessor;
 import io.quarkus.logging.Log;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;

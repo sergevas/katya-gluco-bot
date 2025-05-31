@@ -24,4 +24,8 @@ public enum BotCommand {
                 .findAny()
                 .orElse(UNKNOWN);
     }
+
+    public static boolean isUnitsCommand(String command) {
+        return UNITS.equals(findByCommand(command));
+    }
 }

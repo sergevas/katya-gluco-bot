@@ -1,4 +1,4 @@
-package dev.sergevas.tool.katya.gluco.bot.telegram.control;
+package dev.sergevas.tool.katya.gluco.bot.telegram.control.updprocessor;
 
 import dev.sergevas.tool.katya.gluco.bot.telegram.boundary.ConversationContextStore;
 import dev.sergevas.tool.katya.gluco.bot.telegram.entity.BotCommand;
@@ -27,25 +27,25 @@ class BotUpdateValidationRulesTest {
 
     @Test
     void givenPendingCommand_whenCommandNamesEqual_thenShouldReturnTrue() {
-        when(conversationContextStore.getLast(eq("012345678")))
-                .thenReturn(Optional.of(new ConversationContext("012345678",
-                        "012345",
+        when(conversationContextStore.getLast(eq(123456789L)))
+                .thenReturn(Optional.of(new ConversationContext(123456789L,
+                        12345,
                         BotCommand.UNITS.getCommand(),
                         Boolean.TRUE,
                         OffsetDateTime.now(),
                         Boolean.FALSE)));
-        assertTrue(botUpdateValidationRules.isCommandPending("012345678", "/units"));
+        assertTrue(botUpdateValidationRules.isCommandPending(123456789L));
     }
 
     @Test
     void givenPendingCommand_whenCommandNamesEqualButIsDeleted_thenShouldReturnFalse() {
-        when(conversationContextStore.getLast(eq("012345678")))
-                .thenReturn(Optional.of(new ConversationContext("012345678",
-                        "012345",
+        when(conversationContextStore.getLast(eq(12345679L)))
+                .thenReturn(Optional.of(new ConversationContext(123456789L,
+                        12345,
                         BotCommand.UNITS.getCommand(),
                         Boolean.TRUE,
                         OffsetDateTime.now(),
                         Boolean.TRUE)));
-        assertFalse(botUpdateValidationRules.isCommandPending("012345678", "/units"));
+        assertFalse(botUpdateValidationRules.isCommandPending(123456789L));
     }
 }

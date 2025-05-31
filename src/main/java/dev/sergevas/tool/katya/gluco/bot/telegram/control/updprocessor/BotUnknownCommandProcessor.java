@@ -1,4 +1,4 @@
-package dev.sergevas.tool.katya.gluco.bot.telegram.control;
+package dev.sergevas.tool.katya.gluco.bot.telegram.control.updprocessor;
 
 import io.quarkus.logging.Log;
 import jakarta.enterprise.context.ApplicationScoped;

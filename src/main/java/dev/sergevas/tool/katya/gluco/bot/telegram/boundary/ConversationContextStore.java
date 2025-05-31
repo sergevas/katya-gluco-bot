@@ -6,9 +6,9 @@ import java.util.Optional;
 
 public interface ConversationContextStore {
 
-    Optional<ConversationContext> getLast(String chatId);
+    Optional<ConversationContext> getLast(Long chatId);
 
-    ConversationContext put(String chatId, ConversationContext context);
+    ConversationContext put(Long chatId, ConversationContext context);
 
-    Optional<ConversationContext> removeLast(String chatId);
+    Optional<ConversationContext> removeLast(Long chatId);
 }

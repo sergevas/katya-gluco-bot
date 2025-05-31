@@ -1,4 +1,4 @@
-package dev.sergevas.tool.katya.gluco.bot.telegram.control;
+package dev.sergevas.tool.katya.gluco.bot.telegram.control.updprocessor;
 
 import dev.sergevas.tool.katya.gluco.bot.telegram.boundary.ConversationContextStore;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -12,10 +12,9 @@ public class BotUpdateValidationRules {
         this.conversationContextStore = conversationContextStore;
     }
 
-    public boolean isCommandPending(final String chatId, final String command) {
+    public boolean isCommandPending(final Long chatId) {
         return conversationContextStore.getLast(chatId)
                 .filter(context -> !context.isDeleted()
-                        && command.equals(context.getCommandName())
                         && context.isPending()).isPresent();
     }
 }

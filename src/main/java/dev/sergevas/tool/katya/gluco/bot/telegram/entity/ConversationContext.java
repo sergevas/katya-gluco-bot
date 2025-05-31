@@ -5,14 +5,14 @@ import java.util.Objects;
 
 public class ConversationContext {
 
-    private String chatId;
-    private String messageId;
+    private Long chatId;
+    private Integer messageId;
     private String commandName;
     private Boolean isPending;
     private OffsetDateTime created;
     private Boolean isDeleted;
 
-    public ConversationContext(String chatId, String messageId, String commandName, Boolean isPending,
+    public ConversationContext(Long chatId, Integer messageId, String commandName, Boolean isPending,
                                OffsetDateTime created, Boolean isDeleted) {
         this.chatId = chatId;
         this.messageId = messageId;
@@ -22,20 +22,20 @@ public class ConversationContext {
         this.isDeleted = isDeleted;
     }
 
-    public String getChatId() {
+    public Long getChatId() {
         return chatId;
     }
 
-    public ConversationContext setChatId(String chatId) {
+    public ConversationContext setChatId(Long chatId) {
         this.chatId = chatId;
         return this;
     }
 
-    public String getMessageId() {
+    public Integer getMessageId() {
         return messageId;
     }
 
-    public ConversationContext setMessageId(String messageId) {
+    public ConversationContext setMessageId(Integer messageId) {
         this.messageId = messageId;
         return this;
     }
@@ -88,5 +88,17 @@ public class ConversationContext {
     @Override
     public int hashCode() {
         return Objects.hash(chatId, messageId, commandName, isPending, created, isDeleted);
+    }
+
+    @Override
+    public String toString() {
+        return "ConversationContext{" +
+                "chatId=" + chatId +
+                ", messageId='" + messageId + '\'' +
+                ", commandName='" + commandName + '\'' +
+                ", isPending=" + isPending +
+                ", created=" + created +
+                ", isDeleted=" + isDeleted +
+                '}';
     }
 }

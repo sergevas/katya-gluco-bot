@@ -2,11 +2,10 @@ package dev.sergevas.tool.katya.gluco.bot.recommendation.boundary;
 
 import dev.sergevas.tool.katya.gluco.bot.recommendation.control.RecommendationProvider;
 import dev.sergevas.tool.katya.gluco.bot.recommendation.entity.UnitRecommendation;
-import io.quarkus.arc.profile.UnlessBuildProfile;
 import jakarta.enterprise.context.ApplicationScoped;
 
 @ApplicationScoped
-@UnlessBuildProfile("prod")
+//@UnlessBuildProfile("prod")
 public class RecommendationMockProvider implements RecommendationProvider {
 
     private final RecommendationMessagesConfig recommendationMessagesConfig;
