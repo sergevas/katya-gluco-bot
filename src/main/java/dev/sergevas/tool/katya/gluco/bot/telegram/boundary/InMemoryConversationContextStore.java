@@ -1,6 +1,7 @@
 package dev.sergevas.tool.katya.gluco.bot.telegram.boundary;
 
 import dev.sergevas.tool.katya.gluco.bot.telegram.entity.ConversationContext;
+import io.quarkus.scheduler.Scheduled;
 import jakarta.annotation.PostConstruct;
 import jakarta.enterprise.context.ApplicationScoped;
 
@@ -49,5 +50,10 @@ public class InMemoryConversationContextStore implements ConversationContextStor
         var lastContext = this.getLast(chatId);
         lastContext.ifPresent(context -> context.setDeleted(true));
         return lastContext;
+    }
+
+    @Scheduled(every = "24h")
+    public void cleanup() {
+        store.values().forEach(contexts -> contexts.removeIf(ConversationContext::isDeleted));
     }
 }
