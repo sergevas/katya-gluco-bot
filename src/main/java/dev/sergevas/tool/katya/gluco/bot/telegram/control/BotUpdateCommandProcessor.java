@@ -12,7 +12,7 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 
 @ApplicationScoped
 @Named("update")
-public class BotUpdateCommandProcessor implements BotCommandProcessor {
+public class BotUpdateCommandProcessor implements BotUpdateProcessor {
 
     private final KatyaGlucoBot katyaGlucoBot;
     private final ReadingService readingService;
@@ -32,7 +32,7 @@ public class BotUpdateCommandProcessor implements BotCommandProcessor {
                 .map(reading -> new XDripReadingContext(reading, TriggerEvent.UPDATE))
                 .map(TextMessageFormatter::formatUpdate)
                 .orElse(telegramBotConfig.messages().get("no-data"));
-        katyaGlucoBot.sendSensorReadingUpdate(text);
+        katyaGlucoBot.sendSensorReadingUpdateToAll(text);
         Log.debug("Exit process");
 
     }

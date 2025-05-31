@@ -12,6 +12,8 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
+import static java.util.Objects.isNull;
+
 @ApplicationScoped
 public class InMemoryConversationContextStore implements ConversationContextStore {
 
@@ -27,13 +29,18 @@ public class InMemoryConversationContextStore implements ConversationContextStor
         return Optional.ofNullable(store.get(chatId))
                 .stream()
                 .flatMap(Collection::stream)
-                .filter(context -> !context.getDeleted())
+                .filter(context -> !context.isDeleted())
                 .max(Comparator.comparing(ConversationContext::getCreated));
     }
 
     @Override
     public ConversationContext put(String chatId, ConversationContext context) {
-        store.getOrDefault(chatId, new ArrayList<>()).add(context);
+        var storedContexts = store.get(chatId);
+        if (isNull(storedContexts)) {
+            storedContexts = new ArrayList<>();
+            store.put(chatId, storedContexts);
+        }
+        storedContexts.add(context);
         return context;
     }
 

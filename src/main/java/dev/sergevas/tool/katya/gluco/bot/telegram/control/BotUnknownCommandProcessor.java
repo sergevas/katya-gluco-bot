@@ -7,7 +7,7 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 
 @ApplicationScoped
 @Named("unknown")
-public class BotUnknownCommandProcessor implements BotCommandProcessor {
+public class BotUnknownCommandProcessor implements BotUpdateProcessor {
 
     @Override
     public void process(Update update) {

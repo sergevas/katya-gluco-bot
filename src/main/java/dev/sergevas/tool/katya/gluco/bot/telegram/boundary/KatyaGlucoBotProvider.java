@@ -1,7 +1,7 @@
 package dev.sergevas.tool.katya.gluco.bot.telegram.boundary;
 
 import dev.sergevas.tool.katya.gluco.bot.telegram.TelegramBotConfig;
-import dev.sergevas.tool.katya.gluco.bot.telegram.control.BotCommandDispatchProcessor;
+import dev.sergevas.tool.katya.gluco.bot.telegram.control.BotUpdateDispatchProcessor;
 import jakarta.enterprise.inject.Produces;
 import jakarta.inject.Singleton;
 import org.telegram.telegrambots.meta.TelegramBotsApi;
@@ -11,10 +11,10 @@ import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
 public class KatyaGlucoBotProvider {
 
     private final TelegramBotConfig telegramBotConfig;
-    private final BotCommandDispatchProcessor botCommandDispatchProcessor;
+    private final BotUpdateDispatchProcessor botCommandDispatchProcessor;
 
     public KatyaGlucoBotProvider(TelegramBotConfig telegramBotConfig,
-                                 BotCommandDispatchProcessor botCommandDispatchProcessor) {
+                                 BotUpdateDispatchProcessor botCommandDispatchProcessor) {
         this.telegramBotConfig = telegramBotConfig;
         this.botCommandDispatchProcessor = botCommandDispatchProcessor;
     }

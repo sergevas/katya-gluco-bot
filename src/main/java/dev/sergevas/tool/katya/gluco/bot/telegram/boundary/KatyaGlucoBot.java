@@ -1,6 +1,6 @@
 package dev.sergevas.tool.katya.gluco.bot.telegram.boundary;
 
-import dev.sergevas.tool.katya.gluco.bot.telegram.control.BotCommandDispatchProcessor;
+import dev.sergevas.tool.katya.gluco.bot.telegram.control.BotUpdateDispatchProcessor;
 import io.quarkus.logging.Log;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -13,10 +13,10 @@ public class KatyaGlucoBot extends TelegramLongPollingBot {
 
     private final String botUsername;
     private final List<String> chatIds;
-    private final BotCommandDispatchProcessor botCommandDispatchProcessor;
+    private final BotUpdateDispatchProcessor botCommandDispatchProcessor;
 
     public KatyaGlucoBot(String token, String botUsername, List<String> chatIds,
-                         BotCommandDispatchProcessor botCommandDispatchProcessor) {
+                         BotUpdateDispatchProcessor botCommandDispatchProcessor) {
         super(token);
         this.botUsername = botUsername;
         this.chatIds = chatIds;
@@ -38,28 +38,26 @@ public class KatyaGlucoBot extends TelegramLongPollingBot {
     }
 
     private void processMessage(Update update) {
-        var message = update.getMessage();
-        var user = message.getFrom();
-        var id = user.getId();
-        if (message.isCommand()) {
-            this.botCommandDispatchProcessor.process(update);
-        } else {
-            Log.debug("This is not a command");
-        }
+        this.botCommandDispatchProcessor.process(update);
     }
 
-    public void sendSensorReadingUpdate(final String text) {
+    public void sendSensorReadingUpdateToAll(final String text) {
         chatIds.forEach(chatId -> {
-            var sendMessage = SendMessage.builder()
-                    .chatId(chatId)
-                    .parseMode("HTML")
-                    .text(text)
-                    .build();
-            try {
-                execute(sendMessage);
-            } catch (TelegramApiException e) {
-                Log.error(e);
-            }
+            sendMessageToChat(chatId, text);
         });
+    }
+
+    public void sendMessageToChat(final String chatId, final String text) {
+        var sendMessage = SendMessage.builder()
+                .chatId(chatId)
+                .parseMode("HTML")
+                .text(text)
+                .build();
+        try {
+            execute(sendMessage);
+        } catch (TelegramApiException e) {
+            Log.error(e);
+        }
+
     }
 }

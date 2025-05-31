@@ -1,7 +1,7 @@
-package dev.sergevas.tool.katya.gluco.bot.recommend.boundary;
+package dev.sergevas.tool.katya.gluco.bot.recommendation.boundary;
 
-import dev.sergevas.tool.katya.gluco.bot.recommend.control.RecommendationProvider;
-import dev.sergevas.tool.katya.gluco.bot.recommend.entity.UnitRecommendation;
+import dev.sergevas.tool.katya.gluco.bot.recommendation.control.RecommendationProvider;
+import dev.sergevas.tool.katya.gluco.bot.recommendation.entity.UnitRecommendation;
 import io.quarkus.arc.profile.UnlessBuildProfile;
 import jakarta.enterprise.context.ApplicationScoped;
 

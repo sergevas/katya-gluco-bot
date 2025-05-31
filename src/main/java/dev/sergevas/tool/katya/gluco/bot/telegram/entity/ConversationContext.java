@@ -7,17 +7,17 @@ public class ConversationContext {
 
     private String chatId;
     private String messageId;
-    private String messageText;
-    private Boolean isCommand;
+    private String commandName;
+    private Boolean isPending;
     private OffsetDateTime created;
     private Boolean isDeleted;
 
-    public ConversationContext(String chatId, String messageId, String messageText, Boolean isCommand,
+    public ConversationContext(String chatId, String messageId, String commandName, Boolean isPending,
                                OffsetDateTime created, Boolean isDeleted) {
         this.chatId = chatId;
         this.messageId = messageId;
-        this.messageText = messageText;
-        this.isCommand = isCommand;
+        this.commandName = commandName;
+        this.isPending = isPending;
         this.created = created;
         this.isDeleted = isDeleted;
     }
@@ -40,21 +40,21 @@ public class ConversationContext {
         return this;
     }
 
-    public String getMessageText() {
-        return messageText;
+    public String getCommandName() {
+        return commandName;
     }
 
-    public ConversationContext setMessageText(String messageText) {
-        this.messageText = messageText;
+    public ConversationContext setCommandName(String commandName) {
+        this.commandName = commandName;
         return this;
     }
 
-    public Boolean getCommand() {
-        return isCommand;
+    public Boolean isPending() {
+        return isPending;
     }
 
-    public ConversationContext setCommand(Boolean command) {
-        isCommand = command;
+    public ConversationContext setPending(Boolean pending) {
+        isPending = pending;
         return this;
     }
 
@@ -67,7 +67,7 @@ public class ConversationContext {
         return this;
     }
 
-    public Boolean getDeleted() {
+    public Boolean isDeleted() {
         return isDeleted;
     }
 
@@ -81,25 +81,12 @@ public class ConversationContext {
         if (o == null || getClass() != o.getClass()) return false;
         ConversationContext that = (ConversationContext) o;
         return Objects.equals(chatId, that.chatId) && Objects.equals(messageId, that.messageId)
-                && Objects.equals(messageText, that.messageText)
-                && Objects.equals(isCommand, that.isCommand) && Objects.equals(created, that.created)
-                && Objects.equals(isDeleted, that.isDeleted);
+                && Objects.equals(commandName, that.commandName) && Objects.equals(isPending, that.isPending)
+                && Objects.equals(created, that.created) && Objects.equals(isDeleted, that.isDeleted);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(chatId, messageId, messageText, isCommand, created, isDeleted);
-    }
-
-    @Override
-    public String toString() {
-        return "ConversationContext{" +
-                "chatId='" + chatId + '\'' +
-                ", messageId='" + messageId + '\'' +
-                ", messageText='" + messageText + '\'' +
-                ", isCommand=" + isCommand +
-                ", created=" + created +
-                ", isDeleted=" + isDeleted +
-                '}';
+        return Objects.hash(chatId, messageId, commandName, isPending, created, isDeleted);
     }
 }

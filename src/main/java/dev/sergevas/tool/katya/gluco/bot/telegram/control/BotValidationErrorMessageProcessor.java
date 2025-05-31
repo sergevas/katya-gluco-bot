@@ -1,6 +1,6 @@
 package dev.sergevas.tool.katya.gluco.bot.telegram.control;
 
-import dev.sergevas.tool.katya.gluco.bot.recommendation.boundary.RecommendationMessagesConfig;
+import dev.sergevas.tool.katya.gluco.bot.telegram.TelegramBotConfig;
 import dev.sergevas.tool.katya.gluco.bot.telegram.boundary.ConversationContextStore;
 import dev.sergevas.tool.katya.gluco.bot.telegram.boundary.KatyaGlucoBot;
 import io.quarkus.logging.Log;
@@ -9,28 +9,31 @@ import jakarta.inject.Named;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
 @ApplicationScoped
-@Named("units")
-public class BotUnitsCommandProcessor implements BotUpdateProcessor {
+@Named("messageValidationError")
+public class BotValidationErrorMessageProcessor implements BotUpdateProcessor {
 
     private final KatyaGlucoBot katyaGlucoBot;
-    private final RecommendationMessagesConfig recommendationMessagesConfig;
+    private final TelegramBotConfig telegramBotConfig;
     private final ConversationContextStore conversationContextStore;
 
-    public BotUnitsCommandProcessor(
+    public BotValidationErrorMessageProcessor(
             KatyaGlucoBot katyaGlucoBot,
-            RecommendationMessagesConfig recommendationMessagesConfig,
+            TelegramBotConfig telegramBotConfig,
             ConversationContextStore conversationContextStore) {
         this.katyaGlucoBot = katyaGlucoBot;
-        this.recommendationMessagesConfig = recommendationMessagesConfig;
+        this.telegramBotConfig = telegramBotConfig;
         this.conversationContextStore = conversationContextStore;
     }
 
     @Override
     public void process(Update update) {
         Log.debug("Enter process");
-        var text = recommendationMessagesConfig.messages().get("prompt");
-        katyaGlucoBot.sendSensorReadingUpdateToAll(text);
+        var message = update.getMessage();
+        var messageText = message.getText();
+        var messageUnableToProcess = String.format("%s: '%s'", telegramBotConfig.messages().get("message-unable-to-process"), messageText);
+        var chatId = String.valueOf(message.getFrom().getId());
+        katyaGlucoBot.sendMessageToChat(chatId, messageUnableToProcess);
+        conversationContextStore.removeLast(chatId);
         Log.debug("Exit process");
-
     }
 }

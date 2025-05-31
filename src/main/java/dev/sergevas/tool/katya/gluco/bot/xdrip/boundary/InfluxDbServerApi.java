@@ -14,7 +14,7 @@ import static java.util.Base64.getEncoder;
 import static org.eclipse.microprofile.config.ConfigProvider.getConfig;
 
 @ClientHeaderParam(name = "Authorization", value = "{lookupAuth}")
-@RegisterRestClient(configKey = "xdrip")
+@RegisterRestClient(configKey = "influxdb")
 public interface InfluxDbServerApi {
 
     @GET
