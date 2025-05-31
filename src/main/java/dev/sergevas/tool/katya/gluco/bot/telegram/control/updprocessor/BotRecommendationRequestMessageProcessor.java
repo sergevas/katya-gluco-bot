@@ -21,7 +21,7 @@ public class BotRecommendationRequestMessageProcessor implements BotUpdateProces
     private final ConversationContextStore conversationContextStore;
 
     public BotRecommendationRequestMessageProcessor(KatyaGlucoBot katyaGlucoBot,
-                                                    @Named("openai") RecommendationProvider recommendationProvider,
+                                                    RecommendationProvider recommendationProvider,
                                                     RecommendationMessagesConfig recommendationMessagesConfig,
                                                     ConversationContextStore conversationContextStore) {
         this.katyaGlucoBot = katyaGlucoBot;
