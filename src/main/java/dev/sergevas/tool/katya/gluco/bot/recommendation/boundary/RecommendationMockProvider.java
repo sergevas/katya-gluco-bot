@@ -1,11 +1,13 @@
 package dev.sergevas.tool.katya.gluco.bot.recommendation.boundary;
 
+import dev.sergevas.tool.katya.gluco.bot.recommendation.RecommendationMessagesConfig;
 import dev.sergevas.tool.katya.gluco.bot.recommendation.control.RecommendationProvider;
-import dev.sergevas.tool.katya.gluco.bot.recommendation.entity.UnitRecommendation;
+import dev.sergevas.tool.katya.gluco.bot.recommendation.entity.Recommendation;
+import io.quarkus.arc.profile.IfBuildProfile;
 import jakarta.enterprise.context.ApplicationScoped;
 
 @ApplicationScoped
-//@UnlessBuildProfile("prod")
+@IfBuildProfile("test")
 public class RecommendationMockProvider implements RecommendationProvider {
 
     private final RecommendationMessagesConfig recommendationMessagesConfig;
@@ -15,8 +17,8 @@ public class RecommendationMockProvider implements RecommendationProvider {
     }
 
     @Override
-    public UnitRecommendation provide(String mealInfo) {
-        return new UnitRecommendation(String.format(recommendationMessagesConfig.messages().get("mock-message"), mealInfo),
+    public Recommendation provide(String mealInfo) {
+        return new Recommendation(String.format(recommendationMessagesConfig.messages().get("mock-message"), mealInfo),
                 recommendationMessagesConfig.messages().get("mock-additional-info"));
     }
 }

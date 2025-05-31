@@ -1,6 +1,6 @@
 package dev.sergevas.tool.katya.gluco.bot.telegram.control.updprocessor;
 
-import dev.sergevas.tool.katya.gluco.bot.recommendation.boundary.RecommendationMessagesConfig;
+import dev.sergevas.tool.katya.gluco.bot.recommendation.RecommendationMessagesConfig;
 import dev.sergevas.tool.katya.gluco.bot.telegram.boundary.ConversationContextStore;
 import dev.sergevas.tool.katya.gluco.bot.telegram.boundary.KatyaGlucoBot;
 import dev.sergevas.tool.katya.gluco.bot.telegram.entity.BotCommand;

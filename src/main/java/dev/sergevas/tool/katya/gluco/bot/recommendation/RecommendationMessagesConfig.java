@@ -1,4 +1,4 @@
-package dev.sergevas.tool.katya.gluco.bot.recommendation.boundary;
+package dev.sergevas.tool.katya.gluco.bot.recommendation;
 
 import io.smallrye.config.ConfigMapping;
 

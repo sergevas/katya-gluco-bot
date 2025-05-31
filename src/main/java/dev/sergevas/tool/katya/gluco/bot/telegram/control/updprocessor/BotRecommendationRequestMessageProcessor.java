@@ -1,6 +1,6 @@
 package dev.sergevas.tool.katya.gluco.bot.telegram.control.updprocessor;
 
-import dev.sergevas.tool.katya.gluco.bot.recommendation.boundary.RecommendationMessagesConfig;
+import dev.sergevas.tool.katya.gluco.bot.recommendation.RecommendationMessagesConfig;
 import dev.sergevas.tool.katya.gluco.bot.recommendation.control.RecommendationProvider;
 import dev.sergevas.tool.katya.gluco.bot.telegram.boundary.ConversationContextStore;
 import dev.sergevas.tool.katya.gluco.bot.telegram.boundary.KatyaGlucoBot;
@@ -21,7 +21,7 @@ public class BotRecommendationRequestMessageProcessor implements BotUpdateProces
     private final ConversationContextStore conversationContextStore;
 
     public BotRecommendationRequestMessageProcessor(KatyaGlucoBot katyaGlucoBot,
-                                                    RecommendationProvider recommendationProvider,
+                                                    @Named("openai") RecommendationProvider recommendationProvider,
                                                     RecommendationMessagesConfig recommendationMessagesConfig,
                                                     ConversationContextStore conversationContextStore) {
         this.katyaGlucoBot = katyaGlucoBot;

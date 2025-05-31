@@ -30,7 +30,7 @@ public class BotErrorProcessor implements BotUpdateProcessor {
         Log.debug("Enter process");
         var message = update.getMessage();
         var messageText = message.getText();
-        var messageUnableToProcess = String.format("%s: '%s'", telegramBotConfig.messages().get("message-unable-to-process"), messageText);
+        var messageUnableToProcess = String.format("%s:\n'%s'", telegramBotConfig.messages().get("message-unable-to-process"), messageText);
         var chatId = message.getFrom().getId();
         katyaGlucoBot.sendMessageToChat(String.valueOf(chatId), messageUnableToProcess);
         conversationContextStore.removeLast(chatId);

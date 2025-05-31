@@ -1,8 +1,8 @@
 package dev.sergevas.tool.katya.gluco.bot.recommendation.control;
 
-import dev.sergevas.tool.katya.gluco.bot.recommendation.entity.UnitRecommendation;
+import dev.sergevas.tool.katya.gluco.bot.recommendation.entity.Recommendation;
 
 public interface RecommendationProvider {
 
-    UnitRecommendation provide(String mealInfo);
+    Recommendation provide(String mealInfo);
 }
