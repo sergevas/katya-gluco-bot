@@ -5,7 +5,7 @@ import java.util.Arrays;
 public enum BotCommand {
 
     UPDATE("/update"),
-    UNITS("/units"),
+    INS("/ins"),
     UNKNOWN(null);
 
     private final String command;
@@ -25,7 +25,7 @@ public enum BotCommand {
                 .orElse(UNKNOWN);
     }
 
-    public static boolean isUnitsCommand(String command) {
-        return UNITS.equals(findByCommand(command));
+    public static boolean isInsCommand(String command) {
+        return INS.equals(findByCommand(command));
     }
 }

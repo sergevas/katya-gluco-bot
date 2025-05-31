@@ -15,14 +15,14 @@ import java.time.OffsetDateTime;
 import static dev.sergevas.tool.katya.gluco.bot.telegram.control.updprocessor.BotUpdateProcessor.chatId;
 
 @ApplicationScoped
-@Named("units")
-public class BotUnitsCommandProcessor implements BotUpdateProcessor {
+@Named("ins")
+public class BotInsCommandProcessor implements BotUpdateProcessor {
 
     private final KatyaGlucoBot katyaGlucoBot;
     private final RecommendationMessagesConfig recommendationMessagesConfig;
     private final ConversationContextStore conversationContextStore;
 
-    public BotUnitsCommandProcessor(
+    public BotInsCommandProcessor(
             KatyaGlucoBot katyaGlucoBot,
             RecommendationMessagesConfig recommendationMessagesConfig,
             ConversationContextStore conversationContextStore) {
@@ -39,7 +39,7 @@ public class BotUnitsCommandProcessor implements BotUpdateProcessor {
         conversationContextStore.put(chatId.id(), new ConversationContext(
                 chatId.id(),
                 update.getMessage().getMessageId(),
-                BotCommand.UNITS.getCommand(),
+                BotCommand.INS.getCommand(),
                 Boolean.TRUE,
                 OffsetDateTime.now(),
                 Boolean.FALSE));

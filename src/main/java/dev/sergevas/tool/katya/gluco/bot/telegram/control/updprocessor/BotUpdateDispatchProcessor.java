@@ -14,7 +14,7 @@ public class BotUpdateDispatchProcessor implements BotUpdateProcessor {
     private final ConversationContextStore conversationContextStore;
     private final BotUpdateValidationRules botUpdateValidationRules;
     private final BotUpdateProcessor botUpdateCommandProcessor;
-    private final BotUpdateProcessor botUnitsCommandProcessor;
+    private final BotUpdateProcessor botInsCommandProcessor;
     private final BotUpdateProcessor botUnknownCommandProcessor;
     private final BotUpdateProcessor botErrorProcessor;
     private final BotUpdateProcessor botRecommendationRequestMessageProcessor;
@@ -22,14 +22,14 @@ public class BotUpdateDispatchProcessor implements BotUpdateProcessor {
     public BotUpdateDispatchProcessor(ConversationContextStore conversationContextStore,
                                       BotUpdateValidationRules botUpdateValidationRules,
                                       @Named("update") BotUpdateProcessor botUpdateCommandProcessor,
-                                      @Named("units") BotUpdateProcessor botUnitsCommandProcessor,
+                                      @Named("ins") BotUpdateProcessor botInsCommandProcessor,
                                       @Named("unknown") BotUpdateProcessor botUnknownCommandProcessor,
                                       @Named("error") BotUpdateProcessor botErrorProcessor,
                                       @Named("recommendationRequest") BotUpdateProcessor botRecommendationRequestMessageProcessor) {
         this.conversationContextStore = conversationContextStore;
         this.botUpdateValidationRules = botUpdateValidationRules;
         this.botUpdateCommandProcessor = botUpdateCommandProcessor;
-        this.botUnitsCommandProcessor = botUnitsCommandProcessor;
+        this.botInsCommandProcessor = botInsCommandProcessor;
         this.botUnknownCommandProcessor = botUnknownCommandProcessor;
         this.botErrorProcessor = botErrorProcessor;
         this.botRecommendationRequestMessageProcessor = botRecommendationRequestMessageProcessor;
@@ -37,13 +37,33 @@ public class BotUpdateDispatchProcessor implements BotUpdateProcessor {
 
     @Override
     public void process(Update update) {
-        Log.debugf("Enter process for %s", update);
+        Log.infof("Enter process for %s", update);
         try {
             var message = update.getMessage();
-            var messageText = message.getText();
             var user = message.getFrom();
             var chatId = user.getId();
+            if (!botUpdateValidationRules.isUserValid(chatId)) {
+                Log.warnf("User %s is not valid", chatId);
+                return;
+            }
             var isCommandPending = botUpdateValidationRules.isCommandPending(chatId);
+            Log.infof("""
+                            \n
+                            **************************************************
+                                      Have got preprocessing result
+                            **************************************************
+                            ***** Message ************************************
+                            %s
+                            **************************************************
+                            user=%s
+                            **************************************************
+                            chatId=%s
+                            **************************************************
+                            isCommandPending=%s
+                            **************************************************
+                            
+                            """,
+                    message, user, chatId, isCommandPending);
             if (message.isCommand()) {
                 // Here we discard all the pending commands and try to process the new one
                 if (isCommandPending) {
@@ -55,8 +75,8 @@ public class BotUpdateDispatchProcessor implements BotUpdateProcessor {
             } else {
                 var context = conversationContextStore.getLast(chatId);
                 if (isCommandPending
-                        && BotCommand.isUnitsCommand(context.orElseThrow(() ->
-                                new KatyaGlucoBotException("Unexpected state: the last Conversation Context should be present"))
+                        && BotCommand.isInsCommand(context.orElseThrow(() ->
+                                new KatyaGlucoBotException("Unexpected state: the last ConversationContext instance should be present"))
                         .getCommandName())) {
                     botRecommendationRequestMessageProcessor.process(update);
                 }
@@ -70,7 +90,7 @@ public class BotUpdateDispatchProcessor implements BotUpdateProcessor {
     private BotUpdateProcessor findBotCommandProcessor(BotCommand botCommand) {
         return switch (botCommand) {
             case UPDATE -> botUpdateCommandProcessor;
-            case UNITS -> botUnitsCommandProcessor;
+            case INS -> botInsCommandProcessor;
             default -> botUnknownCommandProcessor;
         };
     }

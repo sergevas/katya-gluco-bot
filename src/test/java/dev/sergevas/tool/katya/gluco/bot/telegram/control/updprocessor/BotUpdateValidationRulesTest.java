@@ -30,7 +30,7 @@ class BotUpdateValidationRulesTest {
         when(conversationContextStore.getLast(eq(123456789L)))
                 .thenReturn(Optional.of(new ConversationContext(123456789L,
                         12345,
-                        BotCommand.UNITS.getCommand(),
+                        BotCommand.INS.getCommand(),
                         Boolean.TRUE,
                         OffsetDateTime.now(),
                         Boolean.FALSE)));
@@ -42,7 +42,7 @@ class BotUpdateValidationRulesTest {
         when(conversationContextStore.getLast(eq(12345679L)))
                 .thenReturn(Optional.of(new ConversationContext(123456789L,
                         12345,
-                        BotCommand.UNITS.getCommand(),
+                        BotCommand.INS.getCommand(),
                         Boolean.TRUE,
                         OffsetDateTime.now(),
                         Boolean.TRUE)));
