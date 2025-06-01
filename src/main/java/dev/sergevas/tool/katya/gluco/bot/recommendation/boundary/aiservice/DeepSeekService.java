@@ -10,15 +10,7 @@ import jakarta.enterprise.context.ApplicationScoped;
 @RegisterAiService
 public interface DeepSeekService {
 
-    @SystemMessage("""
-            Ты - медицинская экспертная система, твоя специализация - диабет.
-            Помогаешь выполнять расчеты доз (единиц) быстрого инсулина перед принятием пищи.
-            Перепроверяй математические расчеты: при делении должен использоваться не общий вес еды, а только вес углеводов,
-            содержащихся в ней. Также не допускай ошибок при округлении, пожалуйста.
-            """)
-    @UserMessage("""
-            Сколько нужно инсулина на {{it}} из расчета 1 ед инсулина на 12 г углеводов?
-            Сгенерируй ответ в JSON. Краткий ответ в формате 'На {} грамм нужно сделать {} ед инсулина' добавь в поле message.
-            Дополнительную информацию, например, объяснение расчетов, добавь в поле additionalInfo""")
-    Recommendation generateBook(String request);
+    @SystemMessage(fromResource = "prompts/system.txt")
+    @UserMessage(fromResource = "prompts/user.txt")
+    Recommendation generateRecommendation(String request);
 }

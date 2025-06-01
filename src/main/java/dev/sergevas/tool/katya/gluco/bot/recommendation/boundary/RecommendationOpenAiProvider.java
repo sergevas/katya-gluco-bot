@@ -18,6 +18,6 @@ public class RecommendationOpenAiProvider implements RecommendationProvider {
 
     @Override
     public Recommendation provide(String mealInfo) {
-        return deepSeekService.generateBook(mealInfo);
+        return deepSeekService.generateRecommendation(mealInfo);
     }
 }

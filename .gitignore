@@ -38,3 +38,4 @@ target/
 /.quarkus/cli/plugins/ 
 
 etc/
+src/main/resources/prompts/
