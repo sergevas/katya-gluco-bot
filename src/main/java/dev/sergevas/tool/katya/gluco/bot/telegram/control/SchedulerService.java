@@ -21,7 +21,6 @@ import static dev.sergevas.tool.katya.gluco.bot.xdrip.entity.ChangeStatus.NONE;
 import static dev.sergevas.tool.katya.gluco.bot.xdrip.entity.ChangeStatus.SINGLE_DOWN;
 import static dev.sergevas.tool.katya.gluco.bot.xdrip.entity.ChangeStatus.SINGLE_UP;
 import static dev.sergevas.tool.katya.gluco.bot.xdrip.entity.ChangeStatus.UNDEFINED;
-import static dev.sergevas.tool.katya.gluco.bot.xdrip.entity.ChangeStatus.X;
 
 @ApplicationScoped
 public class SchedulerService {
@@ -30,7 +29,7 @@ public class SchedulerService {
     private static final long ALERT_PERIOD_SECONDS = DEFAULT_PERIOD_SECONDS * 2;
     private static final long ACCELERATED_PERIOD_SECONDS = 60;
     private static final EnumSet<ChangeStatus> ACCELERATED_STATUSES = EnumSet.of(
-            SINGLE_DOWN, DOUBLE_DOWN, SINGLE_UP, DOUBLE_UP, NONE, X, UNDEFINED);
+            SINGLE_DOWN, DOUBLE_DOWN, SINGLE_UP, DOUBLE_UP, NONE, UNDEFINED);
 
     private final KatyaGlucoBot katyaGlucoBot;
     private final ReadingService readingService;

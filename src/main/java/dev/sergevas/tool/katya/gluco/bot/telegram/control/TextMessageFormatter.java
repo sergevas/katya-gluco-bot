@@ -7,8 +7,8 @@ import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 
+import static com.vdurmont.emoji.EmojiParser.parseToUnicode;
 import static dev.sergevas.tool.katya.gluco.bot.xdrip.entity.ChangeStatus.UNDEFINED;
-import static dev.sergevas.tool.katya.gluco.bot.xdrip.entity.ChangeStatus.X;
 
 public class TextMessageFormatter {
 
@@ -31,7 +31,7 @@ public class TextMessageFormatter {
 
     public static String formatAlert(String minutesSinceLastReading) {
         return String.format("%s Нет нового значения, минут: %s",
-                X.getMark(),
+                parseToUnicode(":x:"),
                 Optional.ofNullable(minutesSinceLastReading).orElse(UNDEFINED.getMark()));
     }
 }

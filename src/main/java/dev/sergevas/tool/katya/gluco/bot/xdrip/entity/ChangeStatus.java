@@ -14,7 +14,6 @@ public enum ChangeStatus {
     FORTY_FIVE_UP("FortyFiveUp", parseToUnicode(":arrow_upper_right:")),
     FORTY_FIVE_DOWN("FortyFiveDown", parseToUnicode(":arrow_lower_right:")),
     NONE("NONE", parseToUnicode(":confused:")),
-    X("x", parseToUnicode(":x:")),
     UNDEFINED(null, parseToUnicode(":confused:"));
 
     private final String name;
