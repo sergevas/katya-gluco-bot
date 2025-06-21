@@ -6,7 +6,6 @@ import dev.sergevas.tool.katya.gluco.bot.telegram.entity.XDripReadingContext;
 import dev.sergevas.tool.katya.gluco.bot.xdrip.control.ReadingService;
 import dev.sergevas.tool.katya.gluco.bot.xdrip.entity.ChangeStatus;
 import dev.sergevas.tool.katya.gluco.bot.xdrip.entity.XDripReading;
-import io.quarkus.logging.Log;
 import io.quarkus.scheduler.Scheduled;
 import jakarta.enterprise.context.ApplicationScoped;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
@@ -14,14 +13,11 @@ import org.eclipse.microprofile.config.inject.ConfigProperty;
 import java.time.Instant;
 import java.util.Optional;
 
+import static io.quarkus.logging.Log.debugf;
+import static io.quarkus.logging.Log.infof;
+
 @ApplicationScoped
 public class SchedulerService {
-
-    //    private static final long DEFAULT_PERIOD_SECONDS = 600;
-//    private static final long ALERT_PERIOD_SECONDS = DEFAULT_PERIOD_SECONDS * 2;
-//    private static final long ACCELERATED_PERIOD_SECONDS = 60;
-//    private static final EnumSet<ChangeStatus> ACCELERATED_STATUSES = EnumSet.of(
-//            SINGLE_DOWN, DOUBLE_DOWN, SINGLE_UP, DOUBLE_UP, NONE, UNDEFINED);
 
     private final KatyaGlucoBot katyaGlucoBot;
     private final ReadingService readingService;
@@ -70,7 +66,7 @@ public class SchedulerService {
     private void accelerateSchedulerIfReadingOutdated(Optional<XDripReading> lastReadingOpt, Instant currentTime) {
         schedulerControls.isLastReadingTimeExpired(lastReadingOpt, currentTime, periodDefault)
                 .ifPresent(time -> {
-                    Log.infof("Forcing accelerated scheduler period due to last reading being older than %ds", periodDefault);
+                    infof("Forcing accelerated scheduler period due to last reading being older than %ds", periodDefault);
                     currentPeriodSeconds = periodAccelerated;
                 });
     }
@@ -82,9 +78,8 @@ public class SchedulerService {
      * @param currentTime    current time to compare against
      */
     private void trySendAlert(final Optional<XDripReading> lastReadingOpt, final Instant currentTime) {
-        if (!schedulerControls.shouldSendAlert(isAlertSent, lastReadingOpt, currentTime)) {
-            Log.infof("It's time to send the alert message as it's hasn't been sent and the last reading being older than %ds",
-                    periodAlert);
+        if (schedulerControls.shouldSendAlert(isAlertSent, lastReadingOpt, currentTime)) {
+            infof("It's time to send the alert message as it's hasn't been sent and the last reading being older than %ds", periodAlert);
             katyaGlucoBot.sendSensorReadingUpdateToAll(TextMessageFormatter.formatAlert(lastReadingOpt, currentTime));
             isAlertSent = true;
         }
@@ -97,12 +92,11 @@ public class SchedulerService {
 
         // Only execute if enough time has passed based on the current period
         if (secondsSinceLastExecution < currentPeriodSeconds) {
-            Log.debugf("Skipping execution, %d seconds passed out of %d seconds period",
-                    secondsSinceLastExecution, currentPeriodSeconds);
+            debugf("Skipping execution, %d seconds passed out of %d seconds period", secondsSinceLastExecution, currentPeriodSeconds);
             return;
         }
         lastExecutionTime = now;
-        Log.infof("Executing scheduled task with period: %ds", currentPeriodSeconds);
+        infof("Executing scheduled task with period: %ds", currentPeriodSeconds);
         var lastReadingOpt = readingService.getLastReading();
         var newReadingOpt = readingService.updateAndReturnLastReadingIfNew(lastReadingOpt);
         if (newReadingOpt.isPresent()) {
