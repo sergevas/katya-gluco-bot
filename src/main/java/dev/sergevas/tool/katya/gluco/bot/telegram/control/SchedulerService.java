@@ -9,69 +9,55 @@ import dev.sergevas.tool.katya.gluco.bot.xdrip.entity.XDripReading;
 import io.quarkus.logging.Log;
 import io.quarkus.scheduler.Scheduled;
 import jakarta.enterprise.context.ApplicationScoped;
+import org.eclipse.microprofile.config.inject.ConfigProperty;
 
-import java.time.Duration;
 import java.time.Instant;
-import java.util.EnumSet;
 import java.util.Optional;
-
-import static dev.sergevas.tool.katya.gluco.bot.xdrip.entity.ChangeStatus.DOUBLE_DOWN;
-import static dev.sergevas.tool.katya.gluco.bot.xdrip.entity.ChangeStatus.DOUBLE_UP;
-import static dev.sergevas.tool.katya.gluco.bot.xdrip.entity.ChangeStatus.NONE;
-import static dev.sergevas.tool.katya.gluco.bot.xdrip.entity.ChangeStatus.SINGLE_DOWN;
-import static dev.sergevas.tool.katya.gluco.bot.xdrip.entity.ChangeStatus.SINGLE_UP;
-import static dev.sergevas.tool.katya.gluco.bot.xdrip.entity.ChangeStatus.UNDEFINED;
 
 @ApplicationScoped
 public class SchedulerService {
 
-    private static final long DEFAULT_PERIOD_SECONDS = 600;
-    private static final long ALERT_PERIOD_SECONDS = DEFAULT_PERIOD_SECONDS * 2;
-    private static final long ACCELERATED_PERIOD_SECONDS = 60;
-    private static final EnumSet<ChangeStatus> ACCELERATED_STATUSES = EnumSet.of(
-            SINGLE_DOWN, DOUBLE_DOWN, SINGLE_UP, DOUBLE_UP, NONE, UNDEFINED);
+    //    private static final long DEFAULT_PERIOD_SECONDS = 600;
+//    private static final long ALERT_PERIOD_SECONDS = DEFAULT_PERIOD_SECONDS * 2;
+//    private static final long ACCELERATED_PERIOD_SECONDS = 60;
+//    private static final EnumSet<ChangeStatus> ACCELERATED_STATUSES = EnumSet.of(
+//            SINGLE_DOWN, DOUBLE_DOWN, SINGLE_UP, DOUBLE_UP, NONE, UNDEFINED);
 
     private final KatyaGlucoBot katyaGlucoBot;
     private final ReadingService readingService;
+    private final SchedulerControls schedulerControls;
+    private final Long periodAccelerated;
+    private final Long periodDefault;
+    private final Long periodAlert;
 
     private Instant lastExecutionTime = Instant.EPOCH;
-    private long currentPeriodSeconds = DEFAULT_PERIOD_SECONDS;
+    private long currentPeriodSeconds;
     private boolean isAlertSent;
 
-    public SchedulerService(KatyaGlucoBot katyaGlucoBot, ReadingService readingService) {
+    public SchedulerService(
+            KatyaGlucoBot katyaGlucoBot,
+            ReadingService readingService,
+            SchedulerControls schedulerControls,
+            @ConfigProperty(name = "scheduler.period.accelerated") Long periodAccelerated,
+            @ConfigProperty(name = "scheduler.period.default") Long periodDefault,
+            @ConfigProperty(name = "scheduler.period.alert") Long periodAlert) {
         this.katyaGlucoBot = katyaGlucoBot;
         this.readingService = readingService;
+        this.schedulerControls = schedulerControls;
+        this.periodAccelerated = periodAccelerated;
+        this.periodDefault = periodDefault;
+        this.periodAlert = periodAlert;
+        this.currentPeriodSeconds = this.periodDefault;
     }
 
     /**
-     * Updates the scheduler period based on the ChangeStatus.
-     * - If ChangeStatus is SINGLE_DOWN, DOUBLE_DOWN, SINGLE_UP, DOUBLE_UP, NONE, X or UNDEFINED,
-     * the period is set to the 60 s.
-     * - If ChangeStatus is FLAT, FORTY_FIVE_UP, or FORTY_FIVE_DOWN, the period is set to 600 s.
+     * Updates the scheduler period if updated period value is provided.
      *
      * @param changeStatus The ChangeStatus to determine the period
      */
     private void updateSchedulerPeriod(ChangeStatus changeStatus) {
-        if (changeStatus == null) {
-            return;
-        }
-
-        long newPeriodSeconds = ACCELERATED_STATUSES.contains(changeStatus)
-                ? ACCELERATED_PERIOD_SECONDS
-                : DEFAULT_PERIOD_SECONDS;
-
-        if (newPeriodSeconds != currentPeriodSeconds) {
-            Log.infof("Changing scheduler period from %ds to %ds due to ChangeStatus: %s",
-                    currentPeriodSeconds, newPeriodSeconds, changeStatus);
-            currentPeriodSeconds = newPeriodSeconds;
-        }
-    }
-
-    private Optional<Instant> isLastReadingTimeExpired(Optional<XDripReading> lastReadingOpt, Instant currentTime,
-                                                       Long period) {
-        return lastReadingOpt
-                .map(XDripReading::getTime)
-                .filter(time -> time.isBefore(currentTime.minusSeconds(period)));
+        schedulerControls.getUpdatedSchedulerPeriod(changeStatus, currentPeriodSeconds)
+                .ifPresent(newPeriod -> currentPeriodSeconds = newPeriod);
     }
 
     /**
@@ -82,11 +68,10 @@ public class SchedulerService {
      * @param currentTime    current time to compare against
      */
     private void accelerateSchedulerIfReadingOutdated(Optional<XDripReading> lastReadingOpt, Instant currentTime) {
-        isLastReadingTimeExpired(lastReadingOpt, currentTime, DEFAULT_PERIOD_SECONDS)
+        schedulerControls.isLastReadingTimeExpired(lastReadingOpt, currentTime, periodDefault)
                 .ifPresent(time -> {
-                    Log.infof("Forcing accelerated scheduler period due to last reading being older than %ds",
-                            DEFAULT_PERIOD_SECONDS);
-                    currentPeriodSeconds = ACCELERATED_PERIOD_SECONDS;
+                    Log.infof("Forcing accelerated scheduler period due to last reading being older than %ds", periodDefault);
+                    currentPeriodSeconds = periodAccelerated;
                 });
     }
 
@@ -97,21 +82,15 @@ public class SchedulerService {
      * @param currentTime    current time to compare against
      */
     private void trySendAlert(final Optional<XDripReading> lastReadingOpt, final Instant currentTime) {
-        if (!isAlertSent && isLastReadingTimeExpired(lastReadingOpt, currentTime, ALERT_PERIOD_SECONDS).isPresent()) {
+        if (!schedulerControls.shouldSendAlert(isAlertSent, lastReadingOpt, currentTime)) {
             Log.infof("It's time to send the alert message as it's hasn't been sent and the last reading being older than %ds",
-                    ALERT_PERIOD_SECONDS);
-            katyaGlucoBot.sendSensorReadingUpdateToAll(TextMessageFormatter
-                    .formatAlert(lastReadingOpt
-                            .map(XDripReading::getTime)
-                            .map(t -> Duration.between(t, currentTime))
-                            .map(Duration::toMinutes)
-                            .map(String::valueOf)
-                            .orElse(null)));
+                    periodAlert);
+            katyaGlucoBot.sendSensorReadingUpdateToAll(TextMessageFormatter.formatAlert(lastReadingOpt, currentTime));
             isAlertSent = true;
         }
     }
 
-    @Scheduled(every = "60s")
+    @Scheduled(every = "${scheduler.every}")
     public void updateReadings() {
         Instant now = Instant.now();
         long secondsSinceLastExecution = now.getEpochSecond() - lastExecutionTime.getEpochSecond();

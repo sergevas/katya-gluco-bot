@@ -1,7 +1,10 @@
 package dev.sergevas.tool.katya.gluco.bot.telegram.control;
 
 import dev.sergevas.tool.katya.gluco.bot.telegram.entity.XDripReadingContext;
+import dev.sergevas.tool.katya.gluco.bot.xdrip.entity.XDripReading;
 
+import java.time.Duration;
+import java.time.Instant;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
@@ -29,9 +32,12 @@ public class TextMessageFormatter {
                 context.triggerEvent().getMark());
     }
 
-    public static String formatAlert(String minutesSinceLastReading) {
-        return String.format("%s Нет нового значения, минут: %s",
-                parseToUnicode(":x:"),
-                Optional.ofNullable(minutesSinceLastReading).orElse(UNDEFINED.getMark()));
+    public static String formatAlert(Optional<XDripReading> lastReadingOpt, Instant currentTime) {
+        var minutesSinceLastReading = lastReadingOpt.map(XDripReading::getTime)
+                .map(t -> Duration.between(t, currentTime))
+                .map(Duration::toMinutes)
+                .map(String::valueOf)
+                .orElse(UNDEFINED.getMark());
+        return String.format("%s Нет нового значения, минут: %s", parseToUnicode(":x:"), minutesSinceLastReading);
     }
 }

@@ -7,6 +7,7 @@ import dev.sergevas.tool.katya.gluco.bot.xdrip.entity.XDripReading;
 import org.junit.jupiter.api.Test;
 
 import java.time.Instant;
+import java.util.Optional;
 
 import static dev.sergevas.tool.katya.gluco.bot.xdrip.entity.ChangeStatus.FLAT;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -30,6 +31,7 @@ class TextMessageFormatterTest {
     @Test
     void testFormatAlert() {
         assertEquals(EmojiParser.parseToUnicode(":x:") + " Нет нового значения, минут: 20",
-                TextMessageFormatter.formatAlert("20"));
+                TextMessageFormatter.formatAlert(Optional.of(new XDripReading(Instant.parse("2025-04-14T21:07:40.688Z"),
+                        7.214927129235995, FLAT)), Instant.parse("2025-04-14T21:27:40.688Z")));
     }
 }
