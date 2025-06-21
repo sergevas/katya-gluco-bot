@@ -47,8 +47,8 @@ public class SchedulerService {
     /**
      * Updates the scheduler period based on the ChangeStatus.
      * - If ChangeStatus is SINGLE_DOWN, DOUBLE_DOWN, SINGLE_UP, DOUBLE_UP, NONE, X or UNDEFINED,
-     * the period is set to the 60s.
-     * - If ChangeStatus is FLAT, FORTY_FIVE_UP, or FORTY_FIVE_DOWN, the period is set to 600s.
+     * the period is set to the 60 s.
+     * - If ChangeStatus is FLAT, FORTY_FIVE_UP, or FORTY_FIVE_DOWN, the period is set to 600 s.
      *
      * @param changeStatus The ChangeStatus to determine the period
      */
