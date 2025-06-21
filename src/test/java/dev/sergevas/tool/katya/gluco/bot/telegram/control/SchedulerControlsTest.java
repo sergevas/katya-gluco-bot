@@ -10,6 +10,7 @@ import java.time.Instant;
 import java.util.Optional;
 
 import static dev.sergevas.tool.katya.gluco.bot.xdrip.entity.ChangeStatus.FLAT;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @QuarkusTest
@@ -30,5 +31,15 @@ class SchedulerControlsTest {
         assertTrue(schedulerControls.isLastReadingTimeExpired(
                 Optional.of(new XDripReading(Instant.parse("2025-04-14T21:07:40.688Z"),
                         7.214927129235995, FLAT)), Instant.parse("2025-04-14T21:30:00Z"), periodAlert).isPresent());
+    }
+
+    @Test
+    void givenLastXDripReadingDoesntExpired_thenShouldReturnFalse() {
+        assertFalse(schedulerControls.isLastReadingTimeExpired(
+                Optional.of(new XDripReading(Instant.parse("2025-04-14T21:07:40.688Z"),
+                        7.214927129235995, FLAT)), Instant.parse("2025-04-14T21:10:00Z"), periodDefault).isPresent());
+        assertFalse(schedulerControls.isLastReadingTimeExpired(
+                Optional.of(new XDripReading(Instant.parse("2025-04-14T21:07:40.688Z"),
+                        7.214927129235995, FLAT)), Instant.parse("2025-04-14T21:20:00Z"), periodAlert).isPresent());
     }
 }
