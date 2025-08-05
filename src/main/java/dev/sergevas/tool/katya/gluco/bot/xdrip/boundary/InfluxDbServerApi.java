@@ -1,31 +1,25 @@
 package dev.sergevas.tool.katya.gluco.bot.xdrip.boundary;
 
-import dev.sergevas.tool.katya.gluco.bot.xdrip.entity.influxdb.GlucoseData;
-import jakarta.ws.rs.Consumes;
-import jakarta.ws.rs.GET;
-import jakarta.ws.rs.Path;
-import jakarta.ws.rs.QueryParam;
-import jakarta.ws.rs.core.MediaType;
-import org.eclipse.microprofile.faulttolerance.Retry;
-import org.eclipse.microprofile.rest.client.annotation.ClientHeaderParam;
-import org.eclipse.microprofile.rest.client.inject.RegisterRestClient;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import static java.util.Base64.getEncoder;
-import static org.eclipse.microprofile.config.ConfigProvider.getConfig;
+@RestController
+@RequestMapping("/xdrip")
+public class InfluxDbServerApi {
 
-@ClientHeaderParam(name = "Authorization", value = "{lookupAuth}")
-@RegisterRestClient(configKey = "influxdb")
-public interface InfluxDbServerApi {
+    private static final Logger LOG = LoggerFactory.getLogger(InfluxDbServerApi.class);
 
-    @GET
-    @Path("/query")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Retry(delay = 0, maxDuration = 11000, jitter = 500, maxRetries = 2)
-    GlucoseData getReadings(@QueryParam("db") String db, @QueryParam("q") String query);
-
-    default String lookupAuth() {
-        var user = getConfig().getValue("influxdb.username", String.class);
-        var password = getConfig().getValue("influxdb.password", String.class);
-        return "Basic " + getEncoder().encodeToString((user + ":" + password).getBytes());
+    @PostMapping(path = "/readings",
+            consumes = MediaType.ALL_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public String postReading(@RequestBody String reading) {
+        LOG.info("Received request to /reading {}", reading);
+        return """
+                {"status":"ok"}""";
     }
 }

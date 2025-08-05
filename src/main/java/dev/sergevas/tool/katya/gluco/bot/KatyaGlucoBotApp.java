@@ -4,9 +4,9 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class KatyaGlucoBotMain {
+public class KatyaGlucoBotApp {
 
     public static void main(String[] args) {
-        SpringApplication.run(KatyaGlucoBotMain.class, args);
+        SpringApplication.run(KatyaGlucoBotApp.class, args);
     }
 }
