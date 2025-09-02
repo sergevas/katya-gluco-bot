@@ -5,29 +5,10 @@ import java.math.RoundingMode;
 import java.time.Instant;
 import java.util.Objects;
 
-public class XDripReading {
-
-    private final Instant time;
-    private final double reading; // mmol/L
-    private final ChangeStatus changeStatus;
-
-    public XDripReading(Instant time, double reading, ChangeStatus changeStatus) {
-        this.time = time;
-        this.reading = reading;
-        this.changeStatus = changeStatus;
-    }
-
-    public Instant getTime() {
-        return time;
-    }
-
-    public double getReading() {
-        return reading;
-    }
-
-    public ChangeStatus getChangeStatus() {
-        return changeStatus;
-    }
+/**
+ * @param reading mmol/L
+ */
+public record XDripReading(Instant time, double reading, ChangeStatus changeStatus) {
 
     public String getRounded() {
         return BigDecimal.valueOf(reading)
@@ -41,11 +22,6 @@ public class XDripReading {
         XDripReading that = (XDripReading) o;
         return Double.compare(reading, that.reading) == 0
                 && Objects.equals(time, that.time) && changeStatus == that.changeStatus;
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(time, reading, changeStatus);
     }
 
     @Override

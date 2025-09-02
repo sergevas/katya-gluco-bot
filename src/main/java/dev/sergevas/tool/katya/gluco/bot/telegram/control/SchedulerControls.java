@@ -3,6 +3,7 @@ package dev.sergevas.tool.katya.gluco.bot.telegram.control;
 import dev.sergevas.tool.katya.gluco.bot.xdrip.entity.ChangeStatus;
 import dev.sergevas.tool.katya.gluco.bot.xdrip.entity.XDripReading;
 import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 import java.time.Instant;
@@ -26,6 +27,7 @@ public class SchedulerControls {
     private final Long periodDefault;
     private final Long periodAlert;
 
+    @Inject
     public SchedulerControls(@ConfigProperty(name = "scheduler.period.accelerated") Long periodAccelerated,
                              @ConfigProperty(name = "scheduler.period.default") Long periodDefault,
                              @ConfigProperty(name = "scheduler.period.alert") Long periodAlert) {
@@ -37,7 +39,7 @@ public class SchedulerControls {
     public Optional<Instant> isLastReadingTimeExpired(Optional<XDripReading> lastReadingOpt, Instant currentTime,
                                                       Long period) {
         return lastReadingOpt
-                .map(XDripReading::getTime)
+                .map(XDripReading::time)
                 .filter(time -> time.isBefore(currentTime.minusSeconds(period)));
     }
 

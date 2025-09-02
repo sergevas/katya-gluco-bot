@@ -6,18 +6,21 @@ import dev.sergevas.tool.katya.gluco.bot.telegram.entity.XDripReadingContext;
 import dev.sergevas.tool.katya.gluco.bot.xdrip.control.ReadingService;
 import dev.sergevas.tool.katya.gluco.bot.xdrip.entity.ChangeStatus;
 import dev.sergevas.tool.katya.gluco.bot.xdrip.entity.XDripReading;
-import io.quarkus.scheduler.Scheduled;
 import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 import java.time.Instant;
 import java.util.Optional;
+import java.util.logging.Logger;
 
-import static io.quarkus.logging.Log.debugf;
-import static io.quarkus.logging.Log.infof;
+//import static io.quarkus.logging.Log.debugf;
+//import static io.quarkus.logging.Log.infof;
 
 @ApplicationScoped
 public class SchedulerService {
+
+    private static final Logger LOG = Logger.getLogger(SchedulerService.class.getName());
 
     private final KatyaGlucoBot katyaGlucoBot;
     private final ReadingService readingService;
@@ -30,6 +33,7 @@ public class SchedulerService {
     private long currentPeriodSeconds;
     private boolean isAlertSent;
 
+    @Inject
     public SchedulerService(
             KatyaGlucoBot katyaGlucoBot,
             ReadingService readingService,
@@ -104,7 +108,7 @@ public class SchedulerService {
             var newReading = newReadingOpt.get();
             katyaGlucoBot.sendSensorReadingUpdateToAll(TextMessageFormatter
                     .format(new XDripReadingContext(newReading, TriggerEvent.DEFAULT)));
-            updateSchedulerPeriod(newReading.getChangeStatus());
+            updateSchedulerPeriod(newReading.changeStatus());
         } else {
             accelerateSchedulerIfReadingOutdated(lastReadingOpt, now);
             trySendAlert(lastReadingOpt, now);

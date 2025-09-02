@@ -2,13 +2,16 @@ package dev.sergevas.tool.katya.gluco.bot.xdrip.control;
 
 import dev.sergevas.tool.katya.gluco.bot.xdrip.boundary.InfluxDbServerApi;
 import dev.sergevas.tool.katya.gluco.bot.xdrip.entity.XDripReading;
-import io.quarkus.logging.Log;
 import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
 
 import java.util.Objects;
 import java.util.Optional;
+
+import static dev.sergevas.tool.katya.gluco.bot.KatyaGlucoBotApp.LOG;
+import static java.util.logging.Level.WARNING;
 
 @ApplicationScoped
 public class ReadingService {
@@ -18,6 +21,7 @@ public class ReadingService {
     private final InfluxDbServerApi influxDbServerApi;
     private final LastReadingCacheManager lastReadingCacheManager;
 
+    @Inject
     public ReadingService(
             @ConfigProperty(name = "influxdb.db") String db,
             @ConfigProperty(name = "influxdb.query") String query,
@@ -39,7 +43,7 @@ public class ReadingService {
                 xDripReadingOpt = Optional.of(currentReadings.getLast());
             }
         } catch (Exception e) {
-            Log.warn("Unable to fetch a new reading", e);
+            LOG.log(WARNING, "Unable to fetch a new reading", e);
         }
         return xDripReadingOpt;
     }

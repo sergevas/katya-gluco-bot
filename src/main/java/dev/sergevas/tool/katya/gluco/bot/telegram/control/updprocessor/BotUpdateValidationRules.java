@@ -3,6 +3,7 @@ package dev.sergevas.tool.katya.gluco.bot.telegram.control.updprocessor;
 import dev.sergevas.tool.katya.gluco.bot.telegram.TelegramBotConfig;
 import dev.sergevas.tool.katya.gluco.bot.telegram.boundary.ConversationContextStore;
 import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
 
 @ApplicationScoped
 public class BotUpdateValidationRules {
@@ -10,6 +11,7 @@ public class BotUpdateValidationRules {
     private final TelegramBotConfig telegramBotConfig;
     private final ConversationContextStore conversationContextStore;
 
+    @Inject
     public BotUpdateValidationRules(TelegramBotConfig telegramBotConfig,
                                     ConversationContextStore conversationContextStore) {
         this.telegramBotConfig = telegramBotConfig;
@@ -23,6 +25,6 @@ public class BotUpdateValidationRules {
     }
 
     public boolean isUserValid(final Long userId) {
-        return telegramBotConfig.chatIds().contains(String.valueOf(userId));
+        return telegramBotConfig.chatIds.contains(String.valueOf(userId));
     }
 }

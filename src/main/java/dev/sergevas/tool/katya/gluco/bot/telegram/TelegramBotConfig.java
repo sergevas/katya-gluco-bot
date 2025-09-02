@@ -1,18 +1,13 @@
 package dev.sergevas.tool.katya.gluco.bot.telegram;
 
-import io.smallrye.config.ConfigMapping;
+import org.eclipse.microprofile.config.inject.ConfigProperties;
 
 import java.util.List;
-import java.util.Map;
 
-@ConfigMapping(prefix = "telegram")
-public interface TelegramBotConfig {
+@ConfigProperties(prefix = "telegram")
+public class TelegramBotConfig {
 
-    String botUsername();
-
-    String token();
-
-    List<String> chatIds();
-
-    Map<String, String> messages();
+    public String botUsername;
+    public String token;
+    public List<String> chatIds;
 }

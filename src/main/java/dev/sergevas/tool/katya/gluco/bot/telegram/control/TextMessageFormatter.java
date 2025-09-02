@@ -21,19 +21,19 @@ public class TextMessageFormatter {
 
     public static String format(XDripReadingContext context) {
         var reading = context.reading();
-        return String.format("%s %s", reading.getRounded(), reading.getChangeStatus().getMark());
+        return String.format("%s %s", reading.getRounded(), reading.changeStatus().getMark());
     }
 
     public static String formatUpdate(XDripReadingContext context) {
         var reading = context.reading();
         return String.format("%s %s %s%s", reading.getRounded(),
-                reading.getChangeStatus().getMark(),
-                TIME_FORMATTER.format(reading.getTime()),
+                reading.changeStatus().getMark(),
+                TIME_FORMATTER.format(reading.time()),
                 context.triggerEvent().getMark());
     }
 
     public static String formatAlert(Optional<XDripReading> lastReadingOpt, Instant currentTime) {
-        var minutesSinceLastReading = lastReadingOpt.map(XDripReading::getTime)
+        var minutesSinceLastReading = lastReadingOpt.map(XDripReading::time)
                 .map(t -> Duration.between(t, currentTime))
                 .map(Duration::toMinutes)
                 .map(String::valueOf)
