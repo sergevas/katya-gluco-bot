@@ -1,13 +1,16 @@
 package dev.sergevas.tool.katya.gluco.bot.telegram.boundary;
 
 import dev.sergevas.tool.katya.gluco.bot.telegram.control.updprocessor.BotUpdateDispatchProcessor;
-import io.quarkus.logging.Log;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 import java.util.List;
+
+import static dev.sergevas.tool.katya.gluco.bot.KatyaGlucoBotApp.LOG;
+import static java.util.logging.Level.FINE;
+import static java.util.logging.Level.SEVERE;
 
 public class KatyaGlucoBot extends TelegramLongPollingBot {
 
@@ -30,11 +33,11 @@ public class KatyaGlucoBot extends TelegramLongPollingBot {
 
     @Override
     public void onUpdateReceived(Update update) {
-        Log.debugf("Enter onUpdateReceived for %s", update);
+        LOG.log(FINE, "Enter onUpdateReceived for {0}", update);
         if (update.hasMessage()) {
             processMessage(update);
         }
-        Log.debug("Exit onUpdateReceived");
+        LOG.fine("Exit onUpdateReceived");
     }
 
     private void processMessage(Update update) {
@@ -56,8 +59,7 @@ public class KatyaGlucoBot extends TelegramLongPollingBot {
         try {
             execute(sendMessage);
         } catch (TelegramApiException e) {
-            Log.error(e);
+            LOG.log(SEVERE, e, null);
         }
-
     }
 }

@@ -44,6 +44,24 @@
             <artifactId>telegrambots</artifactId>
             <version>6.9.7.1</version>
         </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-engine</artifactId>
+            <version>5.9.2</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <version>5.19.0</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.tomee</groupId>
+            <artifactId>openejb-core</artifactId>
+            <version>10.1.1</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
     <build>
         <finalName>katya-gluco-bot</finalName>
@@ -53,7 +71,7 @@
                 <artifactId>tomee-maven-plugin</artifactId>
                 <version>10.1.1</version>
                 <configuration>
-                    <tomeeClassifier>microprofile</tomeeClassifier>
+                    <tomeeClassifier>plus</tomeeClassifier>
                     <context>ROOT</context>
                     <synchronization>
                         <extensions>

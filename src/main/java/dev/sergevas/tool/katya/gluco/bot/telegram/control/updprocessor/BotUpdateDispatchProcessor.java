@@ -3,10 +3,16 @@ package dev.sergevas.tool.katya.gluco.bot.telegram.control.updprocessor;
 import dev.sergevas.tool.katya.gluco.bot.KatyaGlucoBotException;
 import dev.sergevas.tool.katya.gluco.bot.telegram.boundary.ConversationContextStore;
 import dev.sergevas.tool.katya.gluco.bot.telegram.entity.BotCommand;
-import io.quarkus.logging.Log;
 import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
 import jakarta.inject.Named;
 import org.telegram.telegrambots.meta.api.objects.Update;
+
+import static dev.sergevas.tool.katya.gluco.bot.KatyaGlucoBotApp.LOG;
+import static java.util.logging.Level.FINE;
+import static java.util.logging.Level.INFO;
+import static java.util.logging.Level.SEVERE;
+import static java.util.logging.Level.WARNING;
 
 @ApplicationScoped
 public class BotUpdateDispatchProcessor implements BotUpdateProcessor {
@@ -19,6 +25,7 @@ public class BotUpdateDispatchProcessor implements BotUpdateProcessor {
     private final BotUpdateProcessor botErrorProcessor;
     private final BotUpdateProcessor botRecommendationRequestMessageProcessor;
 
+    @Inject
     public BotUpdateDispatchProcessor(ConversationContextStore conversationContextStore,
                                       BotUpdateValidationRules botUpdateValidationRules,
                                       @Named("update") BotUpdateProcessor botUpdateCommandProcessor,
@@ -37,40 +44,39 @@ public class BotUpdateDispatchProcessor implements BotUpdateProcessor {
 
     @Override
     public void process(Update update) {
-        Log.infof("Enter process for %s", update);
+        LOG.log(INFO, "Enter process for {0}", update);
         try {
             var message = update.getMessage();
             var user = message.getFrom();
             var chatId = user.getId();
             if (!botUpdateValidationRules.isUserValid(chatId)) {
-                Log.warnf("User %s is not valid", chatId);
+                LOG.log(WARNING, "User {0} is not valid", chatId);
                 return;
             }
             var isCommandPending = botUpdateValidationRules.isCommandPending(chatId);
-            Log.infof("""
-                            \n
-                            **************************************************
-                                      Have got preprocessing result
-                            **************************************************
-                            ***** Message ************************************
-                            %s
-                            **************************************************
-                            user=%s
-                            **************************************************
-                            chatId=%s
-                            **************************************************
-                            isCommandPending=%s
-                            **************************************************
-                            
-                            """,
-                    message, user, chatId, isCommandPending);
+            LOG.log(INFO, """
+                    \n
+                    **************************************************
+                              Have got preprocessing result
+                    **************************************************
+                    ***** Message ************************************
+                    {0}
+                    **************************************************
+                    user={1}
+                    **************************************************
+                    chatId={2}
+                    **************************************************
+                    isCommandPending={3}
+                    **************************************************
+                    
+                    """, new Object[]{message, user, chatId, isCommandPending});
             if (message.isCommand()) {
                 // Here we discard all the pending commands and try to process the new one
                 if (isCommandPending) {
                     conversationContextStore.removeLast(chatId);
                 }
                 var command = BotCommand.findByCommand(update.getMessage().getText());
-                Log.debugf("Found command: %s", command);
+                LOG.log(FINE, "Found command: {0}", command);
                 findBotCommandProcessor(command).process(update);
             } else {
                 var context = conversationContextStore.getLast(chatId);
@@ -82,7 +88,7 @@ public class BotUpdateDispatchProcessor implements BotUpdateProcessor {
                 }
             }
         } catch (Exception e) {
-            Log.error("Unable to process the update", e);
+            LOG.log(SEVERE, "Unable to process the update", e);
             botErrorProcessor.process(update);
         }
     }
