@@ -8,11 +8,10 @@
     <packaging>war</packaging>
 
     <properties>
-        <compiler-plugin.version>3.13.0</compiler-plugin.version>
         <maven.compiler.release>21</maven.compiler.release>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <surefire-plugin.version>3.2.5</surefire-plugin.version>
+        <tomee.version>10.1.1</tomee.version>
     </properties>
     <dependencies>
         <dependency>
@@ -28,6 +27,11 @@
             <version>7.0</version>
             <type>pom</type>
             <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.tomee.bom</groupId>
+            <artifactId>tomee-plus</artifactId>
+            <version>${tomee.version}</version>
         </dependency>
         <dependency>
             <groupId>com.opencsv</groupId>
@@ -59,7 +63,7 @@
         <dependency>
             <groupId>org.apache.tomee</groupId>
             <artifactId>openejb-core</artifactId>
-            <version>10.1.1</version>
+            <version>${tomee.version}</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
@@ -67,10 +71,19 @@
         <finalName>katya-gluco-bot</finalName>
         <plugins>
             <plugin>
+                <artifactId>maven-war-plugin</artifactId>
+                <version>3.4.0</version>
+                <configuration>
+                    <failOnMissingWebXml>false</failOnMissingWebXml>
+                </configuration>
+            </plugin>
+            <plugin>
                 <groupId>org.apache.tomee.maven</groupId>
                 <artifactId>tomee-maven-plugin</artifactId>
-                <version>10.1.1</version>
+                <version>${tomee.version}</version>
                 <configuration>
+                    <simpleLog>true</simpleLog>
+                    <tomeeVersion>${tomee.version}</tomeeVersion>
                     <tomeeClassifier>plus</tomeeClassifier>
                     <context>ROOT</context>
                     <synchronization>
@@ -87,22 +100,32 @@
                     </systemVariables>
                 </configuration>
             </plugin>
-            <!--<plugin>
+            <plugin>
+                <groupId>org.apache.tomee.maven</groupId>
+                <artifactId>tomee-embedded-maven-plugin</artifactId>
+                <version>${tomee.version}</version>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.apache.tomee</groupId>
+                        <artifactId>apache-tomee</artifactId>
+                        <version>${tomee.version}</version>
+                    </dependency>
+                </dependencies>
+            </plugin>
+            <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>${compiler-plugin.version}</version>
-                <configuration>
-                    <compilerArgs>
-                        <arg>-parameters</arg>
-                    </compilerArgs>
-                </configuration>
-            </plugin>-->
+                <version>3.14.0</version>
+            </plugin>
             <plugin>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <version>${surefire-plugin.version}</version>
+                <version>3.5.3</version>
+                <configuration>
+                    <argLine>-Djdk.attach.allowAttachSelf</argLine>
+                </configuration>
             </plugin>
             <plugin>
                 <artifactId>maven-failsafe-plugin</artifactId>
-                <version>${surefire-plugin.version}</version>
+                <version>3.5.3</version>
                 <executions>
                     <execution>
                         <goals>
