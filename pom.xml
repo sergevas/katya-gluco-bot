@@ -8,7 +8,6 @@
     <packaging>jar</packaging>
 
     <properties>
-        <compiler-plugin.version>3.13.0</compiler-plugin.version>
         <maven.compiler.release>21</maven.compiler.release>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
@@ -16,23 +15,9 @@
     </properties>
     <dependencies>
         <dependency>
-            <groupId>jakarta.platform</groupId>
-            <artifactId>jakarta.jakartaee-api</artifactId>
-            <version>10.0.0</version>
-            <type>pom</type>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.eclipse.microprofile</groupId>
-            <artifactId>microprofile</artifactId>
-            <version>7.0</version>
-            <type>pom</type>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
             <groupId>com.opencsv</groupId>
             <artifactId>opencsv</artifactId>
-            <version>5.9</version>
+            <version>5.12.0</version>
         </dependency>
         <dependency>
             <groupId>com.vdurmont</groupId>
@@ -48,20 +33,15 @@
     <build>
         <finalName>katya-gluco-bot</finalName>
         <plugins>
-            
-            <!--<plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>${compiler-plugin.version}</version>
-                <configuration>
-                    <compilerArgs>
-                        <arg>-parameters</arg>
-                    </compilerArgs>
-                </configuration>
-            </plugin>-->
+                <version>3.14.0</version>
+            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-assembly-plugin</artifactId>
-                <version>3.6.0</version>
+                <version>3.7.1</version>
                 <configuration>
                     <!-- get all project dependencies -->
                     <descriptorRefs>
@@ -88,17 +68,61 @@
             </plugin>
             <plugin>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <version>${surefire-plugin.version}</version>
+                <version>3.5.3</version>
             </plugin>
             <plugin>
                 <artifactId>maven-failsafe-plugin</artifactId>
-                <version>${surefire-plugin.version}</version>
+                <version>3.5.3</version>
                 <executions>
                     <execution>
                         <goals>
                             <goal>integration-test</goal>
                             <goal>verify</goal>
                         </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.openapitools</groupId>
+                <artifactId>openapi-generator-maven-plugin</artifactId>
+                <version>7.14.0</version>
+                <executions>
+                    <execution>
+                        <id>working_time_api_client</id>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                        <configuration>
+                            <inputSpec>
+                                ${project.basedir}/src/main/resources/spec/working-time-api-v1_0_0.yml
+                            </inputSpec>
+                            <generatorName>jaxrs-spec</generatorName>
+                            <generateApis>true</generateApis>
+                            <generateModels>true</generateModels>
+                            <generateApiTests>true</generateApiTests>
+                            <generateModelTests>true</generateModelTests>
+                            <generateApiDocumentation>true</generateApiDocumentation>
+                            <generateModelDocumentation>true</generateModelDocumentation>
+                            <skipValidateSpec>false</skipValidateSpec>
+                            <modelPackage>isop.working.time.api.model</modelPackage>
+                            <apiPackage>isop.working.time.api</apiPackage>
+                            <invokerPackage>isop.working.time.api</invokerPackage>
+                            <generateSupportingFiles>false</generateSupportingFiles>
+                            <output>${project.build.directory}/generated-sources/main</output>
+                            <skipIfSpecIsUnchanged>false</skipIfSpecIsUnchanged>
+                            <configOptions>
+                                <sourceFolder>java</sourceFolder>
+                                <interfaceOnly>false</interfaceOnly>
+                                <library>quarkus</library>
+                                <hideGenerationTimestamp>true</hideGenerationTimestamp>
+                            </configOptions>
+                            <!--<typeMappings>
+                                <typeMapping>HH:mm=LocalTime</typeMapping>
+                            </typeMappings>
+                            <importMappings>
+                                <importMapping>LocalTime=java.time.LocalTime</importMapping>
+                            </importMappings>-->
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>
