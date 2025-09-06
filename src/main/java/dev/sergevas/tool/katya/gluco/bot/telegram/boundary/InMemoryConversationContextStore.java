@@ -1,9 +1,10 @@
 package dev.sergevas.tool.katya.gluco.bot.telegram.boundary;
 
 import dev.sergevas.tool.katya.gluco.bot.telegram.entity.ConversationContext;
-import io.quarkus.scheduler.Scheduled;
 import jakarta.annotation.PostConstruct;
-import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.ejb.Schedule;
+import jakarta.ejb.Singleton;
+import jakarta.ejb.Startup;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -15,7 +16,8 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import static java.util.Objects.isNull;
 
-@ApplicationScoped
+@Startup
+@Singleton
 public class InMemoryConversationContextStore implements ConversationContextStore {
 
     private Map<Long, List<ConversationContext>> store;
@@ -52,7 +54,7 @@ public class InMemoryConversationContextStore implements ConversationContextStor
         return lastContext;
     }
 
-    @Scheduled(every = "24h")
+    @Schedule(hour = "0/24", info = "24 hour timer")
     public void cleanup() {
         store.values().forEach(contexts -> contexts.removeIf(ConversationContext::isDeleted));
     }

@@ -1,9 +1,11 @@
 package dev.sergevas.tool.katya.gluco.bot.telegram.control;
 
 import dev.sergevas.tool.katya.gluco.bot.xdrip.entity.XDripReading;
-import io.quarkus.test.junit.QuarkusTest;
+import jakarta.ejb.embeddable.EJBContainer;
 import jakarta.inject.Inject;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.time.Instant;
@@ -15,17 +17,28 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-@QuarkusTest
 class SchedulerControlsTest {
+
+    private static EJBContainer container;
 
     @Inject
     SchedulerControls schedulerControls;
-    @ConfigProperty(name = "scheduler.period.default")
+    @ConfigProperty(name = "scheduler.period.default", defaultValue = "600")
     Long periodDefault;
-    @ConfigProperty(name = "scheduler.period.alert")
+    @ConfigProperty(name = "scheduler.period.alert", defaultValue = "60")
     Long periodAlert;
-    @ConfigProperty(name = "scheduler.period.accelerated")
+    @ConfigProperty(name = "scheduler.period.accelerated", defaultValue = "60")
     Long periodAccelerated;
+
+    @BeforeAll
+    public static void start() {
+        container = EJBContainer.createEJBContainer();
+    }
+
+    @BeforeEach
+    public void setUp() throws Exception {
+        container.getContext().bind("inject", this);
+    }
 
     @Test
     void givenLastXDripReadingExpired_thenShouldReturnTrue() {
