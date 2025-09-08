@@ -11,27 +11,12 @@
         <maven.compiler.release>21</maven.compiler.release>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <tomee.version>10.1.1</tomee.version>
     </properties>
     <dependencies>
         <dependency>
-            <groupId>jakarta.platform</groupId>
-            <artifactId>jakarta.jakartaee-api</artifactId>
-            <version>10.0.0</version>
-            <type>pom</type>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.eclipse.microprofile</groupId>
-            <artifactId>microprofile</artifactId>
-            <version>7.0</version>
-            <type>pom</type>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.tomee.bom</groupId>
-            <artifactId>tomee-plus</artifactId>
-            <version>${tomee.version}</version>
+            <groupId>jakarta.ws.rs</groupId>
+            <artifactId>jakarta.ws.rs-api</artifactId>
+            <version>3.1.0</version>
         </dependency>
         <dependency>
             <groupId>com.opencsv</groupId>
@@ -51,7 +36,7 @@
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-engine</artifactId>
-            <version>5.9.2</version>
+            <version>5.12.2</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -60,58 +45,10 @@
             <version>5.19.0</version>
             <scope>test</scope>
         </dependency>
-        <dependency>
-            <groupId>org.apache.tomee</groupId>
-            <artifactId>openejb-core</artifactId>
-            <version>${tomee.version}</version>
-            <scope>test</scope>
-        </dependency>
     </dependencies>
     <build>
         <finalName>katya-gluco-bot</finalName>
         <plugins>
-            <plugin>
-                <artifactId>maven-war-plugin</artifactId>
-                <version>3.4.0</version>
-                <configuration>
-                    <failOnMissingWebXml>false</failOnMissingWebXml>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.tomee.maven</groupId>
-                <artifactId>tomee-maven-plugin</artifactId>
-                <version>${tomee.version}</version>
-                <configuration>
-                    <simpleLog>true</simpleLog>
-                    <tomeeVersion>${tomee.version}</tomeeVersion>
-                    <tomeeClassifier>plus</tomeeClassifier>
-                    <context>ROOT</context>
-                    <synchronization>
-                        <extensions>
-                            <extension>.class</extension>
-                        </extensions>
-                    </synchronization>
-                    <reloadOnUpdate>true</reloadOnUpdate>
-                    <tomeeShutdownPort>8006</tomeeShutdownPort>
-                    <debug>false</debug>
-                    <systemVariables>
-                        <openejb.system.apps>false</openejb.system.apps>
-                        <tomee.serialization.class.blacklist>-</tomee.serialization.class.blacklist>
-                    </systemVariables>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.tomee.maven</groupId>
-                <artifactId>tomee-embedded-maven-plugin</artifactId>
-                <version>${tomee.version}</version>
-                <dependencies>
-                    <dependency>
-                        <groupId>org.apache.tomee</groupId>
-                        <artifactId>apache-tomee</artifactId>
-                        <version>${tomee.version}</version>
-                    </dependency>
-                </dependencies>
-            </plugin>
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.14.0</version>
@@ -135,50 +72,31 @@
                     </execution>
                 </executions>
             </plugin>
-            <plugin>
-                <groupId>org.openapitools</groupId>
-                <artifactId>openapi-generator-maven-plugin</artifactId>
-                <version>7.14.0</version>
-                <executions>
-                    <execution>
-                        <id>working_time_api_client</id>
-                        <goals>
-                            <goal>generate</goal>
-                        </goals>
-                        <configuration>
-                            <inputSpec>
-                                ${project.basedir}/src/main/resources/spec/working-time-api-v1_0_0.yml
-                            </inputSpec>
-                            <generatorName>jaxrs-spec</generatorName>
-                            <generateApis>true</generateApis>
-                            <generateModels>true</generateModels>
-                            <generateApiTests>true</generateApiTests>
-                            <generateModelTests>true</generateModelTests>
-                            <generateApiDocumentation>true</generateApiDocumentation>
-                            <generateModelDocumentation>true</generateModelDocumentation>
-                            <skipValidateSpec>false</skipValidateSpec>
-                            <modelPackage>isop.working.time.api.model</modelPackage>
-                            <apiPackage>isop.working.time.api</apiPackage>
-                            <invokerPackage>isop.working.time.api</invokerPackage>
-                            <generateSupportingFiles>false</generateSupportingFiles>
-                            <output>${project.build.directory}/generated-sources/main</output>
-                            <skipIfSpecIsUnchanged>false</skipIfSpecIsUnchanged>
-                            <configOptions>
-                                <sourceFolder>java</sourceFolder>
-                                <interfaceOnly>false</interfaceOnly>
-                                <library>quarkus</library>
-                                <hideGenerationTimestamp>true</hideGenerationTimestamp>
-                            </configOptions>
-                            <!--<typeMappings>
-                                <typeMapping>HH:mm=LocalTime</typeMapping>
-                            </typeMappings>
-                            <importMappings>
-                                <importMapping>LocalTime=java.time.LocalTime</importMapping>
-                            </importMappings>-->
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
         </plugins>
     </build>
+    <profiles>
+        <profile>
+            <id>jersey</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <dependencies>
+                <dependency>
+                    <groupId>org.glassfish.jersey.core</groupId>
+                    <artifactId>jersey-server</artifactId>
+                    <version>3.1.11</version>
+                </dependency>
+                <dependency>
+                    <groupId>org.glassfish.jersey.containers</groupId>
+                    <artifactId>jersey-container-jdk-http</artifactId>
+                    <version>3.1.11</version>
+                </dependency>
+                <dependency>
+                    <groupId>org.glassfish.jersey.inject</groupId>
+                    <artifactId>jersey-cdi2-se</artifactId>
+                    <version>3.1.11</version>
+                </dependency>
+            </dependencies>
+        </profile>
+    </profiles>
 </project>
