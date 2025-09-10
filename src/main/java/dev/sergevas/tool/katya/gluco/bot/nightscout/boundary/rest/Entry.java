@@ -1,4 +1,4 @@
-package dev.sergevas.tool.katya.gluco.bot.nightscout.entity;
+package dev.sergevas.tool.katya.gluco.bot.nightscout.boundary.rest;
 
 import jakarta.json.bind.annotation.JsonbProperty;
 import jakarta.validation.Valid;
@@ -37,19 +37,19 @@ public class Entry {
     }
 
     /**
-     * dateString, MUST be ISO &#x60;8601&#x60; format date parseable by JavaScript Date()
+     * sgvTime, MUST be ISO &#x60;8601&#x60; format epochTime parseable by JavaScript Date()
      **/
     public Entry dateString(String dateString) {
         this.dateString = dateString;
         return this;
     }
 
-    @JsonbProperty("dateString")
+    @JsonbProperty("sgvTime")
     public String getDateString() {
         return dateString;
     }
 
-    @JsonbProperty("dateString")
+    @JsonbProperty("sgvTime")
     public void setDateString(String dateString) {
         this.dateString = dateString;
     }
@@ -62,13 +62,13 @@ public class Entry {
         return this;
     }
 
-    @JsonbProperty("date")
+    @JsonbProperty("epochTime")
     @Valid
     public Long getDate() {
         return date;
     }
 
-    @JsonbProperty("date")
+    @JsonbProperty("epochTime")
     public void setDate(Long date) {
         this.date = date;
     }
@@ -217,8 +217,8 @@ public class Entry {
     public String toString() {
         return new StringJoiner(", ", Entry.class.getSimpleName() + "[", "]")
                 .add("type='" + type + "'")
-                .add("dateString='" + dateString + "'")
-                .add("date=" + date)
+                .add("sgvTime='" + dateString + "'")
+                .add("epochTime=" + date)
                 .add("sgv=" + sgv)
                 .add("direction='" + direction + "'")
                 .add("noise=" + noise)

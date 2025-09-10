@@ -81,7 +81,7 @@ paths:
           required: true
           schema:
             type: string
-            default: dateString
+            default: sgvTime
         - name: type
           in: path
           description: 'The type field to search against, default is sgv.'
@@ -569,7 +569,7 @@ components:
           description: 'sgv, mbg, cal, etc'
         dateString:
           type: string
-          description: 'dateString, MUST be ISO `8601` format date parseable by Javascript Date()'
+          description: 'sgvTime, MUST be ISO `8601` format epochTime parseable by Javascript Date()'
         date:
           type: number
           description: Epoch
@@ -613,7 +613,7 @@ components:
           description: 'Device type and hostname for example openaps://hostname'
         created_at:
           type: string
-          description: 'dateString, MUST be ISO `8601` format date parseable by Javascript Date()'
+          description: 'sgvTime, MUST be ISO `8601` format epochTime parseable by Javascript Date()'
         openaps:
           type: string
           description: 'OpenAPS devicestatus record - TODO: Fill Out Details'
@@ -634,7 +634,7 @@ components:
       properties:
         clock:
           type: string
-          description: 'dateString, MUST be ISO `8601` format date parseable by Javascript Date()'
+          description: 'sgvTime, MUST be ISO `8601` format epochTime parseable by Javascript Date()'
         battery:
           $ref: '#/components/schemas/pumpbattery'
         reservoir:
@@ -663,7 +663,7 @@ components:
           description: Is Pump Suspended
         timestamp:
           type: string
-          description: 'dateString, MUST be ISO `8601` format date parseable by Javascript Date()'
+          description: 'sgvTime, MUST be ISO `8601` format epochTime parseable by Javascript Date()'
     uploader:
       properties:
         batteryVoltage:
@@ -759,7 +759,7 @@ components:
           description: The type of treatment event.
         created_at:
           type: string
-          description: 'The date of the event, might be set retroactively .'
+          description: 'The epochTime of the event, might be set retroactively .'
         glucose:
           type: string
           description: Current glucose.

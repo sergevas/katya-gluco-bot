@@ -1,6 +1,5 @@
-package dev.sergevas.tool.katya.gluco.bot.nightscout.boundary;
+package dev.sergevas.tool.katya.gluco.bot.nightscout.boundary.rest;
 
-import dev.sergevas.tool.katya.gluco.bot.nightscout.entity.Entry;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import jakarta.ws.rs.Consumes;

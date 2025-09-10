@@ -1,4 +1,4 @@
-package dev.sergevas.tool.katya.gluco.bot.nightscout.entity;
+package dev.sergevas.tool.katya.gluco.bot.nightscout.boundary.rest;
 
 import jakarta.json.bind.annotation.JsonbProperty;
 
