@@ -9,9 +9,11 @@ import java.util.StringJoiner;
 public class Entry {
 
     private String type;
+    private String device;
     private String dateString;
     private Long date;
     private Integer sgv;
+    private Double delta;
     private String direction;
     private Integer noise;
     private Integer filtered;
@@ -34,6 +36,21 @@ public class Entry {
     @JsonbProperty("type")
     public void setType(String type) {
         this.type = type;
+    }
+
+    public Entry device(String device) {
+        this.type = type;
+        return this;
+    }
+
+    @JsonbProperty("device")
+    public String getDevice() {
+        return device;
+    }
+
+    @JsonbProperty("device")
+    public void setDevice(String device) {
+        this.device = device;
     }
 
     /**
@@ -81,7 +98,6 @@ public class Entry {
         return this;
     }
 
-
     @JsonbProperty("sgv")
     @Valid
     public Integer getSgv() {
@@ -91,6 +107,22 @@ public class Entry {
     @JsonbProperty("sgv")
     public void setSgv(Integer sgv) {
         this.sgv = sgv;
+    }
+
+    public Entry delta(Double delta) {
+        this.delta = delta;
+        return this;
+    }
+
+    @JsonbProperty("delta")
+    @Valid
+    public Double getDelta() {
+        return delta;
+    }
+
+    @JsonbProperty("delta")
+    public void setDelta(Double delta) {
+        this.delta = delta;
     }
 
     /**
@@ -198,9 +230,11 @@ public class Entry {
         }
         Entry entry = (Entry) o;
         return Objects.equals(this.type, entry.type) &&
+                Objects.equals(this.device, entry.device) &&
                 Objects.equals(this.dateString, entry.dateString) &&
                 Objects.equals(this.date, entry.date) &&
                 Objects.equals(this.sgv, entry.sgv) &&
+                Objects.equals(this.delta, entry.delta) &&
                 Objects.equals(this.direction, entry.direction) &&
                 Objects.equals(this.noise, entry.noise) &&
                 Objects.equals(this.filtered, entry.filtered) &&
@@ -210,16 +244,18 @@ public class Entry {
 
     @Override
     public int hashCode() {
-        return Objects.hash(type, dateString, date, sgv, direction, noise, filtered, unfiltered, rssi);
+        return Objects.hash(type, device, dateString, date, sgv, delta, direction, noise, filtered, unfiltered, rssi);
     }
 
     @Override
     public String toString() {
         return new StringJoiner(", ", Entry.class.getSimpleName() + "[", "]")
                 .add("type='" + type + "'")
+                .add("device='" + device + "'")
                 .add("sgvTime='" + dateString + "'")
                 .add("epochTime=" + date)
                 .add("sgv=" + sgv)
+                .add("delta=" + delta)
                 .add("direction='" + direction + "'")
                 .add("noise=" + noise)
                 .add("filtered=" + filtered)

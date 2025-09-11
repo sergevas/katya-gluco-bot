@@ -1,5 +1,7 @@
 package dev.sergevas.tool.katya.gluco.bot.nightscout.boundary.rest;
 
+import dev.sergevas.tool.katya.gluco.bot.infra.logging.Loggable;
+import dev.sergevas.tool.katya.gluco.bot.nightscout.control.SensorDataRepository;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import jakarta.ws.rs.Consumes;
@@ -21,28 +23,35 @@ import static jakarta.ws.rs.core.MediaType.TEXT_PLAIN;
 @Path("/entries")
 public class EntriesApi {
 
+    private final SensorDataRepository sensorDataRepository;
+
+    public EntriesApi(SensorDataRepository sensorDataRepository) {
+        this.sensorDataRepository = sensorDataRepository;
+    }
+
     @POST
     @Consumes({APPLICATION_JSON, TEXT_PLAIN})
-    public Response addEntries(@Valid @NotNull List<@Valid Entry> entry) {
-        return Response.ok().entity("magic!").build();
+    @Loggable(logArguments = true)
+    public Response addEntries(@Valid @NotNull List<@Valid Entry> entries) {
+        sensorDataRepository.store(NsEntryMapper.toNsEntries(entries));
+        return Response.ok().build();
     }
 
     @GET
     @Produces({APPLICATION_JSON})
-    public Response entriesGet(@QueryParam("find") String find, @QueryParam("count") BigDecimal count) {
-        return Response.ok().entity("magic!").build();
+    public Response getEntries(@QueryParam("find") String find, @QueryParam("count") BigDecimal count) {
+        return Response.status(Response.Status.NOT_IMPLEMENTED).build();
     }
 
     @GET
     @Path("/{spec}")
     @Produces({APPLICATION_JSON})
-
-    public Response entriesSpecGet(@PathParam("spec") String spec, @QueryParam("find") String find, @QueryParam("count") BigDecimal count) {
-        return Response.ok().entity("magic!").build();
+    public Response getEntriesSpec(@PathParam("spec") String spec, @QueryParam("find") String find, @QueryParam("count") BigDecimal count) {
+        return Response.status(Response.Status.NOT_IMPLEMENTED).build();
     }
 
     @DELETE
     public Response remove(@QueryParam("find") String find, @QueryParam("count") BigDecimal count) {
-        return Response.ok().entity("magic!").build();
+        return Response.status(Response.Status.NOT_IMPLEMENTED).build();
     }
 }

@@ -16,10 +16,12 @@ import java.time.OffsetDateTime;
 @NamedQuery(name = "NsEntryEntity.findAll", query = "select e from NsEntryEntity e")
 public class NsEntryEntity extends BaseEntity {
 
-    private String type;
+    private String typ;
+    private String device;
     private OffsetDateTime sgvTime;
-    private long epochTime;
+    private Long epochTime;
     private Integer sgv;
+    private Double delta;
     private String direction;
     private Integer noise;
     private Integer filtered;
@@ -29,12 +31,14 @@ public class NsEntryEntity extends BaseEntity {
     public NsEntryEntity() {
     }
 
-    public NsEntryEntity(String type, OffsetDateTime sgvTime, long epochTime, Integer sgv, String direction,
-                         Integer noise, Integer filtered, Integer unfiltered, Integer rssi) {
-        this.type = type;
+    public NsEntryEntity(String typ, String device, OffsetDateTime sgvTime, Long epochTime, Integer sgv, Double delta,
+                         String direction, Integer noise, Integer filtered, Integer unfiltered, Integer rssi) {
+        this.typ = typ;
+        this.device = device;
         this.sgvTime = sgvTime;
         this.epochTime = epochTime;
         this.sgv = sgv;
+        this.delta = delta;
         this.direction = direction;
         this.noise = noise;
         this.filtered = filtered;
@@ -42,12 +46,21 @@ public class NsEntryEntity extends BaseEntity {
         this.rssi = rssi;
     }
 
-    public String getType() {
-        return type;
+    public String getTyp() {
+        return typ;
     }
 
-    public NsEntryEntity setType(String type) {
-        this.type = type;
+    public NsEntryEntity setTyp(String type) {
+        this.typ = type;
+        return this;
+    }
+
+    public String getDevice() {
+        return device;
+    }
+
+    public NsEntryEntity setDevice(String device) {
+        this.device = device;
         return this;
     }
 
@@ -60,11 +73,11 @@ public class NsEntryEntity extends BaseEntity {
         return this;
     }
 
-    public long getEpochTime() {
+    public Long getEpochTime() {
         return epochTime;
     }
 
-    public NsEntryEntity setEpochTime(long date) {
+    public NsEntryEntity setEpochTime(Long date) {
         this.epochTime = date;
         return this;
     }
@@ -75,6 +88,15 @@ public class NsEntryEntity extends BaseEntity {
 
     public NsEntryEntity setSgv(Integer sgv) {
         this.sgv = sgv;
+        return this;
+    }
+
+    public Double getDelta() {
+        return delta;
+    }
+
+    public NsEntryEntity setDelta(Double delta) {
+        this.delta = delta;
         return this;
     }
 
@@ -127,10 +149,12 @@ public class NsEntryEntity extends BaseEntity {
     public String toString() {
         return "NsEntryEntity{" +
                 "id='" + super.getId() + '\'' +
-                "type='" + type + '\'' +
+                "typ='" + typ + '\'' +
+                "device='" + device + '\'' +
                 ", sgvTime=" + sgvTime +
                 ", epochTime=" + epochTime +
                 ", sgv=" + sgv +
+                ", delta=" + delta +
                 ", direction='" + direction + '\'' +
                 ", noise=" + noise +
                 ", filtered=" + filtered +

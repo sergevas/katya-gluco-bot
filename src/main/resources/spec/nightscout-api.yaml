@@ -567,6 +567,9 @@ components:
         type:
           type: string
           description: 'sgv, mbg, cal, etc'
+      device:
+        type: string
+        description: 'Sensor identifier'
         dateString:
           type: string
           description: 'sgvTime, MUST be ISO `8601` format epochTime parseable by Javascript Date()'
@@ -576,6 +579,10 @@ components:
         sgv:
           type: number
           description: The glucose reading. (only available for sgv types)
+        delta:
+          type: number
+          #          TODO: add description
+          description:
         direction:
           type: string
           description: >-

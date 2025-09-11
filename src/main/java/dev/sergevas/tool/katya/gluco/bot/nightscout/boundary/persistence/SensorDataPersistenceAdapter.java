@@ -22,9 +22,6 @@ public class SensorDataPersistenceAdapter implements SensorDataRepository {
     @Inject
     EntityManager em;
 
-    @Inject
-    NsEntryEntityMapper pollsSensorReadingMapper;
-
     @Loggable
     @Transactional
     @Override
@@ -35,18 +32,16 @@ public class SensorDataPersistenceAdapter implements SensorDataRepository {
                 em.createNamedQuery("NsEntryEntity.findByEpochTime", NsEntryEntity.class)
                         .setParameter("epochTimeValues", sensorReadingsByEpochTime.keySet())
                         .getResultStream()
-                        .collect(toMap(NsEntryEntity::getEpochTime, pollsSensorReadingMapper::toPollsSensorReading));
-
+                        .collect(toMap(NsEntryEntity::getEpochTime, NsEntryEntityMapper::toNsEntry));
         Log.debugf("existingPollsSensorReadingsByTimeEpoch=%s", existingPollsSensorReadingsByTimeEpoch);
-
         var newSensorReadings = entries.stream()
-                .filter(r -> !existingPollsSensorReadingsByTimeEpoch.containsKey(r.getTimeEpoch()))
+                .filter(r -> !existingPollsSensorReadingsByTimeEpoch.containsKey(r.epochTime()))
                 .toList();
 
         Log.debugf("newSensorReadings=%s", newSensorReadings);
 
         newSensorReadings.stream()
-                .map(pollsSensorReadingMapper::toPollsSensorReadingEntity)
+                .map(NsEntryEntityMapper::toNsEntryEntity)
                 .forEach(em::persist);
 
         if (!existingPollsSensorReadingsByTimeEpoch.isEmpty()) {
@@ -61,10 +56,10 @@ public class SensorDataPersistenceAdapter implements SensorDataRepository {
 
     @Loggable
     @Override
-    public List<PollsSensorReading> readAll() {
-        return em.createNamedQuery("PollsSensorReadingEntity.findAll", PollsSensorReadingEntity.class)
+    public List<NsEntry> readAll() {
+        return em.createNamedQuery("NsEntryEntity.findAll", NsEntryEntity.class)
                 .getResultStream()
-                .map(pollsSensorReadingMapper::toPollsSensorReading)
+                .map(NsEntryEntityMapper::toNsEntry)
                 .toList();
     }
 }

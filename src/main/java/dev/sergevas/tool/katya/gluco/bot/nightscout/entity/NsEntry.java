@@ -4,10 +4,12 @@ import java.time.OffsetDateTime;
 
 public record NsEntry(
         String type,
+        String device,
         OffsetDateTime sgvTime,
         Long epochTime,
 //        Sensor Glucose Value
         Integer sgv,
+        Double delta,
         String direction,
         Integer noise,
         Integer filtered,
