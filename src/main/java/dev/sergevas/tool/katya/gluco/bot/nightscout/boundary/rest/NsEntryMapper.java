@@ -4,6 +4,7 @@ import dev.sergevas.tool.katya.gluco.bot.nightscout.entity.NsEntry;
 
 import java.time.OffsetDateTime;
 import java.util.List;
+import java.util.Optional;
 
 public class NsEntryMapper {
 
@@ -11,7 +12,9 @@ public class NsEntryMapper {
         return new NsEntry(
                 entry.getType(),
                 entry.getDevice(),
-                OffsetDateTime.parse(entry.getDateString()),
+                Optional.ofNullable(entry.getDateString())
+                        .map(OffsetDateTime::parse)
+                        .orElse(null),
                 entry.getDate(),
                 entry.getSgv(),
                 entry.getDelta(),

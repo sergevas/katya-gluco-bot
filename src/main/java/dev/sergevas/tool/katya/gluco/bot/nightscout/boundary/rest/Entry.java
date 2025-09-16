@@ -61,12 +61,12 @@ public class Entry {
         return this;
     }
 
-    @JsonbProperty("sgvTime")
+    @JsonbProperty("dateString")
     public String getDateString() {
         return dateString;
     }
 
-    @JsonbProperty("sgvTime")
+    @JsonbProperty("dateString")
     public void setDateString(String dateString) {
         this.dateString = dateString;
     }
@@ -79,13 +79,13 @@ public class Entry {
         return this;
     }
 
-    @JsonbProperty("epochTime")
+    @JsonbProperty("date")
     @Valid
     public Long getDate() {
         return date;
     }
 
-    @JsonbProperty("epochTime")
+    @JsonbProperty("date")
     public void setDate(Long date) {
         this.date = date;
     }

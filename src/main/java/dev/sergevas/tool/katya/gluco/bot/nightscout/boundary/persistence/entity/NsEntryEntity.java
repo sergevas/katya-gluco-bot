@@ -11,8 +11,7 @@ import java.time.OffsetDateTime;
 @Entity
 @Table(name = "NS_ENTRY")
 @SequenceGenerator(name = "SEQ_GEN", sequenceName = "NS_ENTRY_ID_SEQ", allocationSize = 1)
-@NamedQuery(name = "NsEntryEntity.findByEpochTime",
-        query = "select e from NsEntryEntity e where e.epochTime in :epochTimeValues")
+@NamedQuery(name = "NsEntryEntity.findByEpochTime", query = "select e from NsEntryEntity e where e.epochTime in :epochTimeValues")
 @NamedQuery(name = "NsEntryEntity.findAll", query = "select e from NsEntryEntity e")
 public class NsEntryEntity extends BaseEntity {
 
