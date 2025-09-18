@@ -7,8 +7,7 @@ public record NsEntry(
         String device,
         OffsetDateTime sgvTime,
         Long epochTime,
-//        Sensor Glucose Value
-        Integer sgv,
+        Integer sgv, // Sensor Glucose Value
         Double delta,
         String direction,
         Integer noise,

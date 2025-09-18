@@ -118,6 +118,11 @@
             <artifactId>quarkus-langchain4j-openai</artifactId>
             <version>1.0.0.CR2</version>
         </dependency>
+        <dependency>
+            <groupId>org.drools</groupId>
+            <artifactId>drools-core</artifactId>
+            <version></version>
+        </dependency>
     </dependencies>
     <build>
         <plugins>
