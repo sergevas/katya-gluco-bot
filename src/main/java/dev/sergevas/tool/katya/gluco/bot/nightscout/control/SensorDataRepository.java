@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface SensorDataRepository {
 
-    void store(List<NsEntry> entries);
+    void storeNsEntries(List<NsEntry> entries);
 
-    List<NsEntry> readAll();
+    List<NsEntry> getAllNsEntries();
 }

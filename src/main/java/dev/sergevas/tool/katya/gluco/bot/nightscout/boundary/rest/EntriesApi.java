@@ -9,7 +9,6 @@ import jakarta.ws.rs.DELETE;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
-import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.QueryParam;
 import jakarta.ws.rs.core.Response;
@@ -33,20 +32,20 @@ public class EntriesApi {
     @Consumes({APPLICATION_JSON, TEXT_PLAIN})
     @Loggable(logArguments = true)
     public Response addEntries(@Valid @NotNull List<@Valid Entry> entries) {
-        sensorDataRepository.store(NsEntryMapper.toNsEntries(entries));
+        sensorDataRepository.storeNsEntries(NsEntryMapper.toNsEntries(entries));
         return Response.ok().build();
+    }
+
+    @GET
+    @Path("/all")
+    @Produces({APPLICATION_JSON})
+    public Response getAllEntries(/*@QueryParam("count") BigDecimal count*/) {
+        return Response.ok().entity(NsEntryMapper.toEntries(sensorDataRepository.getAllNsEntries())).build();
     }
 
     @GET
     @Produces({APPLICATION_JSON})
     public Response getEntries(@QueryParam("find") String find, @QueryParam("count") BigDecimal count) {
-        return Response.status(Response.Status.NOT_IMPLEMENTED).build();
-    }
-
-    @GET
-    @Path("/{spec}")
-    @Produces({APPLICATION_JSON})
-    public Response getEntriesSpec(@PathParam("spec") String spec, @QueryParam("find") String find, @QueryParam("count") BigDecimal count) {
         return Response.status(Response.Status.NOT_IMPLEMENTED).build();
     }
 

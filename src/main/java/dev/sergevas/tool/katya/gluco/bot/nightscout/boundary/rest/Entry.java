@@ -20,6 +20,26 @@ public class Entry {
     private Integer unfiltered;
     private Integer rssi;
 
+    public Entry() {
+        super();
+    }
+
+    public Entry(String type, String device, String dateString, Long date, Integer sgv, Double delta, String direction,
+                 Integer noise, Integer filtered, Integer unfiltered, Integer rssi) {
+        super();
+        this.type = type;
+        this.device = device;
+        this.dateString = dateString;
+        this.date = date;
+        this.sgv = sgv;
+        this.delta = delta;
+        this.direction = direction;
+        this.noise = noise;
+        this.filtered = filtered;
+        this.unfiltered = unfiltered;
+        this.rssi = rssi;
+    }
+
     /**
      * sgv, mbg, cal, etc
      **/

@@ -25,7 +25,7 @@ public class SensorDataPersistenceAdapter implements SensorDataRepository {
     @Loggable
     @Transactional
     @Override
-    public void store(List<NsEntry> entries) {
+    public void storeNsEntries(List<NsEntry> entries) {
         final var sensorReadingsByEpochTime = entries.stream().collect(toMap(NsEntry::epochTime, r -> r));
         Log.debugf("sensorReadingsByEpochTime=%s", sensorReadingsByEpochTime);
         final var existingPollsSensorReadingsByTimeEpoch =
@@ -56,7 +56,7 @@ public class SensorDataPersistenceAdapter implements SensorDataRepository {
 
     @Loggable
     @Override
-    public List<NsEntry> readAll() {
+    public List<NsEntry> getAllNsEntries() {
         return em.createNamedQuery("NsEntryEntity.findAll", NsEntryEntity.class)
                 .getResultStream()
                 .map(NsEntryEntityMapper::toNsEntry)

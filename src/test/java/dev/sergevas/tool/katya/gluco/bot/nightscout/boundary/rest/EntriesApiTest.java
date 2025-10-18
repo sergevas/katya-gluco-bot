@@ -57,7 +57,7 @@ class EntriesApiTest {
                           }
                         ]""")
                 .when().post("/entries").then().statusCode(200);
-        verify(sensorDataRepository).store(anyList());
+        verify(sensorDataRepository).storeNsEntries(anyList());
     }
 
     @Test

@@ -31,4 +31,28 @@ public class NsEntryMapper {
                 .map(NsEntryMapper::toNsEntry)
                 .toList();
     }
+
+    public static Entry toEntry(NsEntry nsEntry) {
+        return new Entry(
+                nsEntry.type(),
+                nsEntry.device(),
+                Optional.ofNullable(nsEntry.sgvTime())
+                        .map(OffsetDateTime::toString)
+                        .orElse(null),
+                nsEntry.epochTime(),
+                nsEntry.sgv(),
+                nsEntry.delta(),
+                nsEntry.direction(),
+                nsEntry.noise(),
+                nsEntry.filtered(),
+                nsEntry.unfiltered(),
+                nsEntry.rssi()
+        );
+    }
+
+    public static List<Entry> toEntries(List<NsEntry> nsEntries) {
+        return nsEntries.stream()
+                .map(NsEntryMapper::toEntry)
+                .toList();
+    }
 }
