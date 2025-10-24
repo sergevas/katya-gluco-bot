@@ -2,8 +2,6 @@ package dev.sergevas.tool.katya.gluco.bot.telegram.control;
 
 import dev.sergevas.tool.katya.gluco.bot.xdrip.entity.ChangeStatus;
 import dev.sergevas.tool.katya.gluco.bot.xdrip.entity.XDripReading;
-import jakarta.enterprise.context.ApplicationScoped;
-import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 import java.time.Instant;
 import java.util.EnumSet;
@@ -16,7 +14,6 @@ import static dev.sergevas.tool.katya.gluco.bot.xdrip.entity.ChangeStatus.SINGLE
 import static dev.sergevas.tool.katya.gluco.bot.xdrip.entity.ChangeStatus.SINGLE_UP;
 import static dev.sergevas.tool.katya.gluco.bot.xdrip.entity.ChangeStatus.UNDEFINED;
 
-@ApplicationScoped
 public class SchedulerControls {
 
     private static final EnumSet<ChangeStatus> ACCELERATED_STATUSES = EnumSet.of(
@@ -26,9 +23,7 @@ public class SchedulerControls {
     private final Long periodDefault;
     private final Long periodAlert;
 
-    public SchedulerControls(@ConfigProperty(name = "scheduler.period.accelerated") Long periodAccelerated,
-                             @ConfigProperty(name = "scheduler.period.default") Long periodDefault,
-                             @ConfigProperty(name = "scheduler.period.alert") Long periodAlert) {
+    public SchedulerControls(Long periodAccelerated, Long periodDefault, Long periodAlert) {
         this.periodAccelerated = periodAccelerated;
         this.periodDefault = periodDefault;
         this.periodAlert = periodAlert;

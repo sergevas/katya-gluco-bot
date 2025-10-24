@@ -1,12 +1,10 @@
 package dev.sergevas.tool.katya.gluco.bot.xdrip.control;
 
 import dev.sergevas.tool.katya.gluco.bot.xdrip.entity.XDripReading;
-import jakarta.enterprise.context.ApplicationScoped;
 
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
-@ApplicationScoped
 public class LastReadingCacheManager {
 
     private final ReadWriteLock readWriteLock;

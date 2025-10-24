@@ -1,6 +1,6 @@
 package dev.sergevas.tool.katya.gluco.bot.telegram.control.updprocessor;
 
-import dev.sergevas.tool.katya.gluco.bot.telegram.TelegramBotConfig;
+import dev.sergevas.tool.katya.gluco.bot.telegram.TelegramBotProperties;
 import dev.sergevas.tool.katya.gluco.bot.telegram.boundary.ConversationContextStore;
 import dev.sergevas.tool.katya.gluco.bot.telegram.boundary.KatyaGlucoBot;
 import io.quarkus.logging.Log;
@@ -13,15 +13,15 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 public class BotErrorProcessor implements BotUpdateProcessor {
 
     private final KatyaGlucoBot katyaGlucoBot;
-    private final TelegramBotConfig telegramBotConfig;
+    private final TelegramBotProperties telegramBotProperties;
     private final ConversationContextStore conversationContextStore;
 
     public BotErrorProcessor(
             KatyaGlucoBot katyaGlucoBot,
-            TelegramBotConfig telegramBotConfig,
+            TelegramBotProperties telegramBotProperties,
             ConversationContextStore conversationContextStore) {
         this.katyaGlucoBot = katyaGlucoBot;
-        this.telegramBotConfig = telegramBotConfig;
+        this.telegramBotProperties = telegramBotProperties;
         this.conversationContextStore = conversationContextStore;
     }
 
@@ -30,7 +30,7 @@ public class BotErrorProcessor implements BotUpdateProcessor {
         Log.debug("Enter process");
         var message = update.getMessage();
         var messageText = message.getText();
-        var messageUnableToProcess = String.format("%s:\n'%s'", telegramBotConfig.messages().get("message-unable-to-process"), messageText);
+        var messageUnableToProcess = String.format("%s:\n'%s'", telegramBotProperties.messages().get("message-unable-to-process"), messageText);
         var chatId = message.getFrom().getId();
         katyaGlucoBot.sendMessageToChat(String.valueOf(chatId), messageUnableToProcess);
         conversationContextStore.removeLast(chatId);
