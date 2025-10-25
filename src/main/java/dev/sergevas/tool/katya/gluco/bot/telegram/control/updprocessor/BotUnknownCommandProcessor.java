@@ -1,18 +1,17 @@
 package dev.sergevas.tool.katya.gluco.bot.telegram.control.updprocessor;
 
-import io.quarkus.logging.Log;
-import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.inject.Named;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
-@ApplicationScoped
-@Named("unknown")
 public class BotUnknownCommandProcessor implements BotUpdateProcessor {
+
+    private static final Logger LOG = LoggerFactory.getLogger(BotUnknownCommandProcessor.class);
 
     @Override
     public void process(Update update) {
-        Log.debug("Enter unknown command. Do nothing");
+        LOG.debug("Enter unknown command. Do nothing");
         //Do nothing
-        Log.debug("Exit unknown command");
+        LOG.debug("Exit unknown command");
     }
 }

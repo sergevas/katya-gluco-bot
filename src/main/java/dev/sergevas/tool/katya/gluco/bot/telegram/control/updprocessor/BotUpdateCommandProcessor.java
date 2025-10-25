@@ -6,14 +6,13 @@ import dev.sergevas.tool.katya.gluco.bot.telegram.control.TextMessageFormatter;
 import dev.sergevas.tool.katya.gluco.bot.telegram.entity.TriggerEvent;
 import dev.sergevas.tool.katya.gluco.bot.telegram.entity.XDripReadingContext;
 import dev.sergevas.tool.katya.gluco.bot.xdrip.control.ReadingService;
-import io.quarkus.logging.Log;
-import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.inject.Named;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
-@ApplicationScoped
-@Named("update")
 public class BotUpdateCommandProcessor implements BotUpdateProcessor {
+
+    private static final Logger LOG = LoggerFactory.getLogger(BotUpdateCommandProcessor.class);
 
     private final KatyaGlucoBot katyaGlucoBot;
     private final ReadingService readingService;
@@ -28,13 +27,13 @@ public class BotUpdateCommandProcessor implements BotUpdateProcessor {
 
     @Override
     public void process(Update update) {
-        Log.debug("Enter process");
+        LOG.debug("Enter process");
         var text = readingService.updateAndReturnLastReading()
                 .map(reading -> new XDripReadingContext(reading, TriggerEvent.UPDATE))
                 .map(TextMessageFormatter::formatUpdate)
                 .orElse(telegramBotProperties.messages().get("no-data"));
         katyaGlucoBot.sendSensorReadingUpdateToAll(text);
-        Log.debug("Exit process");
+        LOG.debug("Exit process");
 
     }
 }

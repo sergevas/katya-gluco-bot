@@ -14,13 +14,13 @@ public class ToXDripReadingMapper {
     public static final String SERIES_NAME = "glucose";
 
     public static List<XDripReading> toXDripReadingList(GlucoseData glucoseData) {
-        var results = glucoseData.getResults();
+        var results = glucoseData.results();
         if (Objects.isNull(results) || results.stream()
                 .map(Result::getSeries)
                 .anyMatch(Objects::isNull)) {
             return List.of();
         }
-        return glucoseData.getResults().stream()
+        return glucoseData.results().stream()
                 .flatMap(result -> result.getSeries().stream())
                 .filter(s -> SERIES_NAME.equals(s.getName()))
                 .flatMap(s -> s.getValues().stream())

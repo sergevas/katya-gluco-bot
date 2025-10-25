@@ -3,19 +3,12 @@ package dev.sergevas.tool.katya.gluco.bot.telegram.boundary;
 import dev.sergevas.tool.katya.gluco.bot.telegram.entity.ConversationContext;
 import io.quarkus.scheduler.Scheduled;
 import jakarta.annotation.PostConstruct;
-import jakarta.enterprise.context.ApplicationScoped;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 import static java.util.Objects.isNull;
 
-@ApplicationScoped
 public class InMemoryConversationContextStore implements ConversationContextStore {
 
     private Map<Long, List<ConversationContext>> store;

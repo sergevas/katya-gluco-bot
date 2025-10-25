@@ -122,8 +122,7 @@ class ToXDripReadingMapperTest {
         var result = new Result();
         result.setStatement_id(0);
         result.setSeries(List.of(series));
-        glucoseData = new GlucoseData();
-        glucoseData.setResults(List.of(result));
+        glucoseData = new GlucoseData(List.of(result));
 
         XDripReading1 = new XDripReading(Instant.parse("2025-04-14T21:07:40.688Z"), 7.214927129235995, FLAT);
         XDripReading2 = new XDripReading(Instant.parse("2025-04-17T20:35:05.542Z"), 9.323905828551132, SINGLE_DOWN);
@@ -139,8 +138,7 @@ class ToXDripReadingMapperTest {
     void givenNoSeries_thenShouldReturnEmptyXDripReadingList() {
         var result = new Result();
         result.setStatement_id(0);
-        var glucoseData = new GlucoseData();
-        glucoseData.setResults(List.of(result));
+        var glucoseData = new GlucoseData(List.of(result));
         assertIterableEquals(List.of(), ToXDripReadingMapper.toXDripReadingList(glucoseData));
     }
 

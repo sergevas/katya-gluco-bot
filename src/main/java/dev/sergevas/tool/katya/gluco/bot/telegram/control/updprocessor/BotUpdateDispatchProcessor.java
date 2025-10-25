@@ -3,13 +3,15 @@ package dev.sergevas.tool.katya.gluco.bot.telegram.control.updprocessor;
 import dev.sergevas.tool.katya.gluco.bot.KatyaGlucoBotException;
 import dev.sergevas.tool.katya.gluco.bot.telegram.boundary.ConversationContextStore;
 import dev.sergevas.tool.katya.gluco.bot.telegram.entity.BotCommand;
-import io.quarkus.logging.Log;
-import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.inject.Named;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
-@ApplicationScoped
+import javax.inject.Named;
+
 public class BotUpdateDispatchProcessor implements BotUpdateProcessor {
+
+    private static final Logger LOG = LoggerFactory.getLogger(BotUpdateDispatchProcessor.class);
 
     private final ConversationContextStore conversationContextStore;
     private final BotUpdateValidationRules botUpdateValidationRules;
@@ -37,29 +39,29 @@ public class BotUpdateDispatchProcessor implements BotUpdateProcessor {
 
     @Override
     public void process(Update update) {
-        Log.infof("Enter process for %s", update);
+        LOG.info("Enter process for {}", update);
         try {
             var message = update.getMessage();
             var user = message.getFrom();
             var chatId = user.getId();
             if (!botUpdateValidationRules.isUserValid(chatId)) {
-                Log.warnf("User %s is not valid", chatId);
+                LOG.warn("User {} is not valid", chatId);
                 return;
             }
             var isCommandPending = botUpdateValidationRules.isCommandPending(chatId);
-            Log.infof("""
+            LOG.info("""
                             \n
                             **************************************************
                                       Have got preprocessing result
                             **************************************************
                             ***** Message ************************************
-                            %s
+                            {}
                             **************************************************
-                            user=%s
+                            user={}
                             **************************************************
-                            chatId=%s
+                            chatId={}
                             **************************************************
-                            isCommandPending=%s
+                            isCommandPending={}
                             **************************************************
                             
                             """,
@@ -70,7 +72,7 @@ public class BotUpdateDispatchProcessor implements BotUpdateProcessor {
                     conversationContextStore.removeLast(chatId);
                 }
                 var command = BotCommand.findByCommand(update.getMessage().getText());
-                Log.debugf("Found command: %s", command);
+                LOG.debug("Found command: {}", command);
                 findBotCommandProcessor(command).process(update);
             } else {
                 var context = conversationContextStore.getLast(chatId);
@@ -82,7 +84,7 @@ public class BotUpdateDispatchProcessor implements BotUpdateProcessor {
                 }
             }
         } catch (Exception e) {
-            Log.error("Unable to process the update", e);
+            LOG.error("Unable to process the update", e);
             botErrorProcessor.process(update);
         }
     }

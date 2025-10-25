@@ -1,4 +1,4 @@
-package dev.sergevas.tool.katya.gluco.bot.config;
+package dev.sergevas.tool.katya.gluco.bot.xdrip;
 
 import dev.sergevas.tool.katya.gluco.bot.xdrip.control.LastReadingCacheManager;
 import org.springframework.context.annotation.Bean;

@@ -2,8 +2,6 @@ package dev.sergevas.tool.katya.gluco.bot.xdrip.control;
 
 import dev.sergevas.tool.katya.gluco.bot.xdrip.boundary.InfluxDbServerApi;
 import dev.sergevas.tool.katya.gluco.bot.xdrip.entity.XDripReading;
-import org.eclipse.microprofile.config.inject.ConfigProperty;
-import org.eclipse.microprofile.rest.client.inject.RestClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -19,11 +17,9 @@ public class ReadingService {
     private final InfluxDbServerApi influxDbServerApi;
     private final LastReadingCacheManager lastReadingCacheManager;
 
-    public ReadingService(
-            @ConfigProperty(name = "influxdb.db") String db,
-            @ConfigProperty(name = "influxdb.query") String query,
-            @RestClient InfluxDbServerApi influxDbServerApi,
-            LastReadingCacheManager lastReadingCacheManager) {
+    public ReadingService(String db, String query,
+                          InfluxDbServerApi influxDbServerApi,
+                          LastReadingCacheManager lastReadingCacheManager) {
         this.db = db;
         this.query = query;
         this.lastReadingCacheManager = lastReadingCacheManager;

@@ -5,18 +5,17 @@ import dev.sergevas.tool.katya.gluco.bot.telegram.boundary.ConversationContextSt
 import dev.sergevas.tool.katya.gluco.bot.telegram.boundary.KatyaGlucoBot;
 import dev.sergevas.tool.katya.gluco.bot.telegram.entity.BotCommand;
 import dev.sergevas.tool.katya.gluco.bot.telegram.entity.ConversationContext;
-import io.quarkus.logging.Log;
-import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.inject.Named;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
 import java.time.OffsetDateTime;
 
 import static dev.sergevas.tool.katya.gluco.bot.telegram.control.updprocessor.BotUpdateProcessor.chatId;
 
-@ApplicationScoped
-@Named("ins")
 public class BotInsCommandProcessor implements BotUpdateProcessor {
+
+    private static final Logger LOG = LoggerFactory.getLogger(BotInsCommandProcessor.class);
 
     private final KatyaGlucoBot katyaGlucoBot;
     private final RecommendationMessagesConfig recommendationMessagesConfig;
@@ -33,7 +32,7 @@ public class BotInsCommandProcessor implements BotUpdateProcessor {
 
     @Override
     public void process(Update update) {
-        Log.debug("Enter process");
+        LOG.debug("Enter process");
         var chatId = chatId(update);
         var text = recommendationMessagesConfig.messages().get("prompt");
         conversationContextStore.put(chatId.id(), new ConversationContext(
@@ -44,6 +43,6 @@ public class BotInsCommandProcessor implements BotUpdateProcessor {
                 OffsetDateTime.now(),
                 Boolean.FALSE));
         katyaGlucoBot.sendMessageToChat(chatId.strId(), text);
-        Log.debug("Exit process");
+        LOG.debug("Exit process");
     }
 }

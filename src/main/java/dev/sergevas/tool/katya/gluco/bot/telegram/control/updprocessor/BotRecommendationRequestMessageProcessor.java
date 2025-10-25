@@ -4,16 +4,16 @@ import dev.sergevas.tool.katya.gluco.bot.recommendation.RecommendationMessagesCo
 import dev.sergevas.tool.katya.gluco.bot.recommendation.control.RecommendationProvider;
 import dev.sergevas.tool.katya.gluco.bot.telegram.boundary.ConversationContextStore;
 import dev.sergevas.tool.katya.gluco.bot.telegram.boundary.KatyaGlucoBot;
-import io.quarkus.logging.Log;
-import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.inject.Named;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
 import static dev.sergevas.tool.katya.gluco.bot.telegram.control.updprocessor.BotUpdateProcessor.chatId;
 
-@ApplicationScoped
-@Named("recommendationRequest")
 public class BotRecommendationRequestMessageProcessor implements BotUpdateProcessor {
+
+    private static final Logger LOG = LoggerFactory.getLogger(BotRecommendationRequestMessageProcessor.class)
 
     private final KatyaGlucoBot katyaGlucoBot;
     private final RecommendationProvider recommendationProvider;
@@ -32,7 +32,7 @@ public class BotRecommendationRequestMessageProcessor implements BotUpdateProces
 
     @Override
     public void process(Update update) {
-        Log.debug("Enter process");
+        LOG.debug("Enter process");
         var chatId = chatId(update);
         var requestMessage = update.getMessage().getText();
         String text;
@@ -43,7 +43,7 @@ public class BotRecommendationRequestMessageProcessor implements BotUpdateProces
         }
         katyaGlucoBot.sendMessageToChat(chatId.strId(), text);
         conversationContextStore.removeLast(chatId.id());
-        Log.debug("Exit process");
+        LOG.debug("Exit process");
     }
 
     private boolean isRequestMessageValid(String requestMessage) {

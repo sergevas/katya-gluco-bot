@@ -2,9 +2,7 @@ package dev.sergevas.tool.katya.gluco.bot.telegram.control.updprocessor;
 
 import dev.sergevas.tool.katya.gluco.bot.telegram.TelegramBotProperties;
 import dev.sergevas.tool.katya.gluco.bot.telegram.boundary.ConversationContextStore;
-import jakarta.enterprise.context.ApplicationScoped;
 
-@ApplicationScoped
 public class BotUpdateValidationRules {
 
     private final TelegramBotProperties telegramBotProperties;

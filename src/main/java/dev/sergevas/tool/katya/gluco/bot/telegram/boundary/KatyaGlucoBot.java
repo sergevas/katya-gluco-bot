@@ -1,7 +1,8 @@
 package dev.sergevas.tool.katya.gluco.bot.telegram.boundary;
 
 import dev.sergevas.tool.katya.gluco.bot.telegram.control.updprocessor.BotUpdateDispatchProcessor;
-import io.quarkus.logging.Log;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
@@ -14,6 +15,8 @@ public class KatyaGlucoBot extends TelegramLongPollingBot {
     private final String botUsername;
     private final List<String> chatIds;
     private final BotUpdateDispatchProcessor botCommandDispatchProcessor;
+
+    private static final Logger LOG = LoggerFactory.getLogger(KatyaGlucoBot.class);
 
     public KatyaGlucoBot(String token, String botUsername, List<String> chatIds,
                          BotUpdateDispatchProcessor botCommandDispatchProcessor) {
@@ -30,11 +33,11 @@ public class KatyaGlucoBot extends TelegramLongPollingBot {
 
     @Override
     public void onUpdateReceived(Update update) {
-        Log.debugf("Enter onUpdateReceived for %s", update);
+        LOG.debug("Enter onUpdateReceived for {}", update);
         if (update.hasMessage()) {
             processMessage(update);
         }
-        Log.debug("Exit onUpdateReceived");
+        LOG.debug("Exit onUpdateReceived");
     }
 
     private void processMessage(Update update) {
@@ -56,7 +59,7 @@ public class KatyaGlucoBot extends TelegramLongPollingBot {
         try {
             execute(sendMessage);
         } catch (TelegramApiException e) {
-            Log.error(e);
+            LOG.error("Unable send message to chat", e);
         }
 
     }

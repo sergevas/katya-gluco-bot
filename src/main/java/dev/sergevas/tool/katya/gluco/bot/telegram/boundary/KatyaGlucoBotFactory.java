@@ -2,26 +2,24 @@ package dev.sergevas.tool.katya.gluco.bot.telegram.boundary;
 
 import dev.sergevas.tool.katya.gluco.bot.telegram.TelegramBotProperties;
 import dev.sergevas.tool.katya.gluco.bot.telegram.control.updprocessor.BotUpdateDispatchProcessor;
-import jakarta.enterprise.inject.Produces;
-import jakarta.inject.Singleton;
+import org.springframework.beans.factory.FactoryBean;
 import org.telegram.telegrambots.meta.TelegramBotsApi;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
 
-public class KatyaGlucoBotProvider {
+public class KatyaGlucoBotFactory implements FactoryBean<KatyaGlucoBot> {
 
     private final TelegramBotProperties telegramBotProperties;
     private final BotUpdateDispatchProcessor botCommandDispatchProcessor;
 
-    public KatyaGlucoBotProvider(TelegramBotProperties telegramBotProperties,
-                                 BotUpdateDispatchProcessor botCommandDispatchProcessor) {
+    public KatyaGlucoBotFactory(TelegramBotProperties telegramBotProperties,
+                                BotUpdateDispatchProcessor botCommandDispatchProcessor) {
         this.telegramBotProperties = telegramBotProperties;
         this.botCommandDispatchProcessor = botCommandDispatchProcessor;
     }
 
-    @Produces
-    @Singleton
-    public KatyaGlucoBot katyaGlucoBot() {
+    @Override
+    public KatyaGlucoBot getObject() {
         try {
             var telegramBotsApi = new TelegramBotsApi(DefaultBotSession.class);
             var bot = new KatyaGlucoBot(telegramBotProperties.token(),
@@ -33,5 +31,10 @@ public class KatyaGlucoBotProvider {
         } catch (TelegramApiException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    @Override
+    public Class<?> getObjectType() {
+        return KatyaGlucoBot.class;
     }
 }
