@@ -1,6 +1,6 @@
 package dev.sergevas.tool.katya.gluco.bot.xdrip.control;
 
-import dev.sergevas.tool.katya.gluco.bot.xdrip.boundary.InfluxDbServerApi;
+import dev.sergevas.tool.katya.gluco.bot.xdrip.boundary.InfluxDbServerApiClient;
 import dev.sergevas.tool.katya.gluco.bot.xdrip.entity.XDripReading;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,24 +12,19 @@ public class ReadingService {
 
     private static final Logger LOG = LoggerFactory.getLogger(ReadingService.class);
 
-    private final String db;
-    private final String query;
-    private final InfluxDbServerApi influxDbServerApi;
+    private final InfluxDbServerApiClient influxDbServerApiClient;
     private final LastReadingCacheManager lastReadingCacheManager;
 
-    public ReadingService(String db, String query,
-                          InfluxDbServerApi influxDbServerApi,
+    public ReadingService(InfluxDbServerApiClient influxDbServerApiClient,
                           LastReadingCacheManager lastReadingCacheManager) {
-        this.db = db;
-        this.query = query;
         this.lastReadingCacheManager = lastReadingCacheManager;
-        this.influxDbServerApi = influxDbServerApi;
+        this.influxDbServerApiClient = influxDbServerApiClient;
     }
 
     public Optional<XDripReading> getLastReading() {
         Optional<XDripReading> xDripReadingOpt = Optional.empty();
         try {
-            var glucoseData = influxDbServerApi.getReadings(db, query);
+            var glucoseData = influxDbServerApiClient.getReadings();
             Objects.requireNonNull(glucoseData, "Glucose Data must not be null!");
             var currentReadings = ToXDripReadingMapper.toXDripReadingList(glucoseData);
             if (!currentReadings.isEmpty()) {

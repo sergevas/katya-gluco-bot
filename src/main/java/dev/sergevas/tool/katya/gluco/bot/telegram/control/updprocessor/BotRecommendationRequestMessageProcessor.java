@@ -1,6 +1,6 @@
 package dev.sergevas.tool.katya.gluco.bot.telegram.control.updprocessor;
 
-import dev.sergevas.tool.katya.gluco.bot.recommendation.RecommendationMessagesConfig;
+import dev.sergevas.tool.katya.gluco.bot.recommendation.RecommendationMessagesProperties;
 import dev.sergevas.tool.katya.gluco.bot.recommendation.control.RecommendationProvider;
 import dev.sergevas.tool.katya.gluco.bot.telegram.boundary.ConversationContextStore;
 import dev.sergevas.tool.katya.gluco.bot.telegram.boundary.KatyaGlucoBot;
@@ -17,16 +17,16 @@ public class BotRecommendationRequestMessageProcessor implements BotUpdateProces
 
     private final KatyaGlucoBot katyaGlucoBot;
     private final RecommendationProvider recommendationProvider;
-    private final RecommendationMessagesConfig recommendationMessagesConfig;
+    private final RecommendationMessagesProperties recommendationMessagesProperties;
     private final ConversationContextStore conversationContextStore;
 
     public BotRecommendationRequestMessageProcessor(KatyaGlucoBot katyaGlucoBot,
                                                     RecommendationProvider recommendationProvider,
-                                                    RecommendationMessagesConfig recommendationMessagesConfig,
+                                                    RecommendationMessagesProperties recommendationMessagesProperties,
                                                     ConversationContextStore conversationContextStore) {
         this.katyaGlucoBot = katyaGlucoBot;
         this.recommendationProvider = recommendationProvider;
-        this.recommendationMessagesConfig = recommendationMessagesConfig;
+        this.recommendationMessagesProperties = recommendationMessagesProperties;
         this.conversationContextStore = conversationContextStore;
     }
 
@@ -39,7 +39,7 @@ public class BotRecommendationRequestMessageProcessor implements BotUpdateProces
         if (isRequestMessageValid(requestMessage)) {
             text = recommendationProvider.provide(requestMessage).fullMessage();
         } else {
-            text = recommendationMessagesConfig.messages().get("invalid-request-message");
+            text = recommendationMessagesProperties.messages().get("invalid-request-message");
         }
         katyaGlucoBot.sendMessageToChat(chatId.strId(), text);
         conversationContextStore.removeLast(chatId.id());

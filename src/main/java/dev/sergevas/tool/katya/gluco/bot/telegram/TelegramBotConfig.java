@@ -1,13 +1,23 @@
 package dev.sergevas.tool.katya.gluco.bot.telegram;
 
+import dev.sergevas.tool.katya.gluco.bot.recommendation.RecommendationConfig;
+import dev.sergevas.tool.katya.gluco.bot.recommendation.RecommendationMessagesProperties;
+import dev.sergevas.tool.katya.gluco.bot.recommendation.control.RecommendationProvider;
 import dev.sergevas.tool.katya.gluco.bot.telegram.boundary.ConversationContextStore;
 import dev.sergevas.tool.katya.gluco.bot.telegram.boundary.InMemoryConversationContextStore;
 import dev.sergevas.tool.katya.gluco.bot.telegram.boundary.KatyaGlucoBot;
 import dev.sergevas.tool.katya.gluco.bot.telegram.boundary.KatyaGlucoBotFactory;
 import dev.sergevas.tool.katya.gluco.bot.telegram.control.SchedulerControls;
-import dev.sergevas.tool.katya.gluco.bot.telegram.control.updprocessor.*;
+import dev.sergevas.tool.katya.gluco.bot.telegram.control.updprocessor.BotErrorProcessor;
+import dev.sergevas.tool.katya.gluco.bot.telegram.control.updprocessor.BotInsCommandProcessor;
+import dev.sergevas.tool.katya.gluco.bot.telegram.control.updprocessor.BotRecommendationRequestMessageProcessor;
+import dev.sergevas.tool.katya.gluco.bot.telegram.control.updprocessor.BotUnknownCommandProcessor;
+import dev.sergevas.tool.katya.gluco.bot.telegram.control.updprocessor.BotUpdateCommandProcessor;
+import dev.sergevas.tool.katya.gluco.bot.telegram.control.updprocessor.BotUpdateDispatchProcessor;
+import dev.sergevas.tool.katya.gluco.bot.telegram.control.updprocessor.BotUpdateProcessor;
+import dev.sergevas.tool.katya.gluco.bot.telegram.control.updprocessor.BotUpdateValidationRules;
 import dev.sergevas.tool.katya.gluco.bot.xdrip.XdripConfig;
-import dev.sergevas.tool.katya.gluco.bot.xdrip.boundary.InfluxDbServerApi;
+import dev.sergevas.tool.katya.gluco.bot.xdrip.boundary.InfluxDbServerApiClient;
 import dev.sergevas.tool.katya.gluco.bot.xdrip.control.LastReadingCacheManager;
 import dev.sergevas.tool.katya.gluco.bot.xdrip.control.ReadingService;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -17,7 +27,10 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 
 @Configuration
-@Import(XdripConfig.class)
+@Import({
+        XdripConfig.class,
+        RecommendationConfig.class
+})
 public class TelegramBotConfig {
 
     @Bean
@@ -34,11 +47,9 @@ public class TelegramBotConfig {
 
     @Bean
     public ReadingService readingService(
-            @Value("${influxdb.db}") String db,
-            @Value("${influxdb.query}") String query,
-            InfluxDbServerApi influxDbServerApi,
+            InfluxDbServerApiClient influxDbServerApiClient,
             LastReadingCacheManager lastReadingCacheManager) {
-        return new ReadingService(db, query, influxDbServerApi, lastReadingCacheManager);
+        return new ReadingService(influxDbServerApiClient, lastReadingCacheManager);
     }
 
     @Bean
@@ -68,17 +79,17 @@ public class TelegramBotConfig {
 
     @Bean("ins")
     public BotInsCommandProcessor botInsCommandProcessor(KatyaGlucoBot katyaGlucoBot,
-                                                         RecommendationMessagesConfig recommendationMessagesConfig,
+                                                         RecommendationMessagesProperties recommendationMessagesProperties,
                                                          ConversationContextStore conversationContextStore) {
-        return new BotInsCommandProcessor(katyaGlucoBot, recommendationMessagesConfig, conversationContextStore);
+        return new BotInsCommandProcessor(katyaGlucoBot, recommendationMessagesProperties, conversationContextStore);
     }
 
     @Bean("recommendationRequest")
     public BotRecommendationRequestMessageProcessor botRecommendationRequestMessageProcessor(KatyaGlucoBot katyaGlucoBot,
                                                                                              RecommendationProvider recommendationProvider,
-                                                                                             RecommendationMessagesConfig recommendationMessagesConfig,
+                                                                                             RecommendationMessagesProperties recommendationMessagesProperties,
                                                                                              ConversationContextStore conversationContextStore) {
-        return new BotRecommendationRequestMessageProcessor(katyaGlucoBot, recommendationProvider, recommendationMessagesConfig, conversationContextStore);
+        return new BotRecommendationRequestMessageProcessor(katyaGlucoBot, recommendationProvider, recommendationMessagesProperties, conversationContextStore);
     }
 
     @Bean

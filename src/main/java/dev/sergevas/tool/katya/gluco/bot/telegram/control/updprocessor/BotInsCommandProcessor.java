@@ -1,6 +1,6 @@
 package dev.sergevas.tool.katya.gluco.bot.telegram.control.updprocessor;
 
-import dev.sergevas.tool.katya.gluco.bot.recommendation.RecommendationMessagesConfig;
+import dev.sergevas.tool.katya.gluco.bot.recommendation.RecommendationMessagesProperties;
 import dev.sergevas.tool.katya.gluco.bot.telegram.boundary.ConversationContextStore;
 import dev.sergevas.tool.katya.gluco.bot.telegram.boundary.KatyaGlucoBot;
 import dev.sergevas.tool.katya.gluco.bot.telegram.entity.BotCommand;
@@ -18,15 +18,15 @@ public class BotInsCommandProcessor implements BotUpdateProcessor {
     private static final Logger LOG = LoggerFactory.getLogger(BotInsCommandProcessor.class);
 
     private final KatyaGlucoBot katyaGlucoBot;
-    private final RecommendationMessagesConfig recommendationMessagesConfig;
+    private final RecommendationMessagesProperties recommendationMessagesProperties;
     private final ConversationContextStore conversationContextStore;
 
     public BotInsCommandProcessor(
             KatyaGlucoBot katyaGlucoBot,
-            RecommendationMessagesConfig recommendationMessagesConfig,
+            RecommendationMessagesProperties recommendationMessagesProperties,
             ConversationContextStore conversationContextStore) {
         this.katyaGlucoBot = katyaGlucoBot;
-        this.recommendationMessagesConfig = recommendationMessagesConfig;
+        this.recommendationMessagesProperties = recommendationMessagesProperties;
         this.conversationContextStore = conversationContextStore;
     }
 
@@ -34,7 +34,7 @@ public class BotInsCommandProcessor implements BotUpdateProcessor {
     public void process(Update update) {
         LOG.debug("Enter process");
         var chatId = chatId(update);
-        var text = recommendationMessagesConfig.messages().get("prompt");
+        var text = recommendationMessagesProperties.messages().get("prompt");
         conversationContextStore.put(chatId.id(), new ConversationContext(
                 chatId.id(),
                 update.getMessage().getMessageId(),
