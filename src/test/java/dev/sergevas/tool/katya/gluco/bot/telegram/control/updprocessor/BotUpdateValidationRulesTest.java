@@ -1,12 +1,14 @@
 package dev.sergevas.tool.katya.gluco.bot.telegram.control.updprocessor;
 
+import dev.sergevas.tool.katya.gluco.bot.telegram.TelegramBotProperties;
 import dev.sergevas.tool.katya.gluco.bot.telegram.boundary.ConversationContextStore;
 import dev.sergevas.tool.katya.gluco.bot.telegram.entity.BotCommand;
 import dev.sergevas.tool.katya.gluco.bot.telegram.entity.ConversationContext;
-import io.quarkus.test.InjectMock;
-import io.quarkus.test.junit.QuarkusTest;
-import jakarta.inject.Inject;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
+import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
 import java.time.OffsetDateTime;
 import java.util.Optional;
@@ -16,14 +18,17 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 
-@QuarkusTest
+@SpringJUnitConfig(classes = {
+        BotUpdateValidationRules.class
+})
+@EnableConfigurationProperties(TelegramBotProperties.class)
 class BotUpdateValidationRulesTest {
 
-    @InjectMock
-    ConversationContextStore conversationContextStore;
+    @MockitoBean
+    private ConversationContextStore conversationContextStore;
 
-    @Inject
-    BotUpdateValidationRules botUpdateValidationRules;
+    @Autowired
+    private BotUpdateValidationRules botUpdateValidationRules;
 
     @Test
     void givenPendingCommand_whenCommandNamesEqual_thenShouldReturnTrue() {

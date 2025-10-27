@@ -8,14 +8,8 @@ import dev.sergevas.tool.katya.gluco.bot.telegram.boundary.InMemoryConversationC
 import dev.sergevas.tool.katya.gluco.bot.telegram.boundary.KatyaGlucoBot;
 import dev.sergevas.tool.katya.gluco.bot.telegram.boundary.KatyaGlucoBotFactory;
 import dev.sergevas.tool.katya.gluco.bot.telegram.control.SchedulerControls;
-import dev.sergevas.tool.katya.gluco.bot.telegram.control.updprocessor.BotErrorProcessor;
-import dev.sergevas.tool.katya.gluco.bot.telegram.control.updprocessor.BotInsCommandProcessor;
-import dev.sergevas.tool.katya.gluco.bot.telegram.control.updprocessor.BotRecommendationRequestMessageProcessor;
-import dev.sergevas.tool.katya.gluco.bot.telegram.control.updprocessor.BotUnknownCommandProcessor;
-import dev.sergevas.tool.katya.gluco.bot.telegram.control.updprocessor.BotUpdateCommandProcessor;
-import dev.sergevas.tool.katya.gluco.bot.telegram.control.updprocessor.BotUpdateDispatchProcessor;
-import dev.sergevas.tool.katya.gluco.bot.telegram.control.updprocessor.BotUpdateProcessor;
-import dev.sergevas.tool.katya.gluco.bot.telegram.control.updprocessor.BotUpdateValidationRules;
+import dev.sergevas.tool.katya.gluco.bot.telegram.control.SchedulerService;
+import dev.sergevas.tool.katya.gluco.bot.telegram.control.updprocessor.*;
 import dev.sergevas.tool.katya.gluco.bot.xdrip.XdripConfig;
 import dev.sergevas.tool.katya.gluco.bot.xdrip.boundary.InfluxDbServerApiClient;
 import dev.sergevas.tool.katya.gluco.bot.xdrip.control.LastReadingCacheManager;
@@ -25,12 +19,14 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
 @Configuration
 @Import({
         XdripConfig.class,
         RecommendationConfig.class
 })
+@EnableScheduling
 public class TelegramBotConfig {
 
     @Bean
@@ -111,15 +107,24 @@ public class TelegramBotConfig {
                 botRecommendationRequestMessageProcessor);
     }
 
-
     @Bean
-    public KatyaGlucoBotFactory katyaGlucoBotFactory(TelegramBotProperties telegramBotProperties,
-                                                     BotUpdateDispatchProcessor botCommandDispatchProcessor) {
-        return new KatyaGlucoBotFactory(telegramBotProperties, botCommandDispatchProcessor);
+    public KatyaGlucoBotFactory katyaGlucoBotFactory(TelegramBotProperties telegramBotProperties) {
+        return new KatyaGlucoBotFactory(telegramBotProperties);
     }
 
     @Bean
     KatyaGlucoBot katyaGlucoBot(KatyaGlucoBotFactory katyaGlucoBotFactory) {
         return katyaGlucoBotFactory.getObject();
+    }
+
+    @Bean
+    public SchedulerService schedulerService(KatyaGlucoBot katyaGlucoBot,
+                                             ReadingService readingService,
+                                             SchedulerControls schedulerControls,
+                                             @Value("${scheduler.period.accelerated}") Long periodAccelerated,
+                                             @Value("${scheduler.period.default}") Long periodDefault,
+                                             @Value("${scheduler.period.alert}") Long periodAlert) {
+        return new SchedulerService(katyaGlucoBot, readingService, schedulerControls, periodAccelerated,
+                periodDefault, periodAlert);
     }
 }

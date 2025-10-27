@@ -45,9 +45,7 @@ public class KatyaGlucoBot extends TelegramLongPollingBot {
     }
 
     public void sendSensorReadingUpdateToAll(final String text) {
-        chatIds.forEach(chatId -> {
-            sendMessageToChat(chatId, text);
-        });
+        chatIds.forEach(chatId -> sendMessageToChat(chatId, text));
     }
 
     public void sendMessageToChat(final String chatId, final String text) {
@@ -59,7 +57,7 @@ public class KatyaGlucoBot extends TelegramLongPollingBot {
         try {
             execute(sendMessage);
         } catch (TelegramApiException e) {
-            LOG.error("Unable send message to chat", e);
+            LOG.error("Unable send message to chat chatId={}", chatId, e);
         }
 
     }

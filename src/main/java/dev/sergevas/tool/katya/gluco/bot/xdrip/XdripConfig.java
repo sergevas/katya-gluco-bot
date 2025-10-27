@@ -5,12 +5,13 @@ import dev.sergevas.tool.katya.gluco.bot.xdrip.control.LastReadingCacheManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.MediaType;
-import org.springframework.http.client.ClientHttpRequestFactory;
+import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.web.client.RestClient;
 import org.springframework.web.client.support.RestClientAdapter;
 import org.springframework.web.service.invoker.HttpServiceProxyFactory;
 import org.springframework.web.util.DefaultUriBuilderFactory;
 
+import java.time.Duration;
 import java.util.List;
 import java.util.Map;
 
@@ -29,13 +30,15 @@ public class XdripConfig {
         uriBuilderFactory.setDefaultUriVariables(Map.of("query", xdripProperties.query(),
                 "db", xdripProperties.db()));
 
-        var requestFactorySettings = new ClientHttpRequestFactorySettings()
+        var clientHttpRequestFactory = new SimpleClientHttpRequestFactory();
+        clientHttpRequestFactory.setConnectTimeout(Duration.ofSeconds(5));
+        clientHttpRequestFactory.setReadTimeout(Duration.ofSeconds(5));
 
         var restClient = clientBuilder.baseUrl(xdripProperties.url())
                 .uriBuilderFactory(uriBuilderFactory)
                 .defaultHeaders(httpHeaders -> httpHeaders.setBasicAuth(xdripProperties.username(), xdripProperties.password()))
                 .defaultHeaders(httpHeaders -> httpHeaders.setAccept(List.of(MediaType.APPLICATION_JSON)))
-                .requestFactory()
+                .requestFactory(clientHttpRequestFactory)
                 .build();
         return HttpServiceProxyFactory.builderFor(RestClientAdapter.create(restClient)).build();
     }

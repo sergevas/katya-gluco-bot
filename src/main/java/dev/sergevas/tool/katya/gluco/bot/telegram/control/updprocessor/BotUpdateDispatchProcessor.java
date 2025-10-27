@@ -7,8 +7,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
-import javax.inject.Named;
-
 public class BotUpdateDispatchProcessor implements BotUpdateProcessor {
 
     private static final Logger LOG = LoggerFactory.getLogger(BotUpdateDispatchProcessor.class);
@@ -23,11 +21,11 @@ public class BotUpdateDispatchProcessor implements BotUpdateProcessor {
 
     public BotUpdateDispatchProcessor(ConversationContextStore conversationContextStore,
                                       BotUpdateValidationRules botUpdateValidationRules,
-                                      @Named("update") BotUpdateProcessor botUpdateCommandProcessor,
-                                      @Named("ins") BotUpdateProcessor botInsCommandProcessor,
-                                      @Named("unknown") BotUpdateProcessor botUnknownCommandProcessor,
-                                      @Named("error") BotUpdateProcessor botErrorProcessor,
-                                      @Named("recommendationRequest") BotUpdateProcessor botRecommendationRequestMessageProcessor) {
+                                      BotUpdateProcessor botUpdateCommandProcessor,
+                                      BotUpdateProcessor botInsCommandProcessor,
+                                      BotUpdateProcessor botUnknownCommandProcessor,
+                                      BotUpdateProcessor botErrorProcessor,
+                                      BotUpdateProcessor botRecommendationRequestMessageProcessor) {
         this.conversationContextStore = conversationContextStore;
         this.botUpdateValidationRules = botUpdateValidationRules;
         this.botUpdateCommandProcessor = botUpdateCommandProcessor;

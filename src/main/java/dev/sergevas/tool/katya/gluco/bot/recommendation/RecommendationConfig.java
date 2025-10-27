@@ -10,7 +10,7 @@ import org.springframework.context.annotation.Profile;
 public class RecommendationConfig {
 
     @Bean("recommendationMockProvider")
-    @Profile("local")
+    @Profile("!prod")
     public RecommendationProvider recommendationMockProvider(RecommendationMessagesProperties recommendationMessagesProperties) {
         return new RecommendationMockProvider(recommendationMessagesProperties);
     }

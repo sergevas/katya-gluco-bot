@@ -5,7 +5,7 @@ import dev.sergevas.tool.katya.gluco.bot.recommendation.control.RecommendationPr
 import dev.sergevas.tool.katya.gluco.bot.recommendation.entity.Recommendation;
 import org.springframework.context.annotation.Profile;
 
-@Profile("local")
+@Profile("!prod")
 public class RecommendationMockProvider implements RecommendationProvider {
 
     private final RecommendationMessagesProperties recommendationMessagesProperties;

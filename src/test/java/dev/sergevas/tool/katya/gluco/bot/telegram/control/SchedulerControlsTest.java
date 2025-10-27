@@ -1,31 +1,36 @@
 package dev.sergevas.tool.katya.gluco.bot.telegram.control;
 
 import dev.sergevas.tool.katya.gluco.bot.xdrip.entity.XDripReading;
-import io.quarkus.test.junit.QuarkusTest;
-import jakarta.inject.Inject;
-import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.test.context.TestConfiguration;
+import org.springframework.context.annotation.Bean;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.TestPropertySource;
+import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
 import java.time.Instant;
 import java.util.Optional;
 
 import static dev.sergevas.tool.katya.gluco.bot.xdrip.entity.ChangeStatus.DOUBLE_UP;
 import static dev.sergevas.tool.katya.gluco.bot.xdrip.entity.ChangeStatus.FLAT;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
-@QuarkusTest
+@SpringJUnitConfig(classes = SchedulerControlsTest.Config.class)
+@TestPropertySource(locations = "classpath:application.properties")
+@ActiveProfiles("test")
 class SchedulerControlsTest {
 
-    @Inject
-    SchedulerControls schedulerControls;
-    @ConfigProperty(name = "scheduler.period.default")
-    Long periodDefault;
-    @ConfigProperty(name = "scheduler.period.alert")
-    Long periodAlert;
-    @ConfigProperty(name = "scheduler.period.accelerated")
-    Long periodAccelerated;
+    @Autowired
+    private SchedulerControls schedulerControls;
+
+    @Value("${scheduler.period.default}")
+    private Long periodDefault;
+    @Value("${scheduler.period.alert}")
+    private Long periodAlert;
+    @Value("${scheduler.period.accelerated}")
+    private Long periodAccelerated;
 
     @Test
     void givenLastXDripReadingExpired_thenShouldReturnTrue() {
@@ -83,5 +88,16 @@ class SchedulerControlsTest {
     void givenAlertNotSet_whenLastReadingTimeNotOlderThenAlertPeriod_thenShouldReturnFalse() {
         assertFalse(schedulerControls.shouldSendAlert(false, Optional.of(new XDripReading(Instant.parse("2025-04-14T21:07:40.688Z"),
                 7.214927129235995, FLAT)), Instant.parse("2025-04-14T21:20:00Z")));
+    }
+
+    @TestConfiguration
+    static class Config {
+
+        @Bean
+        public SchedulerControls schedulerControls(@Value("${scheduler.period.accelerated}") Long periodAccelerated,
+                                                   @Value("${scheduler.period.default}") Long periodDefault,
+                                                   @Value("${scheduler.period.alert}") Long periodAlert) {
+            return new SchedulerControls(periodAccelerated, periodDefault, periodAlert);
+        }
     }
 }

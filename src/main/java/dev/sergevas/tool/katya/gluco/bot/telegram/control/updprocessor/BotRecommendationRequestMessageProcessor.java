@@ -4,7 +4,6 @@ import dev.sergevas.tool.katya.gluco.bot.recommendation.RecommendationMessagesPr
 import dev.sergevas.tool.katya.gluco.bot.recommendation.control.RecommendationProvider;
 import dev.sergevas.tool.katya.gluco.bot.telegram.boundary.ConversationContextStore;
 import dev.sergevas.tool.katya.gluco.bot.telegram.boundary.KatyaGlucoBot;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.telegram.telegrambots.meta.api.objects.Update;
@@ -13,7 +12,7 @@ import static dev.sergevas.tool.katya.gluco.bot.telegram.control.updprocessor.Bo
 
 public class BotRecommendationRequestMessageProcessor implements BotUpdateProcessor {
 
-    private static final Logger LOG = LoggerFactory.getLogger(BotRecommendationRequestMessageProcessor.class)
+    private static final Logger LOG = LoggerFactory.getLogger(BotRecommendationRequestMessageProcessor.class);
 
     private final KatyaGlucoBot katyaGlucoBot;
     private final RecommendationProvider recommendationProvider;
