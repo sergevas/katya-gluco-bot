@@ -8,5 +8,5 @@ import java.util.List;
 
 public interface NsEntryEntityJpaRepository extends JpaRepository<NsEntryEntity, Long> {
 
-    List<NsEntryEntity> findByEpochTime(Collection<Long> epochTimestamp);
+    List<NsEntryEntity> findByEpochTime(Collection<Long> epochTimeValues);
 }
