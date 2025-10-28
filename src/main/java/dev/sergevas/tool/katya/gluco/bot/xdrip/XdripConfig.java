@@ -1,7 +1,9 @@
 package dev.sergevas.tool.katya.gluco.bot.xdrip;
 
+import dev.sergevas.tool.katya.gluco.bot.telegram.control.LastReadingCacheManager;
+import dev.sergevas.tool.katya.gluco.bot.xdrip.boundary.InfluxDbSensorDataReader;
 import dev.sergevas.tool.katya.gluco.bot.xdrip.boundary.InfluxDbServerApiClient;
-import dev.sergevas.tool.katya.gluco.bot.xdrip.control.LastReadingCacheManager;
+import dev.sergevas.tool.katya.gluco.bot.xdrip.control.ToXDripReadingMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.MediaType;
@@ -44,7 +46,18 @@ public class XdripConfig {
     }
 
     @Bean
+    public ToXDripReadingMapper toXDripReadingMapper() {
+        return new ToXDripReadingMapper();
+    }
+
+    @Bean
     public InfluxDbServerApiClient influxDbServerApiClient(HttpServiceProxyFactory httpServiceProxyFactory) {
         return httpServiceProxyFactory.createClient(InfluxDbServerApiClient.class);
+    }
+
+    @Bean
+    public InfluxDbSensorDataReader sensorDataReader(ToXDripReadingMapper toXDripReadingMapper,
+                                                     InfluxDbServerApiClient influxDbServerApiClient) {
+        return new InfluxDbSensorDataReader(toXDripReadingMapper, influxDbServerApiClient);
     }
 }

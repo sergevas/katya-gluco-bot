@@ -1,6 +1,6 @@
 package dev.sergevas.tool.katya.gluco.bot.telegram.control;
 
-import dev.sergevas.tool.katya.gluco.bot.xdrip.entity.XDripReading;
+import dev.sergevas.tool.katya.gluco.bot.telegram.entity.SensorReading;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -15,7 +15,9 @@ import java.util.Optional;
 
 import static dev.sergevas.tool.katya.gluco.bot.xdrip.entity.ChangeStatus.DOUBLE_UP;
 import static dev.sergevas.tool.katya.gluco.bot.xdrip.entity.ChangeStatus.FLAT;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringJUnitConfig(classes = SchedulerControlsTest.Config.class)
 @TestPropertySource(locations = "classpath:application.properties")
@@ -35,20 +37,20 @@ class SchedulerControlsTest {
     @Test
     void givenLastXDripReadingExpired_thenShouldReturnTrue() {
         assertTrue(schedulerControls.isLastReadingTimeExpired(
-                Optional.of(new XDripReading(Instant.parse("2025-04-14T21:07:40.688Z"),
+                Optional.of(new SensorReading(Instant.parse("2025-04-14T21:07:40.688Z"),
                         7.214927129235995, FLAT)), Instant.parse("2025-04-14T21:20:00Z"), periodDefault).isPresent());
         assertTrue(schedulerControls.isLastReadingTimeExpired(
-                Optional.of(new XDripReading(Instant.parse("2025-04-14T21:07:40.688Z"),
+                Optional.of(new SensorReading(Instant.parse("2025-04-14T21:07:40.688Z"),
                         7.214927129235995, FLAT)), Instant.parse("2025-04-14T21:30:00Z"), periodAlert).isPresent());
     }
 
     @Test
     void givenLastXDripReadingDoesntExpired_thenShouldReturnFalse() {
         assertFalse(schedulerControls.isLastReadingTimeExpired(
-                Optional.of(new XDripReading(Instant.parse("2025-04-14T21:07:40.688Z"),
+                Optional.of(new SensorReading(Instant.parse("2025-04-14T21:07:40.688Z"),
                         7.214927129235995, FLAT)), Instant.parse("2025-04-14T21:10:00Z"), periodDefault).isPresent());
         assertFalse(schedulerControls.isLastReadingTimeExpired(
-                Optional.of(new XDripReading(Instant.parse("2025-04-14T21:07:40.688Z"),
+                Optional.of(new SensorReading(Instant.parse("2025-04-14T21:07:40.688Z"),
                         7.214927129235995, FLAT)), Instant.parse("2025-04-14T21:20:00Z"), periodAlert).isPresent());
     }
 
@@ -74,19 +76,19 @@ class SchedulerControlsTest {
 
     @Test
     void givenAlertNotSet_whenLastReadingTimeOlderThenAlertPeriod_thenShouldReturnTrue() {
-        assertTrue(schedulerControls.shouldSendAlert(false, Optional.of(new XDripReading(Instant.parse("2025-04-14T21:07:40.688Z"),
+        assertTrue(schedulerControls.shouldSendAlert(false, Optional.of(new SensorReading(Instant.parse("2025-04-14T21:07:40.688Z"),
                 7.214927129235995, FLAT)), Instant.parse("2025-04-14T21:30:00Z")));
     }
 
     @Test
     void givenAlertSet_whenLastReadingTimeOlderThenAlertPeriod_thenShouldReturnFalse() {
-        assertFalse(schedulerControls.shouldSendAlert(true, Optional.of(new XDripReading(Instant.parse("2025-04-14T21:07:40.688Z"),
+        assertFalse(schedulerControls.shouldSendAlert(true, Optional.of(new SensorReading(Instant.parse("2025-04-14T21:07:40.688Z"),
                 7.214927129235995, FLAT)), Instant.parse("2025-04-14T21:30:00Z")));
     }
 
     @Test
     void givenAlertNotSet_whenLastReadingTimeNotOlderThenAlertPeriod_thenShouldReturnFalse() {
-        assertFalse(schedulerControls.shouldSendAlert(false, Optional.of(new XDripReading(Instant.parse("2025-04-14T21:07:40.688Z"),
+        assertFalse(schedulerControls.shouldSendAlert(false, Optional.of(new SensorReading(Instant.parse("2025-04-14T21:07:40.688Z"),
                 7.214927129235995, FLAT)), Instant.parse("2025-04-14T21:20:00Z")));
     }
 

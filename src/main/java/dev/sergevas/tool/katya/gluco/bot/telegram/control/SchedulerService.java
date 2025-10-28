@@ -1,11 +1,11 @@
 package dev.sergevas.tool.katya.gluco.bot.telegram.control;
 
 import dev.sergevas.tool.katya.gluco.bot.telegram.boundary.KatyaGlucoBot;
+import dev.sergevas.tool.katya.gluco.bot.telegram.entity.SensorReading;
 import dev.sergevas.tool.katya.gluco.bot.telegram.entity.TriggerEvent;
 import dev.sergevas.tool.katya.gluco.bot.telegram.entity.XDripReadingContext;
 import dev.sergevas.tool.katya.gluco.bot.xdrip.control.ReadingService;
 import dev.sergevas.tool.katya.gluco.bot.xdrip.entity.ChangeStatus;
-import dev.sergevas.tool.katya.gluco.bot.xdrip.entity.XDripReading;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -61,7 +61,7 @@ public class SchedulerService {
      * @param lastReadingOpt Optional containing the last reading
      * @param currentTime    current time to compare against
      */
-    private void accelerateSchedulerIfReadingOutdated(Optional<XDripReading> lastReadingOpt, Instant currentTime) {
+    private void accelerateSchedulerIfReadingOutdated(Optional<SensorReading> lastReadingOpt, Instant currentTime) {
         schedulerControls.isLastReadingTimeExpired(lastReadingOpt, currentTime, periodDefault)
                 .ifPresent(time -> {
                     LOG.info("Forcing accelerated scheduler period due to last reading being older than {}", periodDefault);
@@ -75,7 +75,7 @@ public class SchedulerService {
      * @param lastReadingOpt Optional containing the last reading
      * @param currentTime    current time to compare against
      */
-    private void trySendAlert(final Optional<XDripReading> lastReadingOpt, final Instant currentTime) {
+    private void trySendAlert(final Optional<SensorReading> lastReadingOpt, final Instant currentTime) {
         if (schedulerControls.shouldSendAlert(isAlertSent, lastReadingOpt, currentTime)) {
             LOG.info("It's time to send the alert message as it's hasn't been sent and the last reading being older than {}",
                     periodAlert);
@@ -104,7 +104,7 @@ public class SchedulerService {
             var newReading = newReadingOpt.get();
             katyaGlucoBot.sendSensorReadingUpdateToAll(TextMessageFormatter
                     .format(new XDripReadingContext(newReading, TriggerEvent.DEFAULT)));
-            updateSchedulerPeriod(newReading.getChangeStatus());
+            updateSchedulerPeriod(newReading.changeStatus());
         } else {
             accelerateSchedulerIfReadingOutdated(lastReadingOpt, now);
             trySendAlert(lastReadingOpt, now);

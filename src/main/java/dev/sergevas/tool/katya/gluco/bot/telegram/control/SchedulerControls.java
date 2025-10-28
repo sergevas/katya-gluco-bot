@@ -1,7 +1,7 @@
 package dev.sergevas.tool.katya.gluco.bot.telegram.control;
 
+import dev.sergevas.tool.katya.gluco.bot.telegram.entity.SensorReading;
 import dev.sergevas.tool.katya.gluco.bot.xdrip.entity.ChangeStatus;
-import dev.sergevas.tool.katya.gluco.bot.xdrip.entity.XDripReading;
 
 import java.time.Instant;
 import java.util.EnumSet;
@@ -29,10 +29,10 @@ public class SchedulerControls {
         this.periodAlert = periodAlert;
     }
 
-    public Optional<Instant> isLastReadingTimeExpired(Optional<XDripReading> lastReadingOpt, Instant currentTime,
+    public Optional<Instant> isLastReadingTimeExpired(Optional<SensorReading> lastReadingOpt, Instant currentTime,
                                                       Long period) {
         return lastReadingOpt
-                .map(XDripReading::getTime)
+                .map(SensorReading::time)
                 .filter(time -> time.isBefore(currentTime.minusSeconds(period)));
     }
 
@@ -60,7 +60,7 @@ public class SchedulerControls {
      * @param lastReadingOpt Optional containing the last reading
      * @param currentTime    current time to compare against
      */
-    public boolean shouldSendAlert(final boolean isAlertSent, final Optional<XDripReading> lastReadingOpt, final Instant currentTime) {
+    public boolean shouldSendAlert(final boolean isAlertSent, final Optional<SensorReading> lastReadingOpt, final Instant currentTime) {
         return !isAlertSent && isLastReadingTimeExpired(lastReadingOpt, currentTime, periodAlert).isPresent();
     }
 }

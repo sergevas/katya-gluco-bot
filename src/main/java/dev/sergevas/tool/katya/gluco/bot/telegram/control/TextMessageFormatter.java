@@ -1,7 +1,7 @@
 package dev.sergevas.tool.katya.gluco.bot.telegram.control;
 
+import dev.sergevas.tool.katya.gluco.bot.telegram.entity.SensorReading;
 import dev.sergevas.tool.katya.gluco.bot.telegram.entity.XDripReadingContext;
-import dev.sergevas.tool.katya.gluco.bot.xdrip.entity.XDripReading;
 
 import java.time.Duration;
 import java.time.Instant;
@@ -21,19 +21,19 @@ public class TextMessageFormatter {
 
     public static String format(XDripReadingContext context) {
         var reading = context.reading();
-        return String.format("%s %s", reading.getRounded(), reading.getChangeStatus().getMark());
+        return String.format("%s %s", reading.getRounded(), reading.changeStatus().getMark());
     }
 
     public static String formatUpdate(XDripReadingContext context) {
         var reading = context.reading();
         return String.format("%s %s %s%s", reading.getRounded(),
-                reading.getChangeStatus().getMark(),
-                TIME_FORMATTER.format(reading.getTime()),
+                reading.changeStatus().getMark(),
+                TIME_FORMATTER.format(reading.time()),
                 context.triggerEvent().getMark());
     }
 
-    public static String formatAlert(Optional<XDripReading> lastReadingOpt, Instant currentTime) {
-        var minutesSinceLastReading = lastReadingOpt.map(XDripReading::getTime)
+    public static String formatAlert(Optional<SensorReading> lastReadingOpt, Instant currentTime) {
+        var minutesSinceLastReading = lastReadingOpt.map(SensorReading::time)
                 .map(t -> Duration.between(t, currentTime))
                 .map(Duration::toMinutes)
                 .map(String::valueOf)

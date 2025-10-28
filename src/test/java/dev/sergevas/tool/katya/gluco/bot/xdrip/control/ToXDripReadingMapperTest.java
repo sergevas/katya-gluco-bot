@@ -1,10 +1,11 @@
 package dev.sergevas.tool.katya.gluco.bot.xdrip.control;
 
-import dev.sergevas.tool.katya.gluco.bot.xdrip.entity.XDripReading;
+import dev.sergevas.tool.katya.gluco.bot.telegram.entity.SensorReading;
 import dev.sergevas.tool.katya.gluco.bot.xdrip.entity.influxdb.GlucoseData;
 import dev.sergevas.tool.katya.gluco.bot.xdrip.entity.influxdb.GlucoseMeasurement;
 import dev.sergevas.tool.katya.gluco.bot.xdrip.entity.influxdb.Result;
 import dev.sergevas.tool.katya.gluco.bot.xdrip.entity.influxdb.Series;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -18,10 +19,17 @@ import static org.junit.jupiter.api.Assertions.assertIterableEquals;
 
 class ToXDripReadingMapperTest {
 
+    private static ToXDripReadingMapper toXDripReadingMapper;
+
     private GlucoseData glucoseData;
-    private XDripReading XDripReading1;
-    private XDripReading XDripReading2;
-    private XDripReading XDripReading3;
+    private SensorReading SensorReading1;
+    private SensorReading SensorReading2;
+    private SensorReading SensorReading3;
+
+    @BeforeAll
+    static void setupBeforeAll() {
+        toXDripReadingMapper = new ToXDripReadingMapper();
+    }
 
     /*
     {
@@ -124,14 +132,14 @@ class ToXDripReadingMapperTest {
         result.setSeries(List.of(series));
         glucoseData = new GlucoseData(List.of(result));
 
-        XDripReading1 = new XDripReading(Instant.parse("2025-04-14T21:07:40.688Z"), 7.214927129235995, FLAT);
-        XDripReading2 = new XDripReading(Instant.parse("2025-04-17T20:35:05.542Z"), 9.323905828551132, SINGLE_DOWN);
-        XDripReading3 = new XDripReading(Instant.parse("2025-04-17T20:41:05.5Z"), 9.323905828552232, FLAT);
+        SensorReading1 = new SensorReading(Instant.parse("2025-04-14T21:07:40.688Z"), 7.214927129235995, FLAT);
+        SensorReading2 = new SensorReading(Instant.parse("2025-04-17T20:35:05.542Z"), 9.323905828551132, SINGLE_DOWN);
+        SensorReading3 = new SensorReading(Instant.parse("2025-04-17T20:41:05.5Z"), 9.323905828552232, FLAT);
     }
 
     @Test
     void toXDripReadingList() {
-        assertIterableEquals(List.of(XDripReading1, XDripReading2, XDripReading3), ToXDripReadingMapper.toXDripReadingList(glucoseData));
+        assertIterableEquals(List.of(SensorReading1, SensorReading2, SensorReading3), toXDripReadingMapper.toSensorReadings(glucoseData));
     }
 
     @Test
@@ -139,12 +147,12 @@ class ToXDripReadingMapperTest {
         var result = new Result();
         result.setStatement_id(0);
         var glucoseData = new GlucoseData(List.of(result));
-        assertIterableEquals(List.of(), ToXDripReadingMapper.toXDripReadingList(glucoseData));
+        assertIterableEquals(List.of(), toXDripReadingMapper.toSensorReadings(glucoseData));
     }
 
     @Test
     void toXDripReading() {
-        assertEquals(XDripReading1, ToXDripReadingMapper.toXDripReading(new GlucoseMeasurement(List.of("2025-04-14T21:07:40.688Z",
+        assertEquals(SensorReading1, toXDripReadingMapper.toSensorReading(new GlucoseMeasurement(List.of("2025-04-14T21:07:40.688Z",
                 2.159,
                 "Flat",
                 0,

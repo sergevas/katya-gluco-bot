@@ -1,6 +1,6 @@
-package dev.sergevas.tool.katya.gluco.bot.xdrip.control;
+package dev.sergevas.tool.katya.gluco.bot.telegram.control;
 
-import dev.sergevas.tool.katya.gluco.bot.xdrip.entity.XDripReading;
+import dev.sergevas.tool.katya.gluco.bot.telegram.entity.SensorReading;
 
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
@@ -8,34 +8,33 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 public class LastReadingCacheManager {
 
     private final ReadWriteLock readWriteLock;
-    private XDripReading cachedXDripReading;
+    private SensorReading cachedSensorReading;
 
     public LastReadingCacheManager() {
         readWriteLock = new ReentrantReadWriteLock(true);
     }
 
-    public boolean checkAndUpdateIfNew(XDripReading currentXDripReading) {
-        var isNew = !currentXDripReading.equals(getReading());
+    public boolean checkAndUpdateIfNew(SensorReading currentSensorReading) {
+        var isNew = !currentSensorReading.equals(getReading());
         if (isNew) {
-            updateReading(currentXDripReading);
+            updateReading(currentSensorReading);
         }
         return isNew;
     }
 
-    public XDripReading getReading() {
+    public SensorReading getReading() {
         try {
             readWriteLock.readLock().lock();
-            return cachedXDripReading;
+            return cachedSensorReading;
         } finally {
             readWriteLock.readLock().unlock();
         }
     }
 
-    public XDripReading updateReading(XDripReading XDripReading) {
+    public void updateReading(SensorReading SensorReading) {
         try {
             readWriteLock.writeLock().lock();
-            cachedXDripReading = XDripReading;
-            return cachedXDripReading;
+            cachedSensorReading = SensorReading;
         } finally {
             readWriteLock.writeLock().unlock();
         }

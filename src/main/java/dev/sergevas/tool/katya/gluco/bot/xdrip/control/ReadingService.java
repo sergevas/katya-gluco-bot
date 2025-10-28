@@ -1,48 +1,49 @@
 package dev.sergevas.tool.katya.gluco.bot.xdrip.control;
 
-import dev.sergevas.tool.katya.gluco.bot.xdrip.boundary.InfluxDbServerApiClient;
-import dev.sergevas.tool.katya.gluco.bot.xdrip.entity.XDripReading;
+import dev.sergevas.tool.katya.gluco.bot.telegram.control.LastReadingCacheManager;
+import dev.sergevas.tool.katya.gluco.bot.telegram.control.SensorDataReader;
+import dev.sergevas.tool.katya.gluco.bot.telegram.control.SensorDataReadingUseCase;
+import dev.sergevas.tool.katya.gluco.bot.telegram.entity.SensorReading;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Objects;
 import java.util.Optional;
 
-public class ReadingService {
+public class ReadingService implements SensorDataReadingUseCase {
 
     private static final Logger LOG = LoggerFactory.getLogger(ReadingService.class);
 
-    private final InfluxDbServerApiClient influxDbServerApiClient;
+    private final SensorDataReader sensorDataReader;
     private final LastReadingCacheManager lastReadingCacheManager;
 
-    public ReadingService(InfluxDbServerApiClient influxDbServerApiClient,
+    public ReadingService(SensorDataReader sensorDataReader,
                           LastReadingCacheManager lastReadingCacheManager) {
+        this.sensorDataReader = sensorDataReader;
         this.lastReadingCacheManager = lastReadingCacheManager;
-        this.influxDbServerApiClient = influxDbServerApiClient;
     }
 
-    public Optional<XDripReading> getLastReading() {
-        Optional<XDripReading> xDripReadingOpt = Optional.empty();
+    public Optional<SensorReading> getLastReading() {
+        Optional<SensorReading> sensorReadingOpt = Optional.empty();
         try {
-            var glucoseData = influxDbServerApiClient.getReadings();
-            Objects.requireNonNull(glucoseData, "Glucose Data must not be null!");
-            var currentReadings = ToXDripReadingMapper.toXDripReadingList(glucoseData);
-            if (!currentReadings.isEmpty()) {
-                xDripReadingOpt = Optional.of(currentReadings.getLast());
+            var sensorReadings = sensorDataReader.read();
+            Objects.requireNonNull(sensorReadings, "Sensor readings must not be null!");
+            if (!sensorReadings.isEmpty()) {
+                sensorReadingOpt = Optional.of(sensorReadings.getLast());
             }
         } catch (Exception e) {
             LOG.warn("Unable to fetch a new reading", e);
         }
-        return xDripReadingOpt;
+        return sensorReadingOpt;
     }
 
-    public Optional<XDripReading> updateAndReturnLastReading() {
+    public Optional<SensorReading> updateAndReturnLastReading() {
         var lastReadingOpt = getLastReading();
         lastReadingOpt.ifPresent(lastReadingCacheManager::updateReading);
         return lastReadingOpt;
     }
 
-    public Optional<XDripReading> updateAndReturnLastReadingIfNew(Optional<XDripReading> lastReadingOpt) {
+    public Optional<SensorReading> updateAndReturnLastReadingIfNew(Optional<SensorReading> lastReadingOpt) {
         return lastReadingOpt.filter(lastReadingCacheManager::checkAndUpdateIfNew);
     }
 }
