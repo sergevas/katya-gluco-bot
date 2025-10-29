@@ -17,9 +17,9 @@ import static dev.sergevas.tool.katya.gluco.bot.xdrip.entity.ChangeStatus.SINGLE
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertIterableEquals;
 
-class ToXDripReadingMapperTest {
+class FromXDripReadingMapperTest {
 
-    private static ToXDripReadingMapper toXDripReadingMapper;
+    private static FromXDripReadingMapper fromXDripReadingMapper;
 
     private GlucoseData glucoseData;
     private SensorReading SensorReading1;
@@ -28,7 +28,7 @@ class ToXDripReadingMapperTest {
 
     @BeforeAll
     static void setupBeforeAll() {
-        toXDripReadingMapper = new ToXDripReadingMapper();
+        fromXDripReadingMapper = new FromXDripReadingMapper();
     }
 
     /*
@@ -139,7 +139,7 @@ class ToXDripReadingMapperTest {
 
     @Test
     void toXDripReadingList() {
-        assertIterableEquals(List.of(SensorReading1, SensorReading2, SensorReading3), toXDripReadingMapper.toSensorReadings(glucoseData));
+        assertIterableEquals(List.of(SensorReading1, SensorReading2, SensorReading3), fromXDripReadingMapper.toSensorReadings(glucoseData));
     }
 
     @Test
@@ -147,12 +147,12 @@ class ToXDripReadingMapperTest {
         var result = new Result();
         result.setStatement_id(0);
         var glucoseData = new GlucoseData(List.of(result));
-        assertIterableEquals(List.of(), toXDripReadingMapper.toSensorReadings(glucoseData));
+        assertIterableEquals(List.of(), fromXDripReadingMapper.toSensorReadings(glucoseData));
     }
 
     @Test
     void toXDripReading() {
-        assertEquals(SensorReading1, toXDripReadingMapper.toSensorReading(new GlucoseMeasurement(List.of("2025-04-14T21:07:40.688Z",
+        assertEquals(SensorReading1, fromXDripReadingMapper.toSensorReading(new GlucoseMeasurement(List.of("2025-04-14T21:07:40.688Z",
                 2.159,
                 "Flat",
                 0,

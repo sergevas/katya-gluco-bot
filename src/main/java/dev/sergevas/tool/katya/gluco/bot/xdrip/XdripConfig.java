@@ -1,9 +1,10 @@
 package dev.sergevas.tool.katya.gluco.bot.xdrip;
 
-import dev.sergevas.tool.katya.gluco.bot.telegram.control.LastReadingCacheManager;
-import dev.sergevas.tool.katya.gluco.bot.xdrip.boundary.InfluxDbSensorDataReader;
+import dev.sergevas.tool.katya.gluco.bot.telegram.control.SensorDataReader;
 import dev.sergevas.tool.katya.gluco.bot.xdrip.boundary.InfluxDbServerApiClient;
-import dev.sergevas.tool.katya.gluco.bot.xdrip.control.ToXDripReadingMapper;
+import dev.sergevas.tool.katya.gluco.bot.xdrip.control.FromXDripReadingMapper;
+import dev.sergevas.tool.katya.gluco.bot.xdrip.control.InfluxDbSensorDataReader;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.MediaType;
@@ -18,12 +19,8 @@ import java.util.List;
 import java.util.Map;
 
 @Configuration
+@ConditionalOnProperty(prefix = "app", name = "sensor.data.source", havingValue = "xdrip")
 public class XdripConfig {
-
-    @Bean
-    public LastReadingCacheManager lastReadingCacheManager() {
-        return new LastReadingCacheManager();
-    }
 
     @Bean
     public HttpServiceProxyFactory httpServiceProxyFactory(RestClient.Builder clientBuilder,
@@ -46,8 +43,8 @@ public class XdripConfig {
     }
 
     @Bean
-    public ToXDripReadingMapper toXDripReadingMapper() {
-        return new ToXDripReadingMapper();
+    public FromXDripReadingMapper toXDripReadingMapper() {
+        return new FromXDripReadingMapper();
     }
 
     @Bean
@@ -56,8 +53,8 @@ public class XdripConfig {
     }
 
     @Bean
-    public InfluxDbSensorDataReader sensorDataReader(ToXDripReadingMapper toXDripReadingMapper,
-                                                     InfluxDbServerApiClient influxDbServerApiClient) {
-        return new InfluxDbSensorDataReader(toXDripReadingMapper, influxDbServerApiClient);
+    public SensorDataReader sensorDataReader(FromXDripReadingMapper fromXDripReadingMapper,
+                                             InfluxDbServerApiClient influxDbServerApiClient) {
+        return new InfluxDbSensorDataReader(fromXDripReadingMapper, influxDbServerApiClient);
     }
 }

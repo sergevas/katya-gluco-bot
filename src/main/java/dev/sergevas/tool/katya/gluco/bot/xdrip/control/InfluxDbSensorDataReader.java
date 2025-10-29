@@ -1,25 +1,24 @@
-package dev.sergevas.tool.katya.gluco.bot.xdrip.boundary;
+package dev.sergevas.tool.katya.gluco.bot.xdrip.control;
 
 import dev.sergevas.tool.katya.gluco.bot.telegram.control.SensorDataReader;
-import dev.sergevas.tool.katya.gluco.bot.telegram.control.SensorReadingMapper;
 import dev.sergevas.tool.katya.gluco.bot.telegram.entity.SensorReading;
-import dev.sergevas.tool.katya.gluco.bot.xdrip.entity.influxdb.GlucoseData;
+import dev.sergevas.tool.katya.gluco.bot.xdrip.boundary.InfluxDbServerApiClient;
 
 import java.util.List;
 
 public class InfluxDbSensorDataReader implements SensorDataReader {
 
-    private final SensorReadingMapper<GlucoseData> sensorReadingMapper;
+    private final FromXDripReadingMapper fromXDripReadingMapper;
     private final InfluxDbServerApiClient influxDbServerApiClient;
 
-    public InfluxDbSensorDataReader(SensorReadingMapper<GlucoseData> sensorReadingMapper,
+    public InfluxDbSensorDataReader(FromXDripReadingMapper fromXDripReadingMapper,
                                     InfluxDbServerApiClient influxDbServerApiClient) {
-        this.sensorReadingMapper = sensorReadingMapper;
+        this.fromXDripReadingMapper = fromXDripReadingMapper;
         this.influxDbServerApiClient = influxDbServerApiClient;
     }
 
     @Override
     public List<SensorReading> read() {
-        return sensorReadingMapper.toSensorReadings(influxDbServerApiClient.getReadings());
+        return fromXDripReadingMapper.toSensorReadings(influxDbServerApiClient.getReadings());
     }
 }

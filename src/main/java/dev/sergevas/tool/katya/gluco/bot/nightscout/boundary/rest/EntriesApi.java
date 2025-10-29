@@ -1,6 +1,6 @@
 package dev.sergevas.tool.katya.gluco.bot.nightscout.boundary.rest;
 
-import dev.sergevas.tool.katya.gluco.bot.nightscout.control.SensorDataRepository;
+import dev.sergevas.tool.katya.gluco.bot.nightscout.control.NsEntryRepository;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import org.slf4j.Logger;
@@ -19,20 +19,20 @@ public class EntriesApi {
 
     private static final Logger LOG = LoggerFactory.getLogger(EntriesApi.class);
 
-    private final SensorDataRepository sensorDataRepository;
+    private final NsEntryRepository nsEntryRepository;
 
-    public EntriesApi(SensorDataRepository sensorDataRepository) {
-        this.sensorDataRepository = sensorDataRepository;
+    public EntriesApi(NsEntryRepository nsEntryRepository) {
+        this.nsEntryRepository = nsEntryRepository;
     }
 
     @PostMapping(consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.TEXT_PLAIN_VALUE})
     public void addEntries(@Valid @NotNull @RequestBody List<@Valid Entry> entries) {
-        sensorDataRepository.storeNsEntries(NsEntryMapper.toNsEntries(entries));
+        nsEntryRepository.storeNsEntries(NsEntryMapper.toNsEntries(entries));
     }
 
     @GetMapping(path = "/all", produces = MediaType.APPLICATION_JSON_VALUE)
     public List<Entry> getAllEntries(/*@QueryParam("count") BigDecimal count*/) {
-        return NsEntryMapper.toEntries(sensorDataRepository.getAllNsEntries());
+        return NsEntryMapper.toEntries(nsEntryRepository.getAllNsEntries());
     }
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)

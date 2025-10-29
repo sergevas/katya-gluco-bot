@@ -10,7 +10,7 @@ import dev.sergevas.tool.katya.gluco.bot.xdrip.entity.influxdb.Result;
 import java.util.List;
 import java.util.Objects;
 
-public class ToXDripReadingMapper implements SensorReadingMapper<GlucoseData> {
+public class FromXDripReadingMapper implements SensorReadingMapper<GlucoseData> {
 
     public static final String SERIES_NAME = "glucose";
 

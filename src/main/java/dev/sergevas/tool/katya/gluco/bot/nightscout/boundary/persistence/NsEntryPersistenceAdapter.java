@@ -2,7 +2,7 @@ package dev.sergevas.tool.katya.gluco.bot.nightscout.boundary.persistence;
 
 import dev.sergevas.tool.katya.gluco.bot.nightscout.boundary.persistence.entity.NsEntryEntity;
 import dev.sergevas.tool.katya.gluco.bot.nightscout.boundary.persistence.entity.mapper.NsEntryEntityMapper;
-import dev.sergevas.tool.katya.gluco.bot.nightscout.control.SensorDataRepository;
+import dev.sergevas.tool.katya.gluco.bot.nightscout.control.NsEntryRepository;
 import dev.sergevas.tool.katya.gluco.bot.nightscout.entity.NsEntry;
 import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
@@ -13,13 +13,13 @@ import java.util.Optional;
 
 import static java.util.stream.Collectors.toMap;
 
-public class SensorDataPersistenceAdapter implements SensorDataRepository {
+public class NsEntryPersistenceAdapter implements NsEntryRepository {
 
-    private static final Logger LOG = LoggerFactory.getLogger(SensorDataPersistenceAdapter.class);
+    private static final Logger LOG = LoggerFactory.getLogger(NsEntryPersistenceAdapter.class);
 
     private final NsEntryEntityJpaRepository nsEntryEntityJpaRepository;
 
-    public SensorDataPersistenceAdapter(NsEntryEntityJpaRepository nsEntryEntityJpaRepository) {
+    public NsEntryPersistenceAdapter(NsEntryEntityJpaRepository nsEntryEntityJpaRepository) {
         this.nsEntryEntityJpaRepository = nsEntryEntityJpaRepository;
     }
 
@@ -62,5 +62,14 @@ public class SensorDataPersistenceAdapter implements SensorDataRepository {
                 .toList();
         LOG.debug("Exit getAllNsEntries() nsEntries={}", nsEntries);
         return nsEntries;
+    }
+
+    @Override
+    public Optional<NsEntry> getLatestNsEntry() {
+        LOG.debug("Enter getLatestNsEntry()");
+        var nsEntry = nsEntryEntityJpaRepository.findFirstByOrderByEpochTimeDesc()
+                .map(NsEntryEntityMapper::toNsEntry);
+        LOG.debug("Exit getAllNsEntries() nsEntry={}", nsEntry);
+        return nsEntry;
     }
 }

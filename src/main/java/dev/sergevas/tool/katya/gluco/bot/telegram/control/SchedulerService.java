@@ -4,7 +4,6 @@ import dev.sergevas.tool.katya.gluco.bot.telegram.boundary.KatyaGlucoBot;
 import dev.sergevas.tool.katya.gluco.bot.telegram.entity.SensorReading;
 import dev.sergevas.tool.katya.gluco.bot.telegram.entity.TriggerEvent;
 import dev.sergevas.tool.katya.gluco.bot.telegram.entity.XDripReadingContext;
-import dev.sergevas.tool.katya.gluco.bot.xdrip.control.ReadingService;
 import dev.sergevas.tool.katya.gluco.bot.xdrip.entity.ChangeStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

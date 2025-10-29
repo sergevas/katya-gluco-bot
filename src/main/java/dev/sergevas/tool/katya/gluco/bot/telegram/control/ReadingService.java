@@ -1,8 +1,5 @@
-package dev.sergevas.tool.katya.gluco.bot.xdrip.control;
+package dev.sergevas.tool.katya.gluco.bot.telegram.control;
 
-import dev.sergevas.tool.katya.gluco.bot.telegram.control.LastReadingCacheManager;
-import dev.sergevas.tool.katya.gluco.bot.telegram.control.SensorDataReader;
-import dev.sergevas.tool.katya.gluco.bot.telegram.control.SensorDataReadingUseCase;
 import dev.sergevas.tool.katya.gluco.bot.telegram.entity.SensorReading;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,7 +7,7 @@ import org.slf4j.LoggerFactory;
 import java.util.Objects;
 import java.util.Optional;
 
-public class ReadingService implements SensorDataReadingUseCase {
+public class ReadingService {
 
     private static final Logger LOG = LoggerFactory.getLogger(ReadingService.class);
 

@@ -7,20 +7,9 @@ import dev.sergevas.tool.katya.gluco.bot.telegram.boundary.ConversationContextSt
 import dev.sergevas.tool.katya.gluco.bot.telegram.boundary.InMemoryConversationContextStore;
 import dev.sergevas.tool.katya.gluco.bot.telegram.boundary.KatyaGlucoBot;
 import dev.sergevas.tool.katya.gluco.bot.telegram.boundary.KatyaGlucoBotFactory;
-import dev.sergevas.tool.katya.gluco.bot.telegram.control.LastReadingCacheManager;
-import dev.sergevas.tool.katya.gluco.bot.telegram.control.SchedulerControls;
-import dev.sergevas.tool.katya.gluco.bot.telegram.control.SchedulerService;
-import dev.sergevas.tool.katya.gluco.bot.telegram.control.updprocessor.BotErrorProcessor;
-import dev.sergevas.tool.katya.gluco.bot.telegram.control.updprocessor.BotInsCommandProcessor;
-import dev.sergevas.tool.katya.gluco.bot.telegram.control.updprocessor.BotRecommendationRequestMessageProcessor;
-import dev.sergevas.tool.katya.gluco.bot.telegram.control.updprocessor.BotUnknownCommandProcessor;
-import dev.sergevas.tool.katya.gluco.bot.telegram.control.updprocessor.BotUpdateCommandProcessor;
-import dev.sergevas.tool.katya.gluco.bot.telegram.control.updprocessor.BotUpdateDispatchProcessor;
-import dev.sergevas.tool.katya.gluco.bot.telegram.control.updprocessor.BotUpdateProcessor;
-import dev.sergevas.tool.katya.gluco.bot.telegram.control.updprocessor.BotUpdateValidationRules;
+import dev.sergevas.tool.katya.gluco.bot.telegram.control.*;
+import dev.sergevas.tool.katya.gluco.bot.telegram.control.updprocessor.*;
 import dev.sergevas.tool.katya.gluco.bot.xdrip.XdripConfig;
-import dev.sergevas.tool.katya.gluco.bot.xdrip.boundary.InfluxDbServerApiClient;
-import dev.sergevas.tool.katya.gluco.bot.xdrip.control.ReadingService;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -49,10 +38,14 @@ public class TelegramBotConfig {
     }
 
     @Bean
-    public ReadingService readingService(
-            InfluxDbServerApiClient influxDbServerApiClient,
-            LastReadingCacheManager lastReadingCacheManager) {
-        return new ReadingService(influxDbServerApiClient, lastReadingCacheManager);
+    public LastReadingCacheManager lastReadingCacheManager() {
+        return new LastReadingCacheManager();
+    }
+
+    @Bean
+    public ReadingService readingService(SensorDataReader sensorDataReader,
+                                         LastReadingCacheManager lastReadingCacheManager) {
+        return new ReadingService(sensorDataReader, lastReadingCacheManager);
     }
 
     @Bean
