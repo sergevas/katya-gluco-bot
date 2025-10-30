@@ -1,7 +1,7 @@
 package dev.sergevas.tool.katya.gluco.bot.integration;
 
-import dev.sergevas.tool.katya.gluco.bot.integration.support.TestContainersConfig;
 import dev.sergevas.tool.katya.gluco.bot.nightscout.control.NsEntryRepository;
+import dev.sergevas.tool.katya.gluco.bot.support.TestContainersConfig;
 import dev.sergevas.tool.katya.gluco.bot.telegram.boundary.KatyaGlucoBot;
 import dev.sergevas.tool.katya.gluco.bot.telegram.control.SchedulerService;
 import org.junit.jupiter.api.BeforeEach;

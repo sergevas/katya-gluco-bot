@@ -1,4 +1,4 @@
-package dev.sergevas.tool.katya.gluco.bot.integration.support;
+package dev.sergevas.tool.katya.gluco.bot.support;
 
 import dev.sergevas.tool.katya.gluco.bot.AppProperties;
 import org.springframework.boot.devtools.restart.RestartScope;
