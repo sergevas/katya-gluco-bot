@@ -1,5 +1,6 @@
 package dev.sergevas.tool.katya.gluco.bot.integration;
 
+import dev.sergevas.tool.katya.gluco.bot.integration.support.TestContainersConfig;
 import dev.sergevas.tool.katya.gluco.bot.nightscout.control.NsEntryRepository;
 import dev.sergevas.tool.katya.gluco.bot.telegram.boundary.KatyaGlucoBot;
 import dev.sergevas.tool.katya.gluco.bot.telegram.control.SchedulerService;
@@ -8,15 +9,19 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.web.client.RestClient;
+import org.testcontainers.containers.PostgreSQLContainer;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
+@Import(TestContainersConfig.class)
+@Testcontainers
 public class EntriesApiIT {
 
     @MockitoBean
@@ -24,6 +29,9 @@ public class EntriesApiIT {
 
     @MockitoBean
     private SchedulerService schedulerService;
+
+    @Autowired
+    private PostgreSQLContainer<?> postgreSQLContainer;
 
     @Autowired
     private NsEntryRepository nsEntryRepository;

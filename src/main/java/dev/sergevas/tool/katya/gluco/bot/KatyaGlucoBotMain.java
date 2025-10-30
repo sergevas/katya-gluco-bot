@@ -9,6 +9,7 @@ import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
 
 @SpringBootApplication
 @ConfigurationPropertiesScan(basePackageClasses = {
+        AppProperties.class,
         TelegramBotProperties.class,
         RecommendationMessagesProperties.class,
         XdripProperties.class
