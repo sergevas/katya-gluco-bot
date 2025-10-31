@@ -17,6 +17,7 @@ import org.springframework.web.client.RestClient;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
+import static dev.sergevas.tool.katya.gluco.bot.security.AuthenticationService.API_SECRET_HEADER;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -54,39 +55,42 @@ public class EntriesApiIT {
 
         restClient.post()
                 .contentType(MediaType.APPLICATION_JSON)
-                .body("""
-                        [
-                            {
-                                "type": "sgv",
-                                "device": "3MH01DTCMC4",
-                                "dateString": "2025-09-01T11:13:59.000+03:00",
-                                "date": 1756714439000,
-                                "sgv": 83,
-                                "delta": -7.25,
-                                "direction": "FortyFiveDown",
-                                "noise": 1,
-                                "filtered": 83000,
-                                "unfiltered": 83000,
-                                "rssi": 100
-                            },
-                            {
-                                "type": "sgv",
-                                "device": "3MH01DTCMC4",
-                                "dateString": "2025-09-01T11:15:01.000+03:00",
-                                "date": 1756714501000,
-                                "sgv": 83,
-                                "delta": -7,
-                                "direction": "FortyFiveDown",
-                                "noise": 1,
-                                "filtered": 83000,
-                                "unfiltered": 83000,
-                                "rssi": 100
-                            }
-                        ]""")
+                .header(API_SECRET_HEADER, "e5e9fa1ba31ecd1ae84f75caaa474f3a663f05f4")
+                .body(TEST_REQUEST)
                 .retrieve()
                 .toBodilessEntity();
 
         var persistedNsEntries = nsEntryRepository.getAllNsEntries();
         assertEquals(2, persistedNsEntries.size());
     }
+
+    private static final String TEST_REQUEST = """
+            [
+                {
+                    "type": "sgv",
+                    "device": "3MH01DTCMC4",
+                    "dateString": "2025-09-01T11:13:59.000+03:00",
+                    "date": 1756714439000,
+                    "sgv": 83,
+                    "delta": -7.25,
+                    "direction": "FortyFiveDown",
+                    "noise": 1,
+                    "filtered": 83000,
+                    "unfiltered": 83000,
+                    "rssi": 100
+                },
+                {
+                    "type": "sgv",
+                    "device": "3MH01DTCMC4",
+                    "dateString": "2025-09-01T11:15:01.000+03:00",
+                    "date": 1756714501000,
+                    "sgv": 83,
+                    "delta": -7,
+                    "direction": "FortyFiveDown",
+                    "noise": 1,
+                    "filtered": 83000,
+                    "unfiltered": 83000,
+                    "rssi": 100
+                }
+            ]""";
 }
