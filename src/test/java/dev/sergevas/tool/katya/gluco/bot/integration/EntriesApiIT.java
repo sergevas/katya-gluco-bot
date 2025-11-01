@@ -2,11 +2,13 @@ package dev.sergevas.tool.katya.gluco.bot.integration;
 
 import dev.sergevas.tool.katya.gluco.bot.nightscout.control.NsEntryRepository;
 import dev.sergevas.tool.katya.gluco.bot.support.TestContainersConfig;
+import dev.sergevas.tool.katya.gluco.bot.support.TestRestClientBuilder;
 import dev.sergevas.tool.katya.gluco.bot.telegram.boundary.KatyaGlucoBot;
 import dev.sergevas.tool.katya.gluco.bot.telegram.control.SchedulerService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.context.annotation.Import;
@@ -41,13 +43,18 @@ public class EntriesApiIT {
     @LocalServerPort
     private int port;
 
+    @Value("${server.ssl.key-store}")
+    private String keyStorePath;
+
+    @Value("${server.ssl.key-store-password}")
+    private String keyStorePassword;
+
     private RestClient restClient;
 
     @BeforeEach
-    void setUp() {
-        restClient = RestClient.builder()
-                .baseUrl("http://localhost:" + port + "/entries")
-                .build();
+    void setUp() throws Exception {
+        restClient = TestRestClientBuilder.insecureRestClient(keyStorePath, keyStorePassword,
+                "https://localhost:" + port + "/entries");
     }
 
     @Test
