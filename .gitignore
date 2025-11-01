@@ -31,7 +31,7 @@ target/
 .quarkus/
 
 # Local environment
-.env
+etc/.env
 *.env
 
 # Plugin directory
