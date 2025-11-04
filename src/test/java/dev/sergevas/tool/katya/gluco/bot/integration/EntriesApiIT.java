@@ -54,7 +54,7 @@ public class EntriesApiIT {
     @BeforeEach
     void setUp() throws Exception {
         restClient = TestRestClientBuilder.insecureRestClient(keyStorePath, keyStorePassword,
-                "https://localhost:" + port + "/entries");
+                "https://localhost:" + port + "/api/v1/entries");
     }
 
     @Test

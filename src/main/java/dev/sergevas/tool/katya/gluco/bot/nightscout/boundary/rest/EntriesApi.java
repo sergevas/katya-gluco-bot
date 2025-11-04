@@ -14,7 +14,7 @@ import java.math.BigDecimal;
 import java.util.List;
 
 @RestController
-@RequestMapping(path = "/entries")
+@RequestMapping(path = "/api/v1/entries")
 public class EntriesApi {
 
     private static final Logger LOG = LoggerFactory.getLogger(EntriesApi.class);
