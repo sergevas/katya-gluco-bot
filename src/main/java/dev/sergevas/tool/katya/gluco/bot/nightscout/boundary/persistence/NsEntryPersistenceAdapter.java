@@ -72,4 +72,13 @@ public class NsEntryPersistenceAdapter implements NsEntryRepository {
         LOG.debug("Exit getAllNsEntries() nsEntry={}", nsEntry);
         return nsEntry;
     }
+
+    @Override
+    public Optional<NsEntry> getById(Long id) {
+        LOG.debug("Enter getById() id={}", id);
+        var nsEntry = nsEntryEntityJpaRepository.findFirstByOrderByEpochTimeDesc()
+                .map(NsEntryEntityMapper::toNsEntry);
+        LOG.debug("Exit getById() nsEntry={}", nsEntry);
+        return nsEntry;
+    }
 }

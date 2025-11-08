@@ -3,6 +3,7 @@ package dev.sergevas.tool.katya.gluco.bot.nightscout.entity;
 import java.time.OffsetDateTime;
 
 public record NsEntry(
+        Long id,
         String type,
         String device,
         OffsetDateTime sgvTime,

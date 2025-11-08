@@ -2,12 +2,14 @@ package dev.sergevas.tool.katya.gluco.bot.nightscout.boundary.rest;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.Valid;
+import org.springframework.hateoas.RepresentationModel;
 
 import java.util.Objects;
 import java.util.StringJoiner;
 
-public class Entry {
+public class Entry extends RepresentationModel<Entry> {
 
+    private Long id;
     private String type;
     private String device;
     private String dateString;
@@ -24,9 +26,10 @@ public class Entry {
         super();
     }
 
-    public Entry(String type, String device, String dateString, Long date, Integer sgv, Double delta, String direction,
-                 Integer noise, Integer filtered, Integer unfiltered, Integer rssi) {
+    public Entry(Long id, String type, String device, String dateString, Long date, Integer sgv, Double delta,
+                 String direction, Integer noise, Integer filtered, Integer unfiltered, Integer rssi) {
         super();
+        this.id = id;
         this.type = type;
         this.device = device;
         this.dateString = dateString;
@@ -38,6 +41,21 @@ public class Entry {
         this.filtered = filtered;
         this.unfiltered = unfiltered;
         this.rssi = rssi;
+    }
+
+    public Entry type(Long id) {
+        this.id = id;
+        return this;
+    }
+
+    @JsonProperty("id")
+    public Long getId() {
+        return id;
+    }
+
+    @JsonProperty("id")
+    public void setId(Long id) {
+        this.id = id;
     }
 
     /**
@@ -249,7 +267,8 @@ public class Entry {
             return false;
         }
         Entry entry = (Entry) o;
-        return Objects.equals(this.type, entry.type) &&
+        return Objects.equals(this.id, entry.id) &&
+                Objects.equals(this.type, entry.type) &&
                 Objects.equals(this.device, entry.device) &&
                 Objects.equals(this.dateString, entry.dateString) &&
                 Objects.equals(this.date, entry.date) &&
@@ -264,12 +283,13 @@ public class Entry {
 
     @Override
     public int hashCode() {
-        return Objects.hash(type, device, dateString, date, sgv, delta, direction, noise, filtered, unfiltered, rssi);
+        return Objects.hash(id, type, device, dateString, date, sgv, delta, direction, noise, filtered, unfiltered, rssi);
     }
 
     @Override
     public String toString() {
         return new StringJoiner(", ", Entry.class.getSimpleName() + "[", "]")
+                .add("id='" + id + "'")
                 .add("type='" + type + "'")
                 .add("device='" + device + "'")
                 .add("sgvTime='" + dateString + "'")

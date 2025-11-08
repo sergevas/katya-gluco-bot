@@ -9,7 +9,9 @@ public interface NsEntryRepository {
 
     void storeNsEntries(List<NsEntry> entries);
 
-    List<NsEntry> getAllNsEntries();
+    List<NsEntry> getAllNsEntries(NsEntryFilter filter);
 
     Optional<NsEntry> getLatestNsEntry();
+
+    Optional<NsEntry> getById(Long id);
 }

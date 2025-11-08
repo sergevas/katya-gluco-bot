@@ -1,20 +1,28 @@
 package dev.sergevas.tool.katya.gluco.bot.nightscout.boundary.rest;
 
 import dev.sergevas.tool.katya.gluco.bot.nightscout.entity.NsEntry;
+import org.springframework.hateoas.server.mvc.RepresentationModelAssemblerSupport;
 
 import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.Optional;
 
-public class NsEntryMapper {
+import static dev.sergevas.tool.katya.gluco.bot.nightscout.boundary.rest.MapperSupport.toOdtFromString;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
-    public static NsEntry toNsEntry(Entry entry) {
+public class NsEntryMapper extends RepresentationModelAssemblerSupport<NsEntry, Entry> {
+
+    public NsEntryMapper() {
+        super(NsEntry.class, Entry.class);
+    }
+
+    public NsEntry toNsEntry(Entry entry) {
         return new NsEntry(
+                entry.getId(),
                 entry.getType(),
                 entry.getDevice(),
-                Optional.ofNullable(entry.getDateString())
-                        .map(OffsetDateTime::parse)
-                        .orElse(null),
+                toOdtFromString(entry.getDateString()),
                 entry.getDate(),
                 entry.getSgv(),
                 entry.getDelta(),
@@ -26,14 +34,16 @@ public class NsEntryMapper {
         );
     }
 
-    public static List<NsEntry> toNsEntries(List<Entry> entries) {
+    public List<NsEntry> toNsEntries(List<Entry> entries) {
         return entries.stream()
-                .map(NsEntryMapper::toNsEntry)
+                .map(this::toNsEntry)
                 .toList();
     }
 
-    public static Entry toEntry(NsEntry nsEntry) {
-        return new Entry(
+    @Override
+    public Entry toModel(NsEntry nsEntry) {
+        var entry = new Entry(
+                nsEntry.id(),
                 nsEntry.type(),
                 nsEntry.device(),
                 Optional.ofNullable(nsEntry.sgvTime())
@@ -48,11 +58,13 @@ public class NsEntryMapper {
                 nsEntry.unfiltered(),
                 nsEntry.rssi()
         );
+        entry.add(linkTo(methodOn(EntriesApi.class).getEntryById(nsEntry.id())).withSelfRel());
+        return entry;
     }
 
-    public static List<Entry> toEntries(List<NsEntry> nsEntries) {
+    public List<Entry> toEntries(List<NsEntry> nsEntries) {
         return nsEntries.stream()
-                .map(NsEntryMapper::toEntry)
+                .map(this::toModel)
                 .toList();
     }
 }
