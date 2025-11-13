@@ -2,20 +2,26 @@ package dev.sergevas.tool.katya.gluco.bot.nightscout.boundary.persistence;
 
 import dev.sergevas.tool.katya.gluco.bot.nightscout.boundary.persistence.entity.NsEntryEntity;
 import dev.sergevas.tool.katya.gluco.bot.nightscout.boundary.persistence.entity.mapper.NsEntryEntityMapper;
+import dev.sergevas.tool.katya.gluco.bot.nightscout.control.NsEntryFilter;
 import dev.sergevas.tool.katya.gluco.bot.nightscout.control.NsEntryRepository;
 import dev.sergevas.tool.katya.gluco.bot.nightscout.entity.NsEntry;
 import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.PageRequest;
 
 import java.util.List;
 import java.util.Optional;
 
+import static java.util.Optional.ofNullable;
 import static java.util.stream.Collectors.toMap;
 
 public class NsEntryPersistenceAdapter implements NsEntryRepository {
 
     private static final Logger LOG = LoggerFactory.getLogger(NsEntryPersistenceAdapter.class);
+
+    private static final int DEFAULT_PAGE_NUMBER = 0;
+    private static final int DEFAULT_PAGE_SIZE = 20;
 
     private final NsEntryEntityJpaRepository nsEntryEntityJpaRepository;
 
@@ -45,7 +51,7 @@ public class NsEntryPersistenceAdapter implements NsEntryRepository {
 
         if (!existingPollsSensorReadingsByTimeEpoch.isEmpty()) {
             sensorReadingsByEpochTime.forEach((timeToEpoch, reading) ->
-                    Optional.ofNullable(existingPollsSensorReadingsByTimeEpoch.get(timeToEpoch)).ifPresent(existingReading -> {
+                    ofNullable(existingPollsSensorReadingsByTimeEpoch.get(timeToEpoch)).ifPresent(existingReading -> {
                         if (!reading.equals(existingReading)) {
                             LOG.warn("Idempotency conflict occurred: new {}, existing: {}", reading, existingReading);
                         }
@@ -54,9 +60,14 @@ public class NsEntryPersistenceAdapter implements NsEntryRepository {
     }
 
     @Override
-    public List<NsEntry> getAllNsEntries() {
-        LOG.debug("Enter getAllNsEntries()");
-        var nsEntries = nsEntryEntityJpaRepository.findAll()
+    public List<NsEntry> getNsEntries(NsEntryFilter filter) {
+        LOG.debug("Enter getNsEntries() filter={}", filter);
+        var sort = SortMapper.toEntitySort(filter.sort());
+        var pageable = PageRequest.of(
+                ofNullable(filter.page()).orElse(DEFAULT_PAGE_NUMBER),
+                ofNullable(filter.size()).orElse(DEFAULT_PAGE_SIZE),
+                sort);
+        var nsEntries = nsEntryEntityJpaRepository.findAll(NsEntryEntitySpecification.toSpecification(filter), pageable)
                 .stream()
                 .map(NsEntryEntityMapper::toNsEntry)
                 .toList();

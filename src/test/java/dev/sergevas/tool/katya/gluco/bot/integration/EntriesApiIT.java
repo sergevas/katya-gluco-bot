@@ -1,5 +1,6 @@
 package dev.sergevas.tool.katya.gluco.bot.integration;
 
+import dev.sergevas.tool.katya.gluco.bot.nightscout.control.NsEntryFilter;
 import dev.sergevas.tool.katya.gluco.bot.nightscout.control.NsEntryRepository;
 import dev.sergevas.tool.katya.gluco.bot.support.TestContainersConfig;
 import dev.sergevas.tool.katya.gluco.bot.support.TestRestClientBuilder;
@@ -67,7 +68,16 @@ public class EntriesApiIT {
                 .retrieve()
                 .toBodilessEntity();
 
-        var persistedNsEntries = nsEntryRepository.getAllNsEntries();
+        var persistedNsEntries = nsEntryRepository.getNsEntries(new NsEntryFilter(
+                "3MH01DTCMC4",
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null
+        ));
         assertEquals(2, persistedNsEntries.size());
     }
 
@@ -75,7 +85,7 @@ public class EntriesApiIT {
             [
                 {
                     "type": "sgv",
-                    "device": "3MH01DTCMC4",
+                        "device": "3MH01DTCMC4",
                     "dateString": "2025-09-01T11:13:59.000+03:00",
                     "date": 1756714439000,
                     "sgv": 83,

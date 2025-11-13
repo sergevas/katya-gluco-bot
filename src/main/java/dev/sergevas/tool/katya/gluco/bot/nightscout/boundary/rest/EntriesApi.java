@@ -1,13 +1,11 @@
 package dev.sergevas.tool.katya.gluco.bot.nightscout.boundary.rest;
 
-import dev.sergevas.tool.katya.gluco.bot.nightscout.control.NsEntryFilter;
 import dev.sergevas.tool.katya.gluco.bot.nightscout.control.NsEntryNotFoundException;
 import dev.sergevas.tool.katya.gluco.bot.nightscout.control.NsEntryRepository;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -43,9 +41,9 @@ public class EntriesApi {
     }
 
     @GetMapping(path = "/all", produces = MediaType.APPLICATION_JSON_VALUE)
-    public Page<Entry> getEntries(EntryFilter entryFilter) {
+    public List<Entry> getEntries(EntryFilter entryFilter) {
         var nsEntryfilter = entryFilter.toNsEntryFilter();
-        return nsEntryMapper.toEntries(nsEntryRepository.getAllNsEntries(nsEntryfilter));
+        return nsEntryMapper.toEntries(nsEntryRepository.getNsEntries(nsEntryfilter));
     }
 
     @GetMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)

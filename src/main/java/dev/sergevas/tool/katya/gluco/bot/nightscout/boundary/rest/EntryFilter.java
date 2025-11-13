@@ -2,6 +2,8 @@ package dev.sergevas.tool.katya.gluco.bot.nightscout.boundary.rest;
 
 import dev.sergevas.tool.katya.gluco.bot.nightscout.control.NsEntryFilter;
 
+import java.util.List;
+
 import static dev.sergevas.tool.katya.gluco.bot.nightscout.boundary.rest.MapperSupport.toOdtFromString;
 
 public record EntryFilter(String device,
@@ -9,7 +11,7 @@ public record EntryFilter(String device,
                           String dateString,
                           String fromDateString,
                           String toDateString,
-                          String sort,
+                          List<String> sort,
                           Integer page,
                           Integer size) {
 
