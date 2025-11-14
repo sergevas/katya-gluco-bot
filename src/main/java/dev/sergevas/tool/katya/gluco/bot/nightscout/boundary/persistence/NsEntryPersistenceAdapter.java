@@ -67,10 +67,16 @@ public class NsEntryPersistenceAdapter implements NsEntryRepository {
                 ofNullable(filter.page()).orElse(DEFAULT_PAGE_NUMBER),
                 ofNullable(filter.size()).orElse(DEFAULT_PAGE_SIZE),
                 sort);
-        var nsEntries = nsEntryEntityJpaRepository.findAll(NsEntryEntitySpecification.toSpecification(filter), pageable)
-                .stream()
-                .map(NsEntryEntityMapper::toNsEntry)
-                .toList();
+        List<NsEntry> nsEntries;
+        try {
+            nsEntries = nsEntryEntityJpaRepository.findAll(NsEntryEntitySpecification.toSpecification(filter), pageable)
+                    .stream()
+                    .map(NsEntryEntityMapper::toNsEntry)
+                    .toList();
+        } catch (Exception e) {
+            LOG.error("Error fetching NsEntries with filter: {} and pageable: {}", filter, pageable, e);
+            throw e;
+        }
         LOG.debug("Exit getAllNsEntries() nsEntries={}", nsEntries);
         return nsEntries;
     }

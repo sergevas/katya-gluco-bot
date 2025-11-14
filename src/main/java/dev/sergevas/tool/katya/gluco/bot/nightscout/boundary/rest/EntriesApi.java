@@ -9,14 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -41,9 +34,12 @@ public class EntriesApi {
     }
 
     @GetMapping(path = "/all", produces = MediaType.APPLICATION_JSON_VALUE)
-    public List<Entry> getEntries(EntryFilter entryFilter) {
+    public List<Entry> getEntries(@Valid EntryFilter entryFilter) {
+        LOG.info("Enter getEntries() entryFilter={}", entryFilter);
         var nsEntryfilter = entryFilter.toNsEntryFilter();
-        return nsEntryMapper.toEntries(nsEntryRepository.getNsEntries(nsEntryfilter));
+        var entries = nsEntryMapper.toEntries(nsEntryRepository.getNsEntries(nsEntryfilter));
+        LOG.info("Exit getEntries() entries.size={}", entries.size());
+        return entries;
     }
 
     @GetMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
