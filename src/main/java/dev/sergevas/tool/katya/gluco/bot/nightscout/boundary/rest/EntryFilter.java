@@ -1,6 +1,7 @@
 package dev.sergevas.tool.katya.gluco.bot.nightscout.boundary.rest;
 
 import dev.sergevas.tool.katya.gluco.bot.nightscout.control.NsEntryFilter;
+import dev.sergevas.tool.katya.gluco.bot.web.control.SortSpec;
 
 import java.util.List;
 
@@ -11,7 +12,7 @@ public record EntryFilter(String device,
                           String dateString,
                           String fromDateString,
                           String toDateString,
-                          List<String> sort,
+                          List<SortSpec> sort,
                           Integer page,
                           Integer size) {
 
