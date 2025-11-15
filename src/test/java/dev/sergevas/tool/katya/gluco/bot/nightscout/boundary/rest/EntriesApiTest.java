@@ -21,6 +21,7 @@ import static dev.sergevas.tool.katya.gluco.bot.security.AuthenticationService.A
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -44,13 +45,14 @@ class EntriesApiTest {
     void givenExistentNsEntries_whenGetFilteredWithMultipleSort_thenShouldReturnSuccessfully() throws Exception {
         when(nsEntryRepository.getNsEntries(any(NsEntryFilter.class))).thenReturn(List.of(NS_ENTRY_1, NS_ENTRY_2));
 
-        mockMvc.perform(get("/api/v1/entries/all")
-                        .param("sort", "dateString,desc")
-                        .param("sort", "device,asc")
-                        .param("page", "0")
-                        .param("size", "10")
+        mockMvc.perform(get("/api/v1/entries/all?sort=dateString,desc")
+//                        .param("sort", "dateString,desc")
+//                        .param("sort", "device,asc")
+//                        .param("page", "0")
+//                        .param("size", "10")
                         .header(API_SECRET_HEADER, "test-api-secret")
                         .accept(MediaType.APPLICATION_JSON))
+                .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.length()").value(2));
