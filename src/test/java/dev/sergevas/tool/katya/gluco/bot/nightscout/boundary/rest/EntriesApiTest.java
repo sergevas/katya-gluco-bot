@@ -3,6 +3,7 @@ package dev.sergevas.tool.katya.gluco.bot.nightscout.boundary.rest;
 import dev.sergevas.tool.katya.gluco.bot.nightscout.control.NsEntryFilter;
 import dev.sergevas.tool.katya.gluco.bot.nightscout.control.NsEntryRepository;
 import dev.sergevas.tool.katya.gluco.bot.web.boundary.SortSpecConverter;
+import dev.sergevas.tool.katya.gluco.bot.web.control.SortSpec;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
@@ -13,18 +14,18 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.time.OffsetDateTime;
 import java.util.List;
 
 import static dev.sergevas.tool.katya.gluco.bot.nightscout.support.NightscoutTestData.NS_ENTRY_1;
 import static dev.sergevas.tool.katya.gluco.bot.nightscout.support.NightscoutTestData.NS_ENTRY_2;
 import static dev.sergevas.tool.katya.gluco.bot.security.AuthenticationService.API_SECRET_HEADER;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(EntriesApi.class)
 @Import({
@@ -45,11 +46,16 @@ class EntriesApiTest {
     void givenExistentNsEntries_whenGetFilteredWithMultipleSort_thenShouldReturnSuccessfully() throws Exception {
         when(nsEntryRepository.getNsEntries(any(NsEntryFilter.class))).thenReturn(List.of(NS_ENTRY_1, NS_ENTRY_2));
 
-        mockMvc.perform(get("/api/v1/entries/all?sort=dateString,desc")
-//                        .param("sort", "dateString,desc")
+        mockMvc.perform(get("/api/v1/entries/all")
+                        .param("sort", "dateString,desc")
 //                        .param("sort", "device,asc")
-//                        .param("page", "0")
-//                        .param("size", "10")
+                        .param("page", "1")
+                        .param("size", "20")
+                        .param("fromDateString", "2025-09-01T11:13:59.000+03:00")
+                        .param("toDateString", "2025-09-02T21:00:00.000+03:00")
+                        .param("device", "3MH01DTCMC4")
+                        .param("direction", "FortyFiveDown")
+                        .param("dateString", "2025-09-03T22:01:05.000+03:00")
                         .header(API_SECRET_HEADER, "test-api-secret")
                         .accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
@@ -58,5 +64,15 @@ class EntriesApiTest {
                 .andExpect(jsonPath("$.length()").value(2));
 //                .andExpect(jsonPath("$[0].date").value(NS_ENTRY_2.getDate()))
 //                .andExpect(jsonPath("$[1].date").value(NS_ENTRY_1.getDate()));
+
+        verify(nsEntryRepository).getNsEntries(new NsEntryFilter(
+                "3MH01DTCMC4",
+                "FortyFiveDown",
+                OffsetDateTime.parse("2025-09-03T22:01:05+03:00"),
+                OffsetDateTime.parse("2025-09-01T11:13:59+03:00"),
+                OffsetDateTime.parse("2025-09-02T21:00+03:00"),
+                List.of(new SortSpec("dateString", false)),
+                1,
+                20));
     }
 }
