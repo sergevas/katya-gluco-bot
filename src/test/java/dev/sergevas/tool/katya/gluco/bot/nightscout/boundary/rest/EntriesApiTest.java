@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
@@ -17,6 +18,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.time.OffsetDateTime;
 import java.util.List;
 
+import static dev.sergevas.tool.katya.gluco.bot.nightscout.support.NightscoutTestData.ENTRY_HAL_PAGED_REPLY;
 import static dev.sergevas.tool.katya.gluco.bot.nightscout.support.NightscoutTestData.NS_ENTRY_1;
 import static dev.sergevas.tool.katya.gluco.bot.nightscout.support.NightscoutTestData.NS_ENTRY_2;
 import static dev.sergevas.tool.katya.gluco.bot.security.AuthenticationService.API_SECRET_HEADER;
@@ -26,12 +28,11 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(EntriesApi.class)
 @Import({
-        NsEntryMapperAssembler.class,
+        NsEntryAssembler.class,
         SortFieldMapper.class
 })
 @PropertySource("classpath:application-test.properties")
@@ -46,7 +47,8 @@ class EntriesApiTest {
 
     @Test
     void givenExistentNsEntries_whenGetFilteredWithMultipleSort_thenShouldReturnSuccessfully() throws Exception {
-        when(nsEntryRepository.getNsEntries(any(NsEntryFilter.class))).thenReturn(List.of(NS_ENTRY_1, NS_ENTRY_2));
+        when(nsEntryRepository.getNsEntries(any(NsEntryFilter.class))).thenReturn(
+                new PageImpl<>(List.of(NS_ENTRY_1, NS_ENTRY_2)));
 
         mockMvc.perform(get("/api/v1/entries/all")
                         .param("sort", "dateString,desc")
@@ -63,7 +65,8 @@ class EntriesApiTest {
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.length()").value(2));
+                .andExpect(content().json(ENTRY_HAL_PAGED_REPLY));
+//                .andExpect(jsonPath("$.length()").value(2));
 //                .andExpect(jsonPath("$[0].date").value(NS_ENTRY_2.getDate()))
 //                .andExpect(jsonPath("$[1].date").value(NS_ENTRY_1.getDate()));
 
@@ -76,4 +79,6 @@ class EntriesApiTest {
                 PageRequest.of(1, 10,
                         Sort.by(Sort.Order.desc("sgvTime"), Sort.Order.asc("device")))));
     }
+
+
 }

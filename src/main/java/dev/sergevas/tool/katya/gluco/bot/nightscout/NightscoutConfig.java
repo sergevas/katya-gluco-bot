@@ -2,7 +2,7 @@ package dev.sergevas.tool.katya.gluco.bot.nightscout;
 
 import dev.sergevas.tool.katya.gluco.bot.nightscout.boundary.persistence.NsEntryEntityJpaRepository;
 import dev.sergevas.tool.katya.gluco.bot.nightscout.boundary.persistence.NsEntryPersistenceAdapter;
-import dev.sergevas.tool.katya.gluco.bot.nightscout.boundary.rest.NsEntryMapperAssembler;
+import dev.sergevas.tool.katya.gluco.bot.nightscout.boundary.rest.NsEntryAssembler;
 import dev.sergevas.tool.katya.gluco.bot.nightscout.control.FromNsEntryMapper;
 import dev.sergevas.tool.katya.gluco.bot.nightscout.control.NsEntryRepository;
 import dev.sergevas.tool.katya.gluco.bot.nightscout.control.NsEntrySensorDataReader;
@@ -19,8 +19,8 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 public class NightscoutConfig {
 
     @Bean
-    public NsEntryMapperAssembler nsEntryAssembler() {
-        return new NsEntryMapperAssembler();
+    public NsEntryAssembler nsEntryAssembler() {
+        return new NsEntryAssembler();
     }
 
     @Bean

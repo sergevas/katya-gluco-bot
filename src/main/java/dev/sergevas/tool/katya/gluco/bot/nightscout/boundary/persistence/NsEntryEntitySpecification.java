@@ -45,7 +45,7 @@ public class NsEntryEntitySpecification implements Specification<NsEntryEntity> 
         return specs.stream()
                 .filter(Objects::nonNull)
                 .reduce(Specification::and)
-                .orElse(null);
+                .orElse(Specification.unrestricted());
     }
 
     public static Specification<NsEntryEntity> byDevice(final String device) {

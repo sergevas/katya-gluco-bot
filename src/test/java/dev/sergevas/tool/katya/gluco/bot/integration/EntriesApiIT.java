@@ -1,5 +1,6 @@
 package dev.sergevas.tool.katya.gluco.bot.integration;
 
+import dev.sergevas.tool.katya.gluco.bot.nightscout.boundary.rest.Entry;
 import dev.sergevas.tool.katya.gluco.bot.nightscout.control.NsEntryFilter;
 import dev.sergevas.tool.katya.gluco.bot.nightscout.control.NsEntryRepository;
 import dev.sergevas.tool.katya.gluco.bot.support.TestContainersConfig;
@@ -21,8 +22,10 @@ import org.springframework.web.client.RestClient;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
+import static dev.sergevas.tool.katya.gluco.bot.nightscout.support.NightscoutTestData.TEST_REQUEST;
 import static dev.sergevas.tool.katya.gluco.bot.security.AuthenticationService.API_SECRET_HEADER;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
@@ -77,36 +80,17 @@ public class EntriesApiIT {
                 null,
                 Pageable.unpaged()
         ));
-        assertEquals(2, persistedNsEntries.size());
+        assertEquals(2, persistedNsEntries.stream().count());
     }
 
-    private static final String TEST_REQUEST = """
-            [
-                {
-                    "type": "sgv",
-                        "device": "3MH01DTCMC4",
-                    "dateString": "2025-09-01T11:13:59.000+03:00",
-                    "date": 1756714439000,
-                    "sgv": 83,
-                    "delta": -7.25,
-                    "direction": "FortyFiveDown",
-                    "noise": 1,
-                    "filtered": 83000,
-                    "unfiltered": 83000,
-                    "rssi": 100
-                },
-                {
-                    "type": "sgv",
-                    "device": "3MH01DTCMC4",
-                    "dateString": "2025-09-01T11:15:01.000+03:00",
-                    "date": 1756714501000,
-                    "sgv": 83,
-                    "delta": -7,
-                    "direction": "FortyFiveDown",
-                    "noise": 1,
-                    "filtered": 83000,
-                    "unfiltered": 83000,
-                    "rssi": 100
-                }
-            ]""";
+    @Test
+    void givenGetEntriesWoQueryFilterParamsRequest_whenProcessesSuccessfully_thenShouldReturnEntries() {
+        var response = restClient.get()
+                .uri("/all")
+                .accept(MediaType.APPLICATION_JSON)
+                .header(API_SECRET_HEADER, "e5e9fa1ba31ecd1ae84f75caaa474f3a663f05f4")
+                .retrieve()
+                .toEntity(Entry.class);
+        assertNotNull(response);
+    }
 }

@@ -2,10 +2,12 @@ package dev.sergevas.tool.katya.gluco.bot.nightscout.boundary.rest;
 
 import dev.sergevas.tool.katya.gluco.bot.nightscout.control.NsEntryNotFoundException;
 import dev.sergevas.tool.katya.gluco.bot.nightscout.control.NsEntryRepository;
+import dev.sergevas.tool.katya.gluco.bot.nightscout.entity.NsEntry;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
@@ -32,40 +34,47 @@ public class EntriesApi {
 
     private static final Logger LOG = LoggerFactory.getLogger(EntriesApi.class);
 
-    private final NsEntryMapperAssembler nsEntryMapperAssembler;
+    private final NsEntryAssembler nsEntryAssembler;
     private final NsEntryRepository nsEntryRepository;
-    private final PagedResourcesAssembler<Entry> pagedResourcesAssembler;
+    private final PagedResourcesAssembler<NsEntry> pagedResourcesAssembler;
 
-    public EntriesApi(NsEntryMapperAssembler nsEntryMapperAssembler, NsEntryRepository nsEntryRepository, PagedResourcesAssembler<Entry> pagedResourcesAssembler) {
-        this.nsEntryMapperAssembler = nsEntryMapperAssembler;
+    public EntriesApi(NsEntryAssembler nsEntryAssembler,
+                      NsEntryRepository nsEntryRepository,
+                      PagedResourcesAssembler<NsEntry> pagedResourcesAssembler) {
+        this.nsEntryAssembler = nsEntryAssembler;
         this.nsEntryRepository = nsEntryRepository;
         this.pagedResourcesAssembler = pagedResourcesAssembler;
     }
 
     @PostMapping(consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.TEXT_PLAIN_VALUE})
     public void addEntries(@Valid @NotNull @RequestBody List<@Valid Entry> entries) {
-        nsEntryRepository.storeNsEntries(nsEntryMapperAssembler.toNsEntries(entries));
+        nsEntryRepository.storeNsEntries(nsEntryAssembler.toNsEntries(entries));
     }
 
     @GetMapping(path = "/all", produces = MediaType.APPLICATION_JSON_VALUE)
     public PagedModel<Entry> getEntries(@Valid EntryFilter entryFilter,
                                         @PageableDefault(sort = "dateString", direction = Sort.Direction.DESC) Pageable pageable) {
         LOG.info("Enter getEntries() entryFilter={}", entryFilter);
-        var nsEntryfilter = NsEntryFilterMapper.toNsEntryFilter(entryFilter, pageable);
-        var entries = pagedResourcesAssembler.toModel(nsEntryRepository.getNsEntries(nsEntryfilter), nsEntryMapperAssembler);
+        var normalizedPageable = PageRequest.of(
+                pageable.getPageNumber(),
+                pageable.getPageSize(),
+                SortFieldMapper.map(pageable.getSort())
+        );
+        var nsEntryfilter = NsEntryFilterMapper.toNsEntryFilter(entryFilter, normalizedPageable);
+        var entries = pagedResourcesAssembler.toModel(nsEntryRepository.getNsEntries(nsEntryfilter), nsEntryAssembler);
         LOG.info("Exit getEntries()");
         return entries;
     }
 
     @GetMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public Entry getEntryById(@Valid @PathVariable("id") Long id) {
-        return nsEntryMapperAssembler.toModel(nsEntryRepository.getById(id).orElseThrow(() ->
+        return nsEntryAssembler.toModel(nsEntryRepository.getById(id).orElseThrow(() ->
                 new NsEntryNotFoundException(String.format("Entry with id={%d} not found", id))));
     }
 
     @GetMapping(path = "/latest", produces = MediaType.APPLICATION_JSON_VALUE)
     public Entry getLatestEntry() {
-        return nsEntryMapperAssembler.toModel(nsEntryRepository.getLatestNsEntry().orElseThrow(() ->
+        return nsEntryAssembler.toModel(nsEntryRepository.getLatestNsEntry().orElseThrow(() ->
                 new NsEntryNotFoundException("Latest entry not found")));
     }
 
