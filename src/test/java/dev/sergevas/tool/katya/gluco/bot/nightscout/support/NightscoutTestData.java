@@ -116,7 +116,7 @@ public class NightscoutTestData {
               },
               "_links": {
                 "self": {
-                  "href": "http://localhost/api/v1/entries/all"
+                  "href": "http://localhost/api/v1/entries/all?page=0&size=2"
                 }
               },
               "page": {

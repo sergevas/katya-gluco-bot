@@ -7,6 +7,7 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -55,13 +56,18 @@ public class EntriesApi {
     public PagedModel<Entry> getEntries(@Valid EntryFilter entryFilter,
                                         @PageableDefault(sort = "dateString", direction = Sort.Direction.DESC) Pageable pageable) {
         LOG.info("Enter getEntries() entryFilter={}", entryFilter);
-        var normalizedPageable = PageRequest.of(
+        var nsEntryfilter = NsEntryFilterMapper.toNsEntryFilter(entryFilter, PageRequest.of(
                 pageable.getPageNumber(),
                 pageable.getPageSize(),
-                SortFieldMapper.map(pageable.getSort())
-        );
-        var nsEntryfilter = NsEntryFilterMapper.toNsEntryFilter(entryFilter, normalizedPageable);
-        var entries = pagedResourcesAssembler.toModel(nsEntryRepository.getNsEntries(nsEntryfilter), nsEntryAssembler);
+                SortFieldMapper.mapToEntity(pageable.getSort())
+        ));
+        var nsEntryPage = nsEntryRepository.getNsEntries(nsEntryfilter);
+        var normalizedNsEntryPage = new PageImpl<>(nsEntryPage.toList(), PageRequest.of(
+                nsEntryPage.getNumber(),
+                nsEntryPage.getSize(),
+                SortFieldMapper.mapToApi(nsEntryPage.getSort())
+        ), nsEntryPage.getTotalElements());
+        var entries = pagedResourcesAssembler.toModel(normalizedNsEntryPage, nsEntryAssembler);
         LOG.info("Exit getEntries()");
         return entries;
     }
