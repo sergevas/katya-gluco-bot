@@ -11,9 +11,9 @@ import static dev.sergevas.tool.katya.gluco.bot.nightscout.boundary.rest.MapperS
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
-public class NsEntryMapper extends RepresentationModelAssemblerSupport<NsEntry, Entry> {
+public class NsEntryMapperAssembler extends RepresentationModelAssemblerSupport<NsEntry, Entry> {
 
-    public NsEntryMapper() {
+    public NsEntryMapperAssembler() {
         super(NsEntry.class, Entry.class);
     }
 
@@ -60,11 +60,5 @@ public class NsEntryMapper extends RepresentationModelAssemblerSupport<NsEntry, 
         );
         entry.add(linkTo(methodOn(EntriesApi.class).getEntryById(nsEntry.id())).withSelfRel());
         return entry;
-    }
-
-    public List<Entry> toEntries(List<NsEntry> nsEntries) {
-        return nsEntries.stream()
-                .map(this::toModel)
-                .toList();
     }
 }

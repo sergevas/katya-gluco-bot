@@ -8,6 +8,7 @@ import dev.sergevas.tool.katya.gluco.bot.nightscout.entity.NsEntry;
 import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
 
 import java.util.List;
 import java.util.Optional;
@@ -56,15 +57,13 @@ public class NsEntryPersistenceAdapter implements NsEntryRepository {
     }
 
     @Override
-    public List<NsEntry> getNsEntries(NsEntryFilter filter) {
+    public Page<NsEntry> getNsEntries(NsEntryFilter filter) {
         LOG.debug("Enter getNsEntries() filter={}", filter);
         var pageable = filter.pageable();
-        List<NsEntry> nsEntries;
+        Page<NsEntry> nsEntries;
         try {
             nsEntries = nsEntryEntityJpaRepository.findAll(NsEntryEntitySpecification.toSpecification(filter), pageable)
-                    .stream()
-                    .map(NsEntryEntityMapper::toNsEntry)
-                    .toList();
+                    .map(NsEntryEntityMapper::toNsEntry);
         } catch (Exception e) {
             LOG.error("Error fetching NsEntries with filter: {} and pageable: {}", filter, pageable, e);
             throw e;
