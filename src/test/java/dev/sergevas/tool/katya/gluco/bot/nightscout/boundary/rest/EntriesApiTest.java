@@ -2,13 +2,13 @@ package dev.sergevas.tool.katya.gluco.bot.nightscout.boundary.rest;
 
 import dev.sergevas.tool.katya.gluco.bot.nightscout.control.NsEntryFilter;
 import dev.sergevas.tool.katya.gluco.bot.nightscout.control.NsEntryRepository;
-import dev.sergevas.tool.katya.gluco.bot.web.boundary.SortSpecConverter;
-import dev.sergevas.tool.katya.gluco.bot.web.control.SortSpec;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
@@ -29,8 +29,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @WebMvcTest(EntriesApi.class)
 @Import({
-        SortSpecConverter.class,
-        NsEntryMapper.class
+        NsEntryMapper.class,
+        SortFieldMapper.class
 })
 @PropertySource("classpath:application-test.properties")
 @ActiveProfiles("test")
@@ -48,9 +48,9 @@ class EntriesApiTest {
 
         mockMvc.perform(get("/api/v1/entries/all")
                         .param("sort", "dateString,desc")
-//                        .param("sort", "device,asc")
+                        .param("sort", "device,asc")
                         .param("page", "1")
-                        .param("size", "20")
+                        .param("size", "10")
                         .param("fromDateString", "2025-09-01T11:13:59.000+03:00")
                         .param("toDateString", "2025-09-02T21:00:00.000+03:00")
                         .param("device", "3MH01DTCMC4")
@@ -71,8 +71,7 @@ class EntriesApiTest {
                 OffsetDateTime.parse("2025-09-03T22:01:05+03:00"),
                 OffsetDateTime.parse("2025-09-01T11:13:59+03:00"),
                 OffsetDateTime.parse("2025-09-02T21:00+03:00"),
-                List.of(new SortSpec("dateString", false)),
-                1,
-                20));
+                PageRequest.of(1, 10,
+                        Sort.by(Sort.Order.desc("sgvTime"), Sort.Order.asc("device")))));
     }
 }

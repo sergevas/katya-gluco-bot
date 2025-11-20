@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.context.annotation.Import;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
@@ -74,9 +75,7 @@ public class EntriesApiIT {
                 null,
                 null,
                 null,
-                null,
-                null,
-                null
+                Pageable.unpaged()
         ));
         assertEquals(2, persistedNsEntries.size());
     }
