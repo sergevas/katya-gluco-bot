@@ -9,6 +9,6 @@ import java.io.IOException;
 public interface InfluxDbServerApiClient {
 
     @GetExchange
-    @Retryable(includes = {IOException.class}, maxAttempts = 2, maxDelay = 5000, multiplier = 2.0, jitter = 500)
+    @Retryable(includes = {IOException.class}, maxRetries = 2, maxDelay = 5000, multiplier = 2.0, jitter = 500)
     GlucoseData getReadings();
 }
