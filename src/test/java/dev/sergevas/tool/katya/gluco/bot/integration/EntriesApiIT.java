@@ -86,7 +86,7 @@ public class EntriesApiIT {
     @Test
     void givenGetEntriesWoQueryFilterParamsRequest_whenProcessesSuccessfully_thenShouldReturnEntries() {
         var response = restClient.get()
-                .uri("/all")
+//                .uri("/all")
                 .accept(MediaType.APPLICATION_JSON)
                 .header(API_SECRET_HEADER, "e5e9fa1ba31ecd1ae84f75caaa474f3a663f05f4")
                 .retrieve()

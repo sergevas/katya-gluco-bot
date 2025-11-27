@@ -50,7 +50,7 @@ class EntriesApiTest {
         when(nsEntryRepository.getNsEntries(any(NsEntryFilter.class))).thenReturn(
                 new PageImpl<>(List.of(NS_ENTRY_1, NS_ENTRY_2)));
 
-        mockMvc.perform(get("/api/v1/entries/all")
+        mockMvc.perform(get("/api/v1/entries")
                         .param("sort", "dateString,desc")
                         .param("sort", "device,asc")
                         .param("page", "1")

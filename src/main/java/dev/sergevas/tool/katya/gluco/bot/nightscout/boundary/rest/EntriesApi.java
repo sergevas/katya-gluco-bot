@@ -14,19 +14,14 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.hateoas.PagedModel;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 @RestController
@@ -52,7 +47,7 @@ public class EntriesApi {
         nsEntryRepository.storeNsEntries(nsEntryAssembler.toNsEntries(entries));
     }
 
-    @GetMapping(path = "/all", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public PagedModel<Entry> getEntries(@Valid EntryFilter entryFilter,
                                         @PageableDefault(sort = "dateString", direction = Sort.Direction.DESC) Pageable pageable) {
         LOG.info("Enter getEntries() entryFilter={}", entryFilter);
@@ -82,15 +77,5 @@ public class EntriesApi {
     public Entry getLatestEntry() {
         return nsEntryAssembler.toModel(nsEntryRepository.getLatestNsEntry().orElseThrow(() ->
                 new NsEntryNotFoundException("Latest entry not found")));
-    }
-
-//    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-//    public ResponseEntity<Entry> getEntries(@RequestParam("find") String find, @RequestParam("count") BigDecimal count) {
-//        return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
-//    }
-
-    @DeleteMapping
-    public ResponseEntity<Void> remove(@RequestParam("find") String find, @RequestParam("count") BigDecimal count) {
-        return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
     }
 }
