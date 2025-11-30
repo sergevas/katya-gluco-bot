@@ -46,4 +46,10 @@ public class TestRestClientBuilder {
                 .requestFactory(factory)
                 .build();
     }
+
+    public static RestClient restClient(String baseUrl) throws Exception {
+        return RestClient.builder()
+                .baseUrl(baseUrl)
+                .build();
+    }
 }
