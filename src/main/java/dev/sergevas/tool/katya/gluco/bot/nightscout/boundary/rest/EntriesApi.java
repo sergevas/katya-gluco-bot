@@ -44,7 +44,9 @@ public class EntriesApi {
 
     @PostMapping(consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.TEXT_PLAIN_VALUE})
     public void addEntries(@Valid @NotNull @RequestBody List<@Valid Entry> entries) {
+        LOG.info("Enter addEntries() entries={}", entries);
         nsEntryRepository.storeNsEntries(nsEntryAssembler.toNsEntries(entries));
+        LOG.info("Exit addEntries()");
     }
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
@@ -69,13 +71,19 @@ public class EntriesApi {
 
     @GetMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public Entry getEntryById(@Valid @PathVariable("id") Long id) {
-        return nsEntryAssembler.toModel(nsEntryRepository.getById(id).orElseThrow(() ->
+        LOG.info("Enter getEntryById() id={}", id);
+        var entry = nsEntryAssembler.toModel(nsEntryRepository.getById(id).orElseThrow(() ->
                 new NsEntryNotFoundException(String.format("Entry with id={%d} not found", id))));
+        LOG.info("Exit getEntryById() entry={}", entry);
+        return entry;
     }
 
     @GetMapping(path = "/latest", produces = MediaType.APPLICATION_JSON_VALUE)
     public Entry getLatestEntry() {
-        return nsEntryAssembler.toModel(nsEntryRepository.getLatestNsEntry().orElseThrow(() ->
+        LOG.info("Enter getLatestEntry()");
+        var entry = nsEntryAssembler.toModel(nsEntryRepository.getLatestNsEntry().orElseThrow(() ->
                 new NsEntryNotFoundException("Latest entry not found")));
+        LOG.info("Exit getLatestEntry() entry={}", entry);
+        return entry;
     }
 }
