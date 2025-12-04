@@ -1,6 +1,6 @@
 package dev.sergevas.tool.katya.gluco.bot.nightscout.boundary.persistence.entity;
 
-import dev.sergevas.tool.katya.gluco.bot.persistence.entity.BaseEntity;
+import dev.sergevas.tool.katya.gluco.bot.shared.boundary.entity.BaseEntity;
 import jakarta.persistence.Entity;
 import jakarta.persistence.NamedQuery;
 import jakarta.persistence.SequenceGenerator;

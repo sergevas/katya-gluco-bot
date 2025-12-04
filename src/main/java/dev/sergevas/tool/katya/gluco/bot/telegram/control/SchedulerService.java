@@ -1,10 +1,12 @@
 package dev.sergevas.tool.katya.gluco.bot.telegram.control;
 
+import dev.sergevas.tool.katya.gluco.bot.readings.control.ReadingService;
+import dev.sergevas.tool.katya.gluco.bot.readings.control.SchedulerControls;
+import dev.sergevas.tool.katya.gluco.bot.readings.entity.ChangeDirection;
+import dev.sergevas.tool.katya.gluco.bot.readings.entity.SensorReading;
 import dev.sergevas.tool.katya.gluco.bot.telegram.boundary.KatyaGlucoBot;
-import dev.sergevas.tool.katya.gluco.bot.telegram.entity.SensorReading;
+import dev.sergevas.tool.katya.gluco.bot.telegram.entity.ReadingContext;
 import dev.sergevas.tool.katya.gluco.bot.telegram.entity.TriggerEvent;
-import dev.sergevas.tool.katya.gluco.bot.telegram.entity.XDripReadingContext;
-import dev.sergevas.tool.katya.gluco.bot.xdrip.entity.ChangeStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -46,10 +48,10 @@ public class SchedulerService {
     /**
      * Updates the scheduler period if updated period value is provided.
      *
-     * @param changeStatus The ChangeStatus to determine the period
+     * @param changeDirection The ChangeDirection to determine the period
      */
-    private void updateSchedulerPeriod(ChangeStatus changeStatus) {
-        schedulerControls.getUpdatedSchedulerPeriod(changeStatus, currentPeriodSeconds)
+    private void updateSchedulerPeriod(ChangeDirection changeDirection) {
+        schedulerControls.getUpdatedSchedulerPeriod(changeDirection, currentPeriodSeconds)
                 .ifPresent(newPeriod -> currentPeriodSeconds = newPeriod);
     }
 
@@ -102,8 +104,8 @@ public class SchedulerService {
             isAlertSent = false;
             var newReading = newReadingOpt.get();
             katyaGlucoBot.sendSensorReadingUpdateToAll(TextMessageFormatter
-                    .format(new XDripReadingContext(newReading, TriggerEvent.DEFAULT)));
-            updateSchedulerPeriod(newReading.changeStatus());
+                    .format(new ReadingContext(newReading, TriggerEvent.DEFAULT)));
+            updateSchedulerPeriod(newReading.changeDirection());
         } else {
             accelerateSchedulerIfReadingOutdated(lastReadingOpt, now);
             trySendAlert(lastReadingOpt, now);

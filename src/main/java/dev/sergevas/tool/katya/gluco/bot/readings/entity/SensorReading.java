@@ -1,6 +1,4 @@
-package dev.sergevas.tool.katya.gluco.bot.telegram.entity;
-
-import dev.sergevas.tool.katya.gluco.bot.xdrip.entity.ChangeStatus;
+package dev.sergevas.tool.katya.gluco.bot.readings.entity;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -9,7 +7,7 @@ import java.time.Instant;
 /**
  * @param reading mmol/L
  */
-public record SensorReading(Instant time, double reading, ChangeStatus changeStatus) {
+public record SensorReading(Instant time, double reading, ChangeDirection changeDirection) {
 
     public String getRounded() {
         return BigDecimal.valueOf(reading)

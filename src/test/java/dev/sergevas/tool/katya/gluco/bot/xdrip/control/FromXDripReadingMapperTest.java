@@ -1,6 +1,6 @@
 package dev.sergevas.tool.katya.gluco.bot.xdrip.control;
 
-import dev.sergevas.tool.katya.gluco.bot.telegram.entity.SensorReading;
+import dev.sergevas.tool.katya.gluco.bot.readings.entity.SensorReading;
 import dev.sergevas.tool.katya.gluco.bot.xdrip.entity.influxdb.GlucoseData;
 import dev.sergevas.tool.katya.gluco.bot.xdrip.entity.influxdb.GlucoseMeasurement;
 import dev.sergevas.tool.katya.gluco.bot.xdrip.entity.influxdb.Result;
@@ -12,8 +12,8 @@ import org.junit.jupiter.api.Test;
 import java.time.Instant;
 import java.util.List;
 
-import static dev.sergevas.tool.katya.gluco.bot.xdrip.entity.ChangeStatus.FLAT;
-import static dev.sergevas.tool.katya.gluco.bot.xdrip.entity.ChangeStatus.SINGLE_DOWN;
+import static dev.sergevas.tool.katya.gluco.bot.readings.entity.ChangeDirection.FLAT;
+import static dev.sergevas.tool.katya.gluco.bot.readings.entity.ChangeDirection.SINGLE_DOWN;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertIterableEquals;
 

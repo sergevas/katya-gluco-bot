@@ -1,7 +1,7 @@
 package dev.sergevas.tool.katya.gluco.bot.telegram.control;
 
-import dev.sergevas.tool.katya.gluco.bot.telegram.entity.SensorReading;
-import dev.sergevas.tool.katya.gluco.bot.telegram.entity.XDripReadingContext;
+import dev.sergevas.tool.katya.gluco.bot.readings.entity.SensorReading;
+import dev.sergevas.tool.katya.gluco.bot.telegram.entity.ReadingContext;
 
 import java.time.Duration;
 import java.time.Instant;
@@ -11,7 +11,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 
 import static com.vdurmont.emoji.EmojiParser.parseToUnicode;
-import static dev.sergevas.tool.katya.gluco.bot.xdrip.entity.ChangeStatus.UNDEFINED;
+import static dev.sergevas.tool.katya.gluco.bot.readings.entity.ChangeDirection.UNDEFINED;
 
 public class TextMessageFormatter {
 
@@ -19,15 +19,15 @@ public class TextMessageFormatter {
             .withZone(ZoneId.ofOffset("UTC", ZoneOffset.of("+03:00")));
 
 
-    public static String format(XDripReadingContext context) {
+    public static String format(ReadingContext context) {
         var reading = context.reading();
-        return String.format("%s %s", reading.getRounded(), reading.changeStatus().getMark());
+        return String.format("%s %s", reading.getRounded(), reading.changeDirection().getMark());
     }
 
-    public static String formatUpdate(XDripReadingContext context) {
+    public static String formatUpdate(ReadingContext context) {
         var reading = context.reading();
         return String.format("%s %s %s%s", reading.getRounded(),
-                reading.changeStatus().getMark(),
+                reading.changeDirection().getMark(),
                 TIME_FORMATTER.format(reading.time()),
                 context.triggerEvent().getMark());
     }

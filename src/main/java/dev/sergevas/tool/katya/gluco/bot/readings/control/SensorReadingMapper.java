@@ -1,6 +1,6 @@
-package dev.sergevas.tool.katya.gluco.bot.telegram.control;
+package dev.sergevas.tool.katya.gluco.bot.readings.control;
 
-import dev.sergevas.tool.katya.gluco.bot.telegram.entity.SensorReading;
+import dev.sergevas.tool.katya.gluco.bot.readings.entity.SensorReading;
 
 import java.util.List;
 

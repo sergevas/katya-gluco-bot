@@ -1,10 +1,10 @@
-package dev.sergevas.tool.katya.gluco.bot.xdrip.entity;
+package dev.sergevas.tool.katya.gluco.bot.readings.entity;
 
 import java.util.Arrays;
 
 import static com.vdurmont.emoji.EmojiParser.parseToUnicode;
 
-public enum ChangeStatus {
+public enum ChangeDirection {
 
     FLAT("Flat", parseToUnicode(":arrow_right:")),
     SINGLE_DOWN("SingleDown", parseToUnicode(":arrow_down:")),
@@ -19,13 +19,13 @@ public enum ChangeStatus {
     private final String name;
     private final String mark;
 
-    ChangeStatus(String name, String mark) {
+    ChangeDirection(String name, String mark) {
         this.name = name;
         this.mark = mark;
     }
 
-    public static ChangeStatus fromName(String name) {
-        return Arrays.stream(ChangeStatus.values())
+    public static ChangeDirection fromName(String name) {
+        return Arrays.stream(ChangeDirection.values())
                 .filter(status -> status.name.equals(name))
                 .findFirst()
                 .orElse(UNDEFINED);

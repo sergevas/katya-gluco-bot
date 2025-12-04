@@ -1,4 +1,4 @@
-package dev.sergevas.tool.katya.gluco.bot.persistence.entity;
+package dev.sergevas.tool.katya.gluco.bot.shared.boundary.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.GeneratedValue;
