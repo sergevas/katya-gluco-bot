@@ -1,7 +1,7 @@
 package dev.sergevas.tool.katya.gluco.bot.readings.boundary.rest;
 
 import dev.sergevas.tool.katya.gluco.bot.readings.control.ReadingService;
-import dev.sergevas.tool.katya.gluco.bot.readings.entity.SensorReading;
+import dev.sergevas.tool.katya.gluco.bot.readings.control.ReadingsNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
@@ -22,13 +22,13 @@ public class ReadingsController {
     }
 
     @GetMapping(value = "/last", produces = MediaType.APPLICATION_JSON_VALUE)
-    public SensorReading getLastReading() {
+    public SensorReadingDto getLastReading() {
         LOG.info("Enter getLastReading()");
         var lastReadingOpt = readingService.getLastReading();
-        //TODO: add proper exception handling
         var reading = lastReadingOpt
-                .orElseThrow(() -> new RuntimeException("No reading available"));
-        LOG.info("Exit getLastReading(): {}", reading);
-        return reading;
+                .orElseThrow(() -> new ReadingsNotFoundException("The last reading is unavailable"));
+        var readingDto = SensorReadingDto.fromEntity(reading);
+        LOG.info("Exit getLastReading(): {}", readingDto);
+        return readingDto;
     }
 }
