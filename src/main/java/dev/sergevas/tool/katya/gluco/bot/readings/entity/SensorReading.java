@@ -7,7 +7,7 @@ import java.time.Instant;
 /**
  * @param reading mmol/L
  */
-public record SensorReading(Instant time, double reading, ChangeDirection changeDirection) {
+public record SensorReading(Instant time, double reading, Direction direction) {
 
     public String getRounded() {
         return BigDecimal.valueOf(reading)

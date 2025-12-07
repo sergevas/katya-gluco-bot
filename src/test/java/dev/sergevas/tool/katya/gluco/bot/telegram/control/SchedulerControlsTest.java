@@ -14,8 +14,8 @@ import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 import java.time.Instant;
 import java.util.Optional;
 
-import static dev.sergevas.tool.katya.gluco.bot.readings.entity.ChangeDirection.DOUBLE_UP;
-import static dev.sergevas.tool.katya.gluco.bot.readings.entity.ChangeDirection.FLAT;
+import static dev.sergevas.tool.katya.gluco.bot.readings.entity.Direction.DOUBLE_UP;
+import static dev.sergevas.tool.katya.gluco.bot.readings.entity.Direction.FLAT;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -56,22 +56,22 @@ class SchedulerControlsTest {
     }
 
     @Test
-    void givenChangeDirectionIsAccelerated_whenDefaultStatus_thenShouldReturnPeriodAccelerated() {
+    void givenDirectionIsAccelerated_whenDefaultStatus_thenShouldReturnPeriodAccelerated() {
         assertEquals(Optional.of(periodAccelerated), schedulerControls.getUpdatedSchedulerPeriod(DOUBLE_UP, periodDefault));
     }
 
     @Test
-    void givenChangeDirectionIsDefault_whenAcceleratedStatus_thenShouldReturnPeriodDefault() {
+    void givenDirectionIsDefault_whenAcceleratedStatus_thenShouldReturnPeriodDefault() {
         assertEquals(Optional.of(periodDefault), schedulerControls.getUpdatedSchedulerPeriod(FLAT, periodAccelerated));
     }
 
     @Test
-    void givenChangeDirectionIsAccelerated_whenAcceleratedStatus_thenShouldReturnEmpty() {
+    void givenDirectionIsAccelerated_whenAcceleratedStatus_thenShouldReturnEmpty() {
         assertEquals(Optional.empty(), schedulerControls.getUpdatedSchedulerPeriod(DOUBLE_UP, periodAccelerated));
     }
 
     @Test
-    void givenChangeDirectionIsDefault_whenDefaultStatus_thenShouldReturnEmpty() {
+    void givenDirectionIsDefault_whenDefaultStatus_thenShouldReturnEmpty() {
         assertEquals(Optional.empty(), schedulerControls.getUpdatedSchedulerPeriod(FLAT, periodDefault));
     }
 

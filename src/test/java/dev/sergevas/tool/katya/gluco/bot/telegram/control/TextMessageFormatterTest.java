@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test;
 import java.time.Instant;
 import java.util.Optional;
 
-import static dev.sergevas.tool.katya.gluco.bot.readings.entity.ChangeDirection.FLAT;
+import static dev.sergevas.tool.katya.gluco.bot.readings.entity.Direction.FLAT;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class TextMessageFormatterTest {

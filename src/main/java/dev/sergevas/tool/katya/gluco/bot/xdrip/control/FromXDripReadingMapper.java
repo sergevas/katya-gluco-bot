@@ -1,7 +1,7 @@
 package dev.sergevas.tool.katya.gluco.bot.xdrip.control;
 
 import dev.sergevas.tool.katya.gluco.bot.readings.control.SensorReadingMapper;
-import dev.sergevas.tool.katya.gluco.bot.readings.entity.ChangeDirection;
+import dev.sergevas.tool.katya.gluco.bot.readings.entity.Direction;
 import dev.sergevas.tool.katya.gluco.bot.readings.entity.SensorReading;
 import dev.sergevas.tool.katya.gluco.bot.xdrip.entity.influxdb.GlucoseData;
 import dev.sergevas.tool.katya.gluco.bot.xdrip.entity.influxdb.GlucoseMeasurement;
@@ -32,6 +32,6 @@ public class FromXDripReadingMapper implements SensorReadingMapper<GlucoseData> 
     }
 
     public SensorReading toSensorReading(GlucoseMeasurement gM) {
-        return new SensorReading(gM.getTime(), gM.getValueMmol(), ChangeDirection.fromName(gM.getDirection()));
+        return new SensorReading(gM.getTime(), gM.getValueMmol(), Direction.fromName(gM.getDirection()));
     }
 }

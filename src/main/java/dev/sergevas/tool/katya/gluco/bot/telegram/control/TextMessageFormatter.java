@@ -11,7 +11,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 
 import static com.vdurmont.emoji.EmojiParser.parseToUnicode;
-import static dev.sergevas.tool.katya.gluco.bot.readings.entity.ChangeDirection.UNDEFINED;
+import static dev.sergevas.tool.katya.gluco.bot.readings.entity.Direction.UNDEFINED;
 
 public class TextMessageFormatter {
 
@@ -21,13 +21,13 @@ public class TextMessageFormatter {
 
     public static String format(ReadingContext context) {
         var reading = context.reading();
-        return String.format("%s %s", reading.getRounded(), reading.changeDirection().getMark());
+        return String.format("%s %s", reading.getRounded(), reading.direction().getMark());
     }
 
     public static String formatUpdate(ReadingContext context) {
         var reading = context.reading();
         return String.format("%s %s %s%s", reading.getRounded(),
-                reading.changeDirection().getMark(),
+                reading.direction().getMark(),
                 TIME_FORMATTER.format(reading.time()),
                 context.triggerEvent().getMark());
     }

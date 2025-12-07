@@ -4,7 +4,7 @@ import java.util.Arrays;
 
 import static com.vdurmont.emoji.EmojiParser.parseToUnicode;
 
-public enum ChangeDirection {
+public enum Direction {
 
     FLAT("Flat", parseToUnicode(":arrow_right:")),
     SINGLE_DOWN("SingleDown", parseToUnicode(":arrow_down:")),
@@ -19,13 +19,13 @@ public enum ChangeDirection {
     private final String name;
     private final String mark;
 
-    ChangeDirection(String name, String mark) {
+    Direction(String name, String mark) {
         this.name = name;
         this.mark = mark;
     }
 
-    public static ChangeDirection fromName(String name) {
-        return Arrays.stream(ChangeDirection.values())
+    public static Direction fromName(String name) {
+        return Arrays.stream(Direction.values())
                 .filter(status -> status.name.equals(name))
                 .findFirst()
                 .orElse(UNDEFINED);

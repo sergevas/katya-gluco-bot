@@ -12,8 +12,8 @@ import org.junit.jupiter.api.Test;
 import java.time.Instant;
 import java.util.List;
 
-import static dev.sergevas.tool.katya.gluco.bot.readings.entity.ChangeDirection.FLAT;
-import static dev.sergevas.tool.katya.gluco.bot.readings.entity.ChangeDirection.SINGLE_DOWN;
+import static dev.sergevas.tool.katya.gluco.bot.readings.entity.Direction.FLAT;
+import static dev.sergevas.tool.katya.gluco.bot.readings.entity.Direction.SINGLE_DOWN;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertIterableEquals;
 

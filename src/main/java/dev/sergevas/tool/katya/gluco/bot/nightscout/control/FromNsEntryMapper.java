@@ -2,7 +2,7 @@ package dev.sergevas.tool.katya.gluco.bot.nightscout.control;
 
 import dev.sergevas.tool.katya.gluco.bot.nightscout.entity.NsEntry;
 import dev.sergevas.tool.katya.gluco.bot.readings.control.SensorReadingMapper;
-import dev.sergevas.tool.katya.gluco.bot.readings.entity.ChangeDirection;
+import dev.sergevas.tool.katya.gluco.bot.readings.entity.Direction;
 import dev.sergevas.tool.katya.gluco.bot.readings.entity.SensorReading;
 
 import java.util.List;
@@ -17,6 +17,6 @@ public class FromNsEntryMapper implements SensorReadingMapper<List<NsEntry>> {
     }
 
     public SensorReading toSensorReading(NsEntry nsEntry) {
-        return new SensorReading(nsEntry.sgvTime().toInstant(), nsEntry.sgvMmolL(), ChangeDirection.fromName(nsEntry.direction()));
+        return new SensorReading(nsEntry.sgvTime().toInstant(), nsEntry.sgvMmolL(), Direction.fromName(nsEntry.direction()));
     }
 }

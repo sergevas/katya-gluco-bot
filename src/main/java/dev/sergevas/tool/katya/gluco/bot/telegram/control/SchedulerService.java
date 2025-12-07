@@ -2,7 +2,7 @@ package dev.sergevas.tool.katya.gluco.bot.telegram.control;
 
 import dev.sergevas.tool.katya.gluco.bot.readings.control.ReadingService;
 import dev.sergevas.tool.katya.gluco.bot.readings.control.SchedulerControls;
-import dev.sergevas.tool.katya.gluco.bot.readings.entity.ChangeDirection;
+import dev.sergevas.tool.katya.gluco.bot.readings.entity.Direction;
 import dev.sergevas.tool.katya.gluco.bot.readings.entity.SensorReading;
 import dev.sergevas.tool.katya.gluco.bot.telegram.boundary.KatyaGlucoBot;
 import dev.sergevas.tool.katya.gluco.bot.telegram.entity.ReadingContext;
@@ -48,10 +48,10 @@ public class SchedulerService {
     /**
      * Updates the scheduler period if updated period value is provided.
      *
-     * @param changeDirection The ChangeDirection to determine the period
+     * @param direction The Direction to determine the period
      */
-    private void updateSchedulerPeriod(ChangeDirection changeDirection) {
-        schedulerControls.getUpdatedSchedulerPeriod(changeDirection, currentPeriodSeconds)
+    private void updateSchedulerPeriod(Direction direction) {
+        schedulerControls.getUpdatedSchedulerPeriod(direction, currentPeriodSeconds)
                 .ifPresent(newPeriod -> currentPeriodSeconds = newPeriod);
     }
 
@@ -105,7 +105,7 @@ public class SchedulerService {
             var newReading = newReadingOpt.get();
             katyaGlucoBot.sendSensorReadingUpdateToAll(TextMessageFormatter
                     .format(new ReadingContext(newReading, TriggerEvent.DEFAULT)));
-            updateSchedulerPeriod(newReading.changeDirection());
+            updateSchedulerPeriod(newReading.direction());
         } else {
             accelerateSchedulerIfReadingOutdated(lastReadingOpt, now);
             trySendAlert(lastReadingOpt, now);
