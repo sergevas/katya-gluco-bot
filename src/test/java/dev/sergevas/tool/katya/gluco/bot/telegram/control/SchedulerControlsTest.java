@@ -1,6 +1,7 @@
 package dev.sergevas.tool.katya.gluco.bot.telegram.control;
 
-import dev.sergevas.tool.katya.gluco.bot.telegram.entity.SensorReading;
+import dev.sergevas.tool.katya.gluco.bot.readings.control.SchedulerControls;
+import dev.sergevas.tool.katya.gluco.bot.readings.entity.SensorReading;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -13,8 +14,8 @@ import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 import java.time.Instant;
 import java.util.Optional;
 
-import static dev.sergevas.tool.katya.gluco.bot.xdrip.entity.ChangeStatus.DOUBLE_UP;
-import static dev.sergevas.tool.katya.gluco.bot.xdrip.entity.ChangeStatus.FLAT;
+import static dev.sergevas.tool.katya.gluco.bot.readings.entity.Direction.DOUBLE_UP;
+import static dev.sergevas.tool.katya.gluco.bot.readings.entity.Direction.FLAT;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -55,22 +56,22 @@ class SchedulerControlsTest {
     }
 
     @Test
-    void givenChangeStatusIsAccelerated_whenDefaultStatus_thenShouldReturnPeriodAccelerated() {
+    void givenDirectionIsAccelerated_whenDefaultStatus_thenShouldReturnPeriodAccelerated() {
         assertEquals(Optional.of(periodAccelerated), schedulerControls.getUpdatedSchedulerPeriod(DOUBLE_UP, periodDefault));
     }
 
     @Test
-    void givenChangeStatusIsDefault_whenAcceleratedStatus_thenShouldReturnPeriodDefault() {
+    void givenDirectionIsDefault_whenAcceleratedStatus_thenShouldReturnPeriodDefault() {
         assertEquals(Optional.of(periodDefault), schedulerControls.getUpdatedSchedulerPeriod(FLAT, periodAccelerated));
     }
 
     @Test
-    void givenChangeStatusIsAccelerated_whenAcceleratedStatus_thenShouldReturnEmpty() {
+    void givenDirectionIsAccelerated_whenAcceleratedStatus_thenShouldReturnEmpty() {
         assertEquals(Optional.empty(), schedulerControls.getUpdatedSchedulerPeriod(DOUBLE_UP, periodAccelerated));
     }
 
     @Test
-    void givenChangeStatusIsDefault_whenDefaultStatus_thenShouldReturnEmpty() {
+    void givenDirectionIsDefault_whenDefaultStatus_thenShouldReturnEmpty() {
         assertEquals(Optional.empty(), schedulerControls.getUpdatedSchedulerPeriod(FLAT, periodDefault));
     }
 

@@ -1,11 +1,11 @@
 package dev.sergevas.tool.katya.gluco.bot.telegram.control.updprocessor;
 
+import dev.sergevas.tool.katya.gluco.bot.readings.control.ReadingService;
 import dev.sergevas.tool.katya.gluco.bot.telegram.TelegramBotProperties;
 import dev.sergevas.tool.katya.gluco.bot.telegram.boundary.KatyaGlucoBot;
-import dev.sergevas.tool.katya.gluco.bot.telegram.control.ReadingService;
 import dev.sergevas.tool.katya.gluco.bot.telegram.control.TextMessageFormatter;
+import dev.sergevas.tool.katya.gluco.bot.telegram.entity.ReadingContext;
 import dev.sergevas.tool.katya.gluco.bot.telegram.entity.TriggerEvent;
-import dev.sergevas.tool.katya.gluco.bot.telegram.entity.XDripReadingContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.telegram.telegrambots.meta.api.objects.Update;
@@ -29,7 +29,7 @@ public class BotUpdateCommandProcessor implements BotUpdateProcessor {
     public void process(Update update) {
         LOG.debug("Enter process");
         var text = readingService.updateAndReturnLastReading()
-                .map(reading -> new XDripReadingContext(reading, TriggerEvent.UPDATE))
+                .map(reading -> new ReadingContext(reading, TriggerEvent.UPDATE))
                 .map(TextMessageFormatter::formatUpdate)
                 .orElse(telegramBotProperties.messages().get("no-data"));
         katyaGlucoBot.sendSensorReadingUpdateToAll(text);

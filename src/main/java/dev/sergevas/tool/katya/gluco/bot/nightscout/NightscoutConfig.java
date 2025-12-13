@@ -6,7 +6,7 @@ import dev.sergevas.tool.katya.gluco.bot.nightscout.boundary.rest.NsEntryAssembl
 import dev.sergevas.tool.katya.gluco.bot.nightscout.control.FromNsEntryMapper;
 import dev.sergevas.tool.katya.gluco.bot.nightscout.control.NsEntryRepository;
 import dev.sergevas.tool.katya.gluco.bot.nightscout.control.NsEntrySensorDataReader;
-import dev.sergevas.tool.katya.gluco.bot.telegram.control.SensorDataReader;
+import dev.sergevas.tool.katya.gluco.bot.readings.control.SensorDataReader;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

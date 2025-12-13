@@ -1,5 +1,7 @@
 package dev.sergevas.tool.katya.gluco.bot.telegram;
 
+import dev.sergevas.tool.katya.gluco.bot.readings.control.ReadingService;
+import dev.sergevas.tool.katya.gluco.bot.readings.control.SchedulerControls;
 import dev.sergevas.tool.katya.gluco.bot.recommendation.RecommendationConfig;
 import dev.sergevas.tool.katya.gluco.bot.recommendation.RecommendationMessagesProperties;
 import dev.sergevas.tool.katya.gluco.bot.recommendation.control.RecommendationProvider;
@@ -7,8 +9,15 @@ import dev.sergevas.tool.katya.gluco.bot.telegram.boundary.ConversationContextSt
 import dev.sergevas.tool.katya.gluco.bot.telegram.boundary.InMemoryConversationContextStore;
 import dev.sergevas.tool.katya.gluco.bot.telegram.boundary.KatyaGlucoBot;
 import dev.sergevas.tool.katya.gluco.bot.telegram.boundary.KatyaGlucoBotFactory;
-import dev.sergevas.tool.katya.gluco.bot.telegram.control.*;
-import dev.sergevas.tool.katya.gluco.bot.telegram.control.updprocessor.*;
+import dev.sergevas.tool.katya.gluco.bot.telegram.control.SchedulerService;
+import dev.sergevas.tool.katya.gluco.bot.telegram.control.updprocessor.BotErrorProcessor;
+import dev.sergevas.tool.katya.gluco.bot.telegram.control.updprocessor.BotInsCommandProcessor;
+import dev.sergevas.tool.katya.gluco.bot.telegram.control.updprocessor.BotRecommendationRequestMessageProcessor;
+import dev.sergevas.tool.katya.gluco.bot.telegram.control.updprocessor.BotUnknownCommandProcessor;
+import dev.sergevas.tool.katya.gluco.bot.telegram.control.updprocessor.BotUpdateCommandProcessor;
+import dev.sergevas.tool.katya.gluco.bot.telegram.control.updprocessor.BotUpdateDispatchProcessor;
+import dev.sergevas.tool.katya.gluco.bot.telegram.control.updprocessor.BotUpdateProcessor;
+import dev.sergevas.tool.katya.gluco.bot.telegram.control.updprocessor.BotUpdateValidationRules;
 import dev.sergevas.tool.katya.gluco.bot.xdrip.XdripConfig;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -35,17 +44,6 @@ public class TelegramBotConfig {
     @Bean
     public InMemoryConversationContextStore inMemoryConversationContextStore() {
         return new InMemoryConversationContextStore();
-    }
-
-    @Bean
-    public LastReadingCacheManager lastReadingCacheManager() {
-        return new LastReadingCacheManager();
-    }
-
-    @Bean
-    public ReadingService readingService(SensorDataReader sensorDataReader,
-                                         LastReadingCacheManager lastReadingCacheManager) {
-        return new ReadingService(sensorDataReader, lastReadingCacheManager);
     }
 
     @Bean

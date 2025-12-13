@@ -1,22 +1,22 @@
-package dev.sergevas.tool.katya.gluco.bot.telegram.control;
+package dev.sergevas.tool.katya.gluco.bot.readings.control;
 
-import dev.sergevas.tool.katya.gluco.bot.telegram.entity.SensorReading;
-import dev.sergevas.tool.katya.gluco.bot.xdrip.entity.ChangeStatus;
+import dev.sergevas.tool.katya.gluco.bot.readings.entity.Direction;
+import dev.sergevas.tool.katya.gluco.bot.readings.entity.SensorReading;
 
 import java.time.Instant;
 import java.util.EnumSet;
 import java.util.Optional;
 
-import static dev.sergevas.tool.katya.gluco.bot.xdrip.entity.ChangeStatus.DOUBLE_DOWN;
-import static dev.sergevas.tool.katya.gluco.bot.xdrip.entity.ChangeStatus.DOUBLE_UP;
-import static dev.sergevas.tool.katya.gluco.bot.xdrip.entity.ChangeStatus.NONE;
-import static dev.sergevas.tool.katya.gluco.bot.xdrip.entity.ChangeStatus.SINGLE_DOWN;
-import static dev.sergevas.tool.katya.gluco.bot.xdrip.entity.ChangeStatus.SINGLE_UP;
-import static dev.sergevas.tool.katya.gluco.bot.xdrip.entity.ChangeStatus.UNDEFINED;
+import static dev.sergevas.tool.katya.gluco.bot.readings.entity.Direction.DOUBLE_DOWN;
+import static dev.sergevas.tool.katya.gluco.bot.readings.entity.Direction.DOUBLE_UP;
+import static dev.sergevas.tool.katya.gluco.bot.readings.entity.Direction.NONE;
+import static dev.sergevas.tool.katya.gluco.bot.readings.entity.Direction.SINGLE_DOWN;
+import static dev.sergevas.tool.katya.gluco.bot.readings.entity.Direction.SINGLE_UP;
+import static dev.sergevas.tool.katya.gluco.bot.readings.entity.Direction.UNDEFINED;
 
 public class SchedulerControls {
 
-    private static final EnumSet<ChangeStatus> ACCELERATED_STATUSES = EnumSet.of(
+    private static final EnumSet<Direction> ACCELERATED_STATUSES = EnumSet.of(
             SINGLE_DOWN, DOUBLE_DOWN, SINGLE_UP, DOUBLE_UP, NONE, UNDEFINED);
 
     private final Long periodAccelerated;
@@ -37,19 +37,19 @@ public class SchedulerControls {
     }
 
     /**
-     * Provides the scheduler period based on the ChangeStatus.
-     * - If ChangeStatus is SINGLE_DOWN, DOUBLE_DOWN, SINGLE_UP, DOUBLE_UP, NONE or UNDEFINED,
+     * Provides the scheduler period based on the Direction.
+     * - If Direction is SINGLE_DOWN, DOUBLE_DOWN, SINGLE_UP, DOUBLE_UP, NONE or UNDEFINED,
      * the period is set to the {@code  periodAccelerated} s.
-     * - If ChangeStatus is FLAT, FORTY_FIVE_UP, or FORTY_FIVE_DOWN, the period is set to {@code  periodDefault} s.
+     * - If Direction is FLAT, FORTY_FIVE_UP, or FORTY_FIVE_DOWN, the period is set to {@code  periodDefault} s.
      *
-     * @param changeStatus  The ChangeStatus to determine the period
+     * @param direction     The Direction to determine the period
      * @param currentPeriod Current update period
      */
-    public Optional<Long> getUpdatedSchedulerPeriod(ChangeStatus changeStatus, Long currentPeriod) {
-        if (changeStatus == null) {
+    public Optional<Long> getUpdatedSchedulerPeriod(Direction direction, Long currentPeriod) {
+        if (direction == null) {
             return Optional.empty();
         }
-        var newPeriodSeconds = ACCELERATED_STATUSES.contains(changeStatus) ? periodAccelerated : periodDefault;
+        var newPeriodSeconds = ACCELERATED_STATUSES.contains(direction) ? periodAccelerated : periodDefault;
         return newPeriodSeconds.equals(currentPeriod) ? Optional.empty() : Optional.of(newPeriodSeconds);
     }
 

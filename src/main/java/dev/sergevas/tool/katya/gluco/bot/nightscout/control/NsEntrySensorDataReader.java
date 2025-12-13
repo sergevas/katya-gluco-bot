@@ -1,7 +1,7 @@
 package dev.sergevas.tool.katya.gluco.bot.nightscout.control;
 
-import dev.sergevas.tool.katya.gluco.bot.telegram.control.SensorDataReader;
-import dev.sergevas.tool.katya.gluco.bot.telegram.entity.SensorReading;
+import dev.sergevas.tool.katya.gluco.bot.readings.control.SensorDataReader;
+import dev.sergevas.tool.katya.gluco.bot.readings.entity.SensorReading;
 
 import java.util.List;
 

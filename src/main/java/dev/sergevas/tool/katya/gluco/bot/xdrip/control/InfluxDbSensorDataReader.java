@@ -1,7 +1,7 @@
 package dev.sergevas.tool.katya.gluco.bot.xdrip.control;
 
-import dev.sergevas.tool.katya.gluco.bot.telegram.control.SensorDataReader;
-import dev.sergevas.tool.katya.gluco.bot.telegram.entity.SensorReading;
+import dev.sergevas.tool.katya.gluco.bot.readings.control.SensorDataReader;
+import dev.sergevas.tool.katya.gluco.bot.readings.entity.SensorReading;
 import dev.sergevas.tool.katya.gluco.bot.xdrip.boundary.InfluxDbServerApiClient;
 
 import java.util.List;
