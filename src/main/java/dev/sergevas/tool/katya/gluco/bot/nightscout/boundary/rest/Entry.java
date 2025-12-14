@@ -77,7 +77,7 @@ public class Entry extends RepresentationModel<Entry> {
     }
 
     public Entry device(String device) {
-        this.type = type;
+        this.device = device;
         return this;
     }
 
