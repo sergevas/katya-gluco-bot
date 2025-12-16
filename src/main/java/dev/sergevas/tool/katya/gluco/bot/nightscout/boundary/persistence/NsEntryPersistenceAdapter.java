@@ -3,7 +3,7 @@ package dev.sergevas.tool.katya.gluco.bot.nightscout.boundary.persistence;
 import dev.sergevas.tool.katya.gluco.bot.nightscout.boundary.persistence.entity.NsEntryEntity;
 import dev.sergevas.tool.katya.gluco.bot.nightscout.boundary.persistence.entity.mapper.NsEntryEntityMapper;
 import dev.sergevas.tool.katya.gluco.bot.nightscout.control.NsEntryFilter;
-import dev.sergevas.tool.katya.gluco.bot.nightscout.control.NsEntryNotifier;
+import dev.sergevas.tool.katya.gluco.bot.nightscout.control.NsEntryPublisher;
 import dev.sergevas.tool.katya.gluco.bot.nightscout.control.NsEntryRepository;
 import dev.sergevas.tool.katya.gluco.bot.nightscout.entity.NsEntry;
 import jakarta.transaction.Transactional;
@@ -22,12 +22,12 @@ public class NsEntryPersistenceAdapter implements NsEntryRepository {
     private static final Logger LOG = LoggerFactory.getLogger(NsEntryPersistenceAdapter.class);
 
     private final NsEntryEntityJpaRepository nsEntryEntityJpaRepository;
-    private final NsEntryNotifier nsEntryNotifier;
+    private final NsEntryPublisher nsEntryPublisher;
 
     public NsEntryPersistenceAdapter(NsEntryEntityJpaRepository nsEntryEntityJpaRepository,
-                                     NsEntryNotifier nsEntryNotifier) {
+                                     NsEntryPublisher nsEntryPublisher) {
         this.nsEntryEntityJpaRepository = nsEntryEntityJpaRepository;
-        this.nsEntryNotifier = nsEntryNotifier;
+        this.nsEntryPublisher = nsEntryPublisher;
     }
 
     @Transactional
@@ -46,7 +46,7 @@ public class NsEntryPersistenceAdapter implements NsEntryRepository {
         LOG.debug("newSensorReadings={}", newSensorReadings);
         newSensorReadings.forEach(r -> {
             nsEntryEntityJpaRepository.save(NsEntryEntityMapper.toNsEntryEntity(r));
-            nsEntryNotifier.notify(r);
+            nsEntryPublisher.publish(r);
         });
 
         if (!existingPollsSensorReadingsByTimeEpoch.isEmpty()) {

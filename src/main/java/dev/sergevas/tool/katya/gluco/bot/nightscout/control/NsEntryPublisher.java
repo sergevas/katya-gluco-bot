@@ -2,7 +2,7 @@ package dev.sergevas.tool.katya.gluco.bot.nightscout.control;
 
 import dev.sergevas.tool.katya.gluco.bot.nightscout.entity.NsEntry;
 
-public interface NsEntryNotifier {
+public interface NsEntryPublisher {
 
-    void notify(NsEntry nsEntry);
+    void publish(NsEntry nsEntry);
 }
