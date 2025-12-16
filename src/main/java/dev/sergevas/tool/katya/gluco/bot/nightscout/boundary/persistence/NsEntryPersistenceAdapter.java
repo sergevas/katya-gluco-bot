@@ -3,6 +3,7 @@ package dev.sergevas.tool.katya.gluco.bot.nightscout.boundary.persistence;
 import dev.sergevas.tool.katya.gluco.bot.nightscout.boundary.persistence.entity.NsEntryEntity;
 import dev.sergevas.tool.katya.gluco.bot.nightscout.boundary.persistence.entity.mapper.NsEntryEntityMapper;
 import dev.sergevas.tool.katya.gluco.bot.nightscout.control.NsEntryFilter;
+import dev.sergevas.tool.katya.gluco.bot.nightscout.control.NsEntryNotifier;
 import dev.sergevas.tool.katya.gluco.bot.nightscout.control.NsEntryRepository;
 import dev.sergevas.tool.katya.gluco.bot.nightscout.entity.NsEntry;
 import jakarta.transaction.Transactional;
@@ -21,9 +22,12 @@ public class NsEntryPersistenceAdapter implements NsEntryRepository {
     private static final Logger LOG = LoggerFactory.getLogger(NsEntryPersistenceAdapter.class);
 
     private final NsEntryEntityJpaRepository nsEntryEntityJpaRepository;
+    private final NsEntryNotifier nsEntryNotifier;
 
-    public NsEntryPersistenceAdapter(NsEntryEntityJpaRepository nsEntryEntityJpaRepository) {
+    public NsEntryPersistenceAdapter(NsEntryEntityJpaRepository nsEntryEntityJpaRepository,
+                                     NsEntryNotifier nsEntryNotifier) {
         this.nsEntryEntityJpaRepository = nsEntryEntityJpaRepository;
+        this.nsEntryNotifier = nsEntryNotifier;
     }
 
     @Transactional
@@ -39,12 +43,11 @@ public class NsEntryPersistenceAdapter implements NsEntryRepository {
         var newSensorReadings = entries.stream()
                 .filter(r -> !existingPollsSensorReadingsByTimeEpoch.containsKey(r.epochTime()))
                 .toList();
-
         LOG.debug("newSensorReadings={}", newSensorReadings);
-
-        newSensorReadings.stream()
-                .map(NsEntryEntityMapper::toNsEntryEntity)
-                .forEach(nsEntryEntityJpaRepository::save);
+        newSensorReadings.forEach(r -> {
+            nsEntryEntityJpaRepository.save(NsEntryEntityMapper.toNsEntryEntity(r));
+            nsEntryNotifier.notify(r);
+        });
 
         if (!existingPollsSensorReadingsByTimeEpoch.isEmpty()) {
             sensorReadingsByEpochTime.forEach((timeToEpoch, reading) ->

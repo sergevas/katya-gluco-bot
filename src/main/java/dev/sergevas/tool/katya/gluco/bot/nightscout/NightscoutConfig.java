@@ -1,9 +1,11 @@
 package dev.sergevas.tool.katya.gluco.bot.nightscout;
 
+import dev.sergevas.tool.katya.gluco.bot.nightscout.boundary.appevent.NsEntryAppEventPublisher;
 import dev.sergevas.tool.katya.gluco.bot.nightscout.boundary.persistence.NsEntryEntityJpaRepository;
 import dev.sergevas.tool.katya.gluco.bot.nightscout.boundary.persistence.NsEntryPersistenceAdapter;
 import dev.sergevas.tool.katya.gluco.bot.nightscout.boundary.rest.NsEntryAssembler;
 import dev.sergevas.tool.katya.gluco.bot.nightscout.control.FromNsEntryMapper;
+import dev.sergevas.tool.katya.gluco.bot.nightscout.control.NsEntryNotifier;
 import dev.sergevas.tool.katya.gluco.bot.nightscout.control.NsEntryRepository;
 import dev.sergevas.tool.katya.gluco.bot.nightscout.control.NsEntrySensorDataReader;
 import dev.sergevas.tool.katya.gluco.bot.readings.control.SensorDataReader;
@@ -24,8 +26,14 @@ public class NightscoutConfig {
     }
 
     @Bean
-    public NsEntryPersistenceAdapter sensorDataPersistenceAdapter(NsEntryEntityJpaRepository entityJpaRepository) {
-        return new NsEntryPersistenceAdapter(entityJpaRepository);
+    public NsEntryNotifier nsEntryNotifier() {
+        return new NsEntryAppEventPublisher();
+    }
+
+    @Bean
+    public NsEntryPersistenceAdapter sensorDataPersistenceAdapter(NsEntryEntityJpaRepository entityJpaRepository,
+                                                                  NsEntryNotifier nsEntryNotifier) {
+        return new NsEntryPersistenceAdapter(entityJpaRepository, nsEntryNotifier);
     }
 
     @Bean
