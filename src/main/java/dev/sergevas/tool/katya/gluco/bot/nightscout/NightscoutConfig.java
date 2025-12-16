@@ -17,11 +17,13 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.scheduling.annotation.EnableAsync;
 
 @Configuration
 @EnableJpaRepositories(basePackages = {
         "dev.sergevas.tool.katya.gluco.bot.nightscout.boundary.persistence"
 })
+@EnableAsync
 public class NightscoutConfig {
 
     @Bean
