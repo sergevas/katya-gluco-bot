@@ -1,16 +1,12 @@
 package dev.sergevas.tool.katya.gluco.bot.nightscout;
 
-import dev.sergevas.tool.katya.gluco.bot.nightscout.boundary.appevent.FirstNsEntryPublishedLoggingHandler;
+import dev.sergevas.tool.katya.gluco.bot.nightscout.boundary.appevent.NsEntryAppEventListener;
 import dev.sergevas.tool.katya.gluco.bot.nightscout.boundary.appevent.NsEntryAppEventPublisher;
-import dev.sergevas.tool.katya.gluco.bot.nightscout.boundary.appevent.SecondNsEntryPublishedLoggingHandler;
+import dev.sergevas.tool.katya.gluco.bot.nightscout.boundary.appevent.NsEntryPublishedLoggingHandler;
 import dev.sergevas.tool.katya.gluco.bot.nightscout.boundary.persistence.NsEntryEntityJpaRepository;
 import dev.sergevas.tool.katya.gluco.bot.nightscout.boundary.persistence.NsEntryPersistenceAdapter;
 import dev.sergevas.tool.katya.gluco.bot.nightscout.boundary.rest.NsEntryAssembler;
-import dev.sergevas.tool.katya.gluco.bot.nightscout.control.FromNsEntryMapper;
-import dev.sergevas.tool.katya.gluco.bot.nightscout.control.NsEntryPublishedUseCase;
-import dev.sergevas.tool.katya.gluco.bot.nightscout.control.NsEntryPublisher;
-import dev.sergevas.tool.katya.gluco.bot.nightscout.control.NsEntryRepository;
-import dev.sergevas.tool.katya.gluco.bot.nightscout.control.NsEntrySensorDataReader;
+import dev.sergevas.tool.katya.gluco.bot.nightscout.control.*;
 import dev.sergevas.tool.katya.gluco.bot.readings.control.SensorDataReader;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.ApplicationEventPublisher;
@@ -37,13 +33,13 @@ public class NightscoutConfig {
     }
 
     @Bean
-    public NsEntryPublishedUseCase firstNsEntryPublishedLoggingHandler() {
-        return new FirstNsEntryPublishedLoggingHandler();
+    public NsEntryPublishedUseCase nsEntryPublishedLoggingHandler() {
+        return new NsEntryPublishedLoggingHandler();
     }
 
     @Bean
-    public NsEntryPublishedUseCase secondNsEntryPublishedLoggingHandler() {
-        return new SecondNsEntryPublishedLoggingHandler();
+    public NsEntryAppEventListener nsEntryAppEventListener(NsEntryPublishedUseCase nsEntryPublishedUseCase) {
+        return new NsEntryAppEventListener(nsEntryPublishedUseCase);
     }
 
     @Bean

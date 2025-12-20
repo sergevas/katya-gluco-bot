@@ -6,14 +6,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.event.EventListener;
 
-public class SecondNsEntryPublishedLoggingHandler implements NsEntryPublishedUseCase {
+public class NsEntryPublishedLoggingHandler implements NsEntryPublishedUseCase {
 
-    private static final Logger LOG = LoggerFactory.getLogger(SecondNsEntryPublishedLoggingHandler.class);
+    private static final Logger LOG = LoggerFactory.getLogger(NsEntryPublishedLoggingHandler.class);
 
     @Override
     public void handle(NsEntry nsEntry) {
-        LOG.debug("Enter {}.handle() nsEntry = {}", SecondNsEntryPublishedLoggingHandler.class, nsEntry);
-        LOG.debug("Exit {}.handle()", SecondNsEntryPublishedLoggingHandler.class);
+        LOG.debug("Enter {}.handle() nsEntry = {}", NsEntryPublishedLoggingHandler.class, nsEntry);
+        LOG.debug("Exit {}.handle()", NsEntryPublishedLoggingHandler.class);
     }
 
     @EventListener
