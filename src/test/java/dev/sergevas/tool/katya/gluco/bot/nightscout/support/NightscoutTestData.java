@@ -3,6 +3,7 @@ package dev.sergevas.tool.katya.gluco.bot.nightscout.support;
 import dev.sergevas.tool.katya.gluco.bot.nightscout.entity.NsEntry;
 
 import java.time.OffsetDateTime;
+import java.util.List;
 
 public class NightscoutTestData {
 
@@ -37,6 +38,8 @@ public class NightscoutTestData {
                     83000,
                     100
             );
+
+    public static final List<NsEntry> NS_ENTRIES = List.of(NS_ENTRY_1, NS_ENTRY_2);
 
     public static final String TEST_REQUEST_1 = """
             [

@@ -10,4 +10,14 @@ public record NsEntryFilter(String device,
                             OffsetDateTime sgvTimeFrom,
                             OffsetDateTime sgvTimeTo,
                             Pageable pageable) {
+    public static NsEntryFilter defaultFilter() {
+        return new NsEntryFilter(
+                null,
+                null,
+                null,
+                null,
+                null,
+                Pageable.unpaged()
+        );
+    }
 }

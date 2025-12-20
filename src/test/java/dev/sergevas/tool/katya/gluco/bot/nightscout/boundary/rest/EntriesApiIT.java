@@ -1,6 +1,5 @@
-package dev.sergevas.tool.katya.gluco.bot.integration;
+package dev.sergevas.tool.katya.gluco.bot.nightscout.boundary.rest;
 
-import dev.sergevas.tool.katya.gluco.bot.nightscout.boundary.rest.Entry;
 import dev.sergevas.tool.katya.gluco.bot.nightscout.control.NsEntryFilter;
 import dev.sergevas.tool.katya.gluco.bot.nightscout.control.NsEntryRepository;
 import dev.sergevas.tool.katya.gluco.bot.support.TestContainersConfig;
