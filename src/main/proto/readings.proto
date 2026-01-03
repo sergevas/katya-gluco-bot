@@ -1,0 +1,25 @@
+syntax = "proto3";
+
+package readings;
+
+option java_package = "dev.sergevas.tool.katya.gluco.bot.readings.boundary.grpc";
+option java_outer_classname = "ReadingsProto";
+option java_multiple_files = true;
+
+import "google/protobuf/empty.proto";
+import "google/protobuf/timestamp.proto";
+
+message Direction {
+  string name = 1;
+  string mark = 2;
+}
+
+message SensorReading {
+  google.protobuf.Timestamp time = 1;
+  string reading = 2;
+  Direction direction = 3;
+}
+
+service SensorReadingsService {
+  rpc watchReadings(google.protobuf.Empty) returns (stream SensorReading);
+}
