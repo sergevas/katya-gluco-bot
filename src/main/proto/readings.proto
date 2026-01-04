@@ -1,8 +1,8 @@
 syntax = "proto3";
 
-package readings;
+package readings_boundary_grpc_proto;
 
-option java_package = "dev.sergevas.tool.katya.gluco.bot.readings.boundary.grpc";
+option java_package = "dev.sergevas.tool.katya.gluco.bot.readings.boundary.grpc.proto";
 option java_outer_classname = "ReadingsProto";
 option java_multiple_files = true;
 
