@@ -34,4 +34,16 @@ class TextMessageFormatterTest {
                 TextMessageFormatter.formatAlert(Optional.of(new SensorReading(Instant.parse("2025-04-14T21:07:40.688Z"),
                         7.214927129235995, FLAT)), Instant.parse("2025-04-14T21:27:40.688Z")));
     }
+
+    @Test
+    void testFormatBatteryLowAlert() {
+        assertEquals("\uD83D\uDD0B❗ Низкий уровень заряда: 10%",
+                TextMessageFormatter.formatBatteryLowAlert(10));
+    }
+
+    @Test
+    void testFormatBatteryFullyChargedLowAlert() {
+        assertEquals("\uD83D\uDD0B✅ Телефон полностью заряжен: 100%",
+                TextMessageFormatter.formatBatteryFullyChargedLowAlert(100));
+    }
 }

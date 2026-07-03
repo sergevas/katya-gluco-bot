@@ -40,4 +40,14 @@ public class TextMessageFormatter {
                 .orElse(UNDEFINED.getMark());
         return String.format("%s Нет нового значения, минут: %s", parseToUnicode(":x:"), minutesSinceLastReading);
     }
+
+    public static String formatBatteryLowAlert(Integer batteryLevel) {
+        return "%s%s Низкий уровень заряда: %s%%".formatted(parseToUnicode(":battery:"),
+                parseToUnicode(":exclamation:"), batteryLevel);
+    }
+
+    public static String formatBatteryFullyChargedLowAlert(Integer batteryLevel) {
+        return "%s%s Телефон полностью заряжен: %s%%".formatted(parseToUnicode(":battery:"),
+                parseToUnicode(":white_check_mark:"), batteryLevel);
+    }
 }
